@@ -1,0 +1,27 @@
+    #chart text {
+        fill: black;
+        font: 10px sans-serif;
+        text-anchor: end;
+    }
+
+    .axis text {
+        font: 10px sans-serif;
+    }
+
+    .axis path, .axis line {
+        fill: none;
+        /*stroke: #fff;*/
+        shape-rendering: crispEdges;
+    }
+
+    body {
+        /*background: #1a1a1a;*/
+        color: #eaeaea;
+        padding: 10px;
+    }
+
+    path {
+        stroke: steelblue;
+        stroke-width: 2;
+        fill: none;
+    }

@@ -1,0 +1,65 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <article class="repertoire" >
+            <h1>Stats API data</h1>
+            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/v_usage.json" x-gene="v">Load v_usage (1 repo)</button>
+            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="d">Load d_usage</button>
+            
+            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="x">Throw error</button>
+            
+            <button class="loader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo)</button>
+
+            <div id="usage_20200813_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200813</div>
+            
+            <div id="usage_20200828_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200828</div>
+        </article>
+
+        <script src="lib/jquery-3.5.1.min.js"></script>        
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+        <script src="http://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/data.js"></script>
+        <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+        <!-- script src="lib/highcharts.js"></script>
+        <script src="lib/modules/exporting.js"></script>
+        <script src="lib/modules/data.js"></script>
+        <script src="lib/modules/drilldown.js"></script -->
+
+        <script src="src/iRplusCharts.js"></script>
+
+        <script>
+            function redrawChart(gene, url, identifier){
+                $.get(url, function(data){
+                    let d = new IRplusStatsResult(gene);
+                    d.setRawResult(data);
+                    console.log("---------------------------");
+                    console.log(d);
+                    console.log("---------------------------");
+                    window.irpluscharts.setDebugLevel(11);
+                    let chart = window.irpluscharts.createChart(window.irpluscharts.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
+                });
+            }
+
+            $(function () {
+                $('.loader').click(function(){
+                    redrawChart($(this).attr('x-gene'), $(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                
+                if (Highcharts) {
+                    console.log('Highcharts available')
+                }
+                if (Highcharts._modules.hasOwnProperty("Extensions/Drilldown.js")) {
+                    console.log('Drilldown module available')
+                }
+                if (Highcharts._modules.hasOwnProperty("Extensions/Exporting.js")) {
+                    console.log('Exporting module available')
+                }
+                if (Highcharts._modules.hasOwnProperty("Extensions/Data.js")) {
+                    console.log('Data module available')
+                }
+            });
+        </script>
+    </body>
+</html>
