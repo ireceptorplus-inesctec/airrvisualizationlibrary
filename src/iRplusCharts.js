@@ -1,3 +1,18 @@
+// jQuery not required atm.
+//export {$,jQuery} from 'jquery';
+
+// Import Hicharts into module
+import Highcharts from 'highcharts';
+import highcharts3d from 'highcharts/highcharts-3d';
+highcharts3d(Highcharts);
+import Exporting from 'highcharts/modules/exporting';
+Exporting(Highcharts);
+import Data from 'highcharts/modules/data';
+Data(Highcharts);
+import Drilldown from 'highcharts/modules/drilldown';
+Drilldown(Highcharts);
+
+
 /**
  * A logger class.
  */
@@ -117,7 +132,9 @@ class IRplusLogger{
         }
     }
 }
-
+/**
+ * Result Series types
+ */
 class IRplusResultSerieType {
     
     static types = {
@@ -204,7 +221,7 @@ class IRplusProperties {
         this.#_yLabel = undefined;
         this.#_id = IRplusCommon.makeid(12);
         this.#_sort = false;
-        this.#_logger.trace(this);
+        this.#_logger.trace(JSON.stringify(this));
     }
 
     get title() {
@@ -252,42 +269,43 @@ class IRplusProperties {
     setTitle (value) {
         this.#_title = value;
         this.#_logger.debug("setTitle.");
-        this.#_logger.trace(this);
+        this.#_logger.trace(JSON.stringify(this));
         return this;
     }
 
     setSubtitle(value) {
         this.#_subtitle = value;
         this.#_logger.debug("setSubtitle");
-        this.#_logger.trace(this);
+        this.#_logger.trace(JSON.stringify(this));
         return this;
     }
     
     setXLabel( label) {
         this.#_xLabel = label;
         this.#_logger.debug("setXLabel.");
-        this.#_logger.trace(this);
+        this.#_logger.trace(JSON.stringify(this));
         return this;
     }
 
     setYLabel (label) {
         this.#_yLabel = label;
         this.#_logger.debug("setYLabel.");
-        this.#_logger.trace(this);
+        this.#_logger.trace(JSON.stringify(this));
         return this;
     }
 
     setId (elementId) {
         this.#_id = elementId;
         this.#_logger.debug("setId.");
-        this.#_logger.trace(this);
+        this.#_logger.trace(JSON.stringify(this));
+        console.log(JSON.stringify(this));
         return this;
     }
 
     setSort (value) {
         this.#_sort = value;
         this.#_logger.debug("setSort.");
-        this.#_logger.trace(this);
+        this.#_logger.trace(JSON.stringify(this));
         return this;
     }
         
@@ -711,10 +729,10 @@ class IRplusStatsResult extends IRplusResult {
         //If we have only one serie to drill to, we can use the drilldown object.
         if (this.#_multipleSeries){
             let emptyDrilldownObject = {series: []};
-            this.#_logger.trace(emptyDrilldownObject);
+            this.#_logger.trace(JSON.stringify(emptyDrilldownObject));
             return emptyDrilldownObject;
         }           
-        this.#_logger.trace(this.#_drilldownSeries);
+        this.#_logger.trace(JSON.stringify(this.#_drilldownSeries));
         return this.#_drilldownSeries;
     }
                     
@@ -724,15 +742,15 @@ class IRplusStatsResult extends IRplusResult {
             logger.debug("retrieving single serie drillup event");
             return function(e) {
                 let chart = this
-                logger.trace(e);
-                logger.trace(chart);
+                logger.trace(e.toString());
+                //logger.trace(JSON.stringify(chart));
             };    
         }
         logger.debug("retrieving multiple series drillup event");
         return function(e) {
                 let chart = this
-                logger.trace(e);
-                logger.trace(chart);
+                logger.trace(e.toString());
+                //logger.trace(JSON.stringify(chart));
         };    
             
     }
@@ -744,14 +762,14 @@ class IRplusStatsResult extends IRplusResult {
             return function(e) {
                 let chart = this;
                 chart.setTitle(null, { text: e.point.name });
-                logger.trace(e);
+                logger.trace(e.toString());
             };    
         }
         // I may need a structure to hold the drilldown and drillup level and labels. That way we can have a subtitle of the type 'Families' > ' Genes' > '...' and a label for drillup button.
         let drilldownSeries = {...this.#_geneSeriesByFamily, ...this.#_cellSeriesByGene};
         return function(e) {
             let chart = this
-            logger.trace(e);
+            logger.trace(e.toString());
             if (!e.seriesOptions) {
                 //this.#_logger.debug(drilldownSeries);
                 chart.setTitle(null, { text: e.point.name });
@@ -759,25 +777,81 @@ class IRplusStatsResult extends IRplusResult {
                 for (let i = 0; i < drilldownSeries[e.point.drilldown].length; i++){
                     let serie = drilldownSeries[e.point.drilldown][i];
                     logger.debug("Found serie")
-                    logger.trace(serie);
+                    logger.trace(JSON.stringify(serie));
                     chart.addSingleSeriesAsDrilldown(e.point, serie.asHighchartSeries());
                 }
-                logger.trace(chart.drilldown);
+                logger.trace(JSON.stringify(chart.drilldown));
                 //chart.addSingleSeriesAsDrilldown(e.point, series[0]);
                 //chart.addSingleSeriesAsDrilldown(e.point, series[1]);
-                logger.trace(chart);
+                //logger.trace(JSON.stringify(chart));
                 chart.applyDrilldown();
             }else{
                 chart.setTitle(null, {text: e.seriesOptions.name});
             }
         }            
     }
+
+    getMousedownEvent(targetChart){
+        let logger = this.#_logger;
+        if (!this.#_multipleSeries){
+            this.#_logger.debug("retrieving single serie mousedown event");
+            return function(e) {
+                let chart = this;
+                console.log("Mousedown in single series");
+                logger.trace(e.toString());
+            };    
+        }
+        return function(eStart) {
+            let chart = targetChart;
+            console.log("Mousedown in multiple series");
+            eStart = chart.pointer.normalize(eStart);
+
+            var posX = eStart.chartX,
+                posY = eStart.chartY,
+                alpha = chart.options.chart.options3d.alpha,
+                beta = chart.options.chart.options3d.beta,
+                sensitivity = 5,  // lower is more sensitive
+                handlers = [];
+    
+            function drag(e) {
+                // Get e.chartX and e.chartY
+                e = chart.pointer.normalize(e);
+    
+                chart.update({
+                    chart: {
+                        options3d: {
+                            alpha: alpha + (e.chartY - posY) / sensitivity,
+                            beta: beta + (posX - e.chartX) / sensitivity
+                        }
+                    }
+                }, undefined, undefined, false);
+            }
+    
+            function unbindAll() {
+                handlers.forEach(function (unbind) {
+                    if (unbind) {
+                        unbind();
+                    }
+                });
+                handlers.length = 0;
+            }
+    
+            handlers.push(Highcharts.addEvent(document, 'mousemove', drag));
+            handlers.push(Highcharts.addEvent(document, 'touchmove', drag));
+    
+    
+            handlers.push(Highcharts.addEvent(document, 'mouseup', unbindAll));
+            handlers.push(Highcharts.addEvent(document, 'touchend', unbindAll));
+    
+            logger.trace(eStart.toString());
+        };  
+    }
     
     get properties(){
         return this.#_defaultProperties;
     }
         
-    is3D(){
+    isMultipleSeries(){
         return this.#_multipleSeries;
     }
     
@@ -842,149 +916,11 @@ class IRplusStatsResult extends IRplusResult {
         }
         this.#_seriesByRepertoire[repertoire_id].push(serie);
     }
+
+    preparse(originalDataResult){
+        
+    }   
            
-    parseSingleRepertoireStatsData(data){
-        this.#_logger.debug("IRplusStatsResult parseSingleRepertoireStatsData.");
-        let gene = this.#_geneType;
-        let series = [];
-        let drilldownSeries = [];
-        let familySeries;
-        let familyNames = [];
-        let geneSeries;
-        let geneNames = [];
-        let cellSeries;
-        // let gene = 'd';
-        let familyPostfix = '_family';
-        let genePostfix = '_gene';
-        let geneSpliter = '-'
-        let cellPostfix = '_call';
-        let cellSpliter = '*'
-
-        let familySeriesName = gene.concat(familyPostfix);
-        let geneSeriesName = gene.concat(genePostfix);
-        let cellSeriesName = gene.concat(cellPostfix);
-
-        if (typeof data === "string"){
-            data = JSON.parse(data);
-        }
-        
-        this.#_logger.debug("Data Result length = " + data.Result.length);
-        if (data.Result.length > 1){
-            this.#_logger.debug("Representing " + data.Result.length + " repertoires. Will need a 3D chart.");
-            this.#_multipleSeries = true;
-        }
-        
-        for (let i = 0; i< data.Result[0].fields.length; i++){
-            //  	this.#_logger.debug(data.Result[0].fields[i].field);
-            //    this.#_logger.debug(familySeriesName, geneSeriesName, callSeriesName);
-            if (data.Result[0].fields[i].field.localeCompare(familySeriesName)==0){
-                //    	this.#_logger.debug('Setting families');
-                familySeries = data.Result[0].fields[i];
-            }else if (data.Result[0].fields[i].field.localeCompare(geneSeriesName)==0){
-                //    	this.#_logger.debug('Setting genes');
-                geneSeries = data.Result[0].fields[i];
-            }else if (data.Result[0].fields[i].field.localeCompare(cellSeriesName)==0){
-                //    	this.#_logger.debug('Setting calls');
-                cellSeries = data.Result[0].fields[i];
-            }
-        }
-        //  this.#_logger.debug('Family :');
-        //  this.#_logger.debug(familySeries);
-        //  this.#_logger.debug('Gene :');
-        //  this.#_logger.debug(geneSeries);
-        //  this.#_logger.debug('Cell :');
-        //  this.#_logger.debug(cellSeries);
-        if (familySeries){
-            //this is the main series.
-            let seriesData = [];
-            for (let i = 0; i< familySeries.data.length; i++){
-                let familyName = familySeries.data[i].key;
-                familyNames.push(familyName)
-                seriesData.push({
-                    name: familyName,
-                    y: familySeries.data[i].count,
-                    drilldown: familyName.concat(genePostfix) 
-                });
-            }
-            series.push({
-                name: familySeriesName,
-                data: seriesData
-            })
-        }else{
-            //abort and return  
-        }
-        if (geneSeries){
-            //this is the second serie.
-            let seriesData = [];
-            //Build a dictionary to group genes by family
-            let seriesDataDict = new Object();
-            for (let i = 0; i < familyNames.length; i++){
-                seriesDataDict[familyNames[i]] = [];
-            }
-            for (let i = 0; i< geneSeries.data.length; i++){
-                let geneName = geneSeries.data[i].key;
-                geneNames.push(geneName);
-                let geneSpliterIndex = geneName.indexOf(geneSpliter);
-                let familyName = geneName.substring(0,geneSpliterIndex);
-                seriesDataDict[familyName].push({
-                    name: geneName,
-                    y: geneSeries.data[i].count,
-                    drilldown: geneName.concat(cellPostfix) 
-                });
-            }
-            //   this.#_logger.debug(seriesDataDict);
-            for (let key in seriesDataDict){
-                let value = seriesDataDict[key];
-                drilldownSeries.push({
-                    name: key.concat(' Genes'),
-                    id: key.concat(genePostfix),
-                    data: value
-                });
-            }
-        }else{
-            //abort and return  
-        }
-
-        if (cellSeries){
-            //this is the second serie.
-            let seriesData = [];
-            //Build a dictionary to group genes by family
-            let seriesDataDict = new Object();
-            for (let i = 0; i < geneNames.length; i++){
-                seriesDataDict[geneNames[i]] = [];
-            }
-            for (let i = 0; i< cellSeries.data.length; i++){
-                let cellName = cellSeries.data[i].key;
-                let cellSpliterIndex = cellName.indexOf(cellSpliter);
-                let geneName = cellName.substring(0,cellSpliterIndex);
-                seriesDataDict[geneName].push({
-                    name: cellName,
-                    y: cellSeries.data[i].count
-                });
-            }
-            //    this.#_logger.debug(seriesDataDict);
-            for (let key in seriesDataDict){
-                let value = seriesDataDict[key];
-                drilldownSeries.push({
-                    name: key.concat(' Cells'),
-                    id: key.concat(cellPostfix),
-                    data: value
-                });
-            }
-        }else{
-            //abort and return  
-        }
-
-        //  this.#_logger.debug('Series:');
-        //  this.#_logger.debug(series);
-        //  this.#_logger.debug('DrilldownSeries:');
-        //  this.#_logger.debug(drilldownSeries);
-
-        //return [series, {series:drilldownSeries}];
-        this.#_series = series;
-        this.#_drilldownSeries = {series:drilldownSeries};
-    }
-    
     parse (data){
         this.#_logger.debug("IRplusStatsResult parse.");
         //Highcharts default
@@ -1116,10 +1052,10 @@ class IRplusStatsResult extends IRplusResult {
                     //{name: geneName,y: geneSeries.data[i].count,drilldown: geneName.concat(cellPostfix)});
                 }
                 this.#_logger.trace("All Gene data serie for Repertoire " +repertoire.repertoire_id + ": ");
-                this.#_logger.trace(serie);
+                this.#_logger.trace(JSON.stringify(serie));
                 this._addToStructures(serie);
                 this.#_logger.trace("All series for gene data grouped by family : ");
-                this.#_logger.trace(geneSeriesDict);
+                this.#_logger.trace(JSON.stringify(geneSeriesDict));
                 for (let key in geneSeriesDict){
                     let value = geneSeriesDict[key];
                     this._addToStructures(value);
@@ -1170,7 +1106,7 @@ class IRplusStatsResult extends IRplusResult {
                     //{name: cellName,y: cellSeries.data[i].count});
 
                 }
-                //    this.#_logger.trace(cellSeriesDict);
+                //    this.#_logger.trace(JSON.stringify(cellSeriesDict));
                 for (let key in cellSeriesDict){
                     let value = cellSeriesDict[key];
                     this._addToStructures(value);
@@ -1196,12 +1132,14 @@ class IRplusChart {
     #_id;
     #_properties;
     #_result;
+    #_chart;
     #_logger;
     
     constructor(properties){
         this.#_logger = new IRplusLogger('IRplusChart');
         this.#_logger.debug("Constructor.");
         this.#_result = {};
+        this.#_chart = undefined;
         this.#_properties = undefined;
         if (properties instanceof IRplusProperties){
             this.#_properties = properties;
@@ -1209,7 +1147,7 @@ class IRplusChart {
             this.#_properties = new IRplusProperties();
         }
         this.#_id = this.#_properties.id;
-        this.#_logger.trace(this);
+        this.#_logger.trace(JSON.stringify(this));
     }
 
     //setter
@@ -1217,14 +1155,14 @@ class IRplusChart {
         this.#_logger.debug("setResult");
         if (result instanceof IRplusResult){
             this.#_result = result;
-            this.#_logger.trace(this.#_properties);
-            this.#_logger.trace(this.#_result.properties);
+            this.#_logger.trace(JSON.stringify(this.#_properties));
+            this.#_logger.trace(JSON.stringify(this.#_result.properties));
             this.#_properties.updateWith(this.#_result.properties);
-            this.#_logger.trace(this.#_properties);
+            this.#_logger.trace(JSON.stringify(this.#_properties));
         }else{
             this.#_logger.error("Received result is not compatible. Result must be an instance of IRplusResult.");
         }
-        this.#_logger.trace(this);
+        this.#_logger.trace(JSON.stringify(this));
         return this;
     }
     
@@ -1258,6 +1196,10 @@ class IRplusChart {
         return this.#_id;
     }
 
+    get chart(){
+        return this.#_chart;
+    }
+
     //plot
     plot(){
         this.#_logger.debug("Ploting chart");
@@ -1288,8 +1230,8 @@ class IRplusChart {
             drillup: this.#_result.drillupSeriesEvent,
             drilldown: this.#_result.drilldownSeriesEvent
         }
-        this.#_logger.trace("Is 3D? -" + this.#_result.is3D());
-        if (this.#_result.is3D()){
+        this.#_logger.trace("Is 3D (multiple series)? -" + this.#_result.isMultipleSeries());
+        if (this.#_result.isMultipleSeries()){
             // Setup chart 3Doptions properties (in the future using #_properties and #_dataseries data).
             p.chart.options3d = {
                 enabled: true,
@@ -1323,10 +1265,14 @@ class IRplusChart {
                 }
             };
         }
-        $('#'+this.#_properties.id).highcharts(p);
-        this.#_logger.trace(p);
+        // If Hicharts is imported as a module than we don't need jquery to plot the chart into the DOM.
+        this.#_chart  = Highcharts.chart(this.#_properties.id, p);
+        //$('#'+this.#_properties.id).highcharts(p);
+        this.#_logger.trace(JSON.stringify(p));
         this.#_logger.debug("Plotting into " + this.#_properties.id);
-        this.#_logger.trace(this.#_result);
+        this.#_logger.trace(JSON.stringify(this.#_result));
+        Highcharts.addEvent(this.#_chart.container, "mousedown", this.#_result.getMousedownEvent(this.#_chart));
+        console.log(this);
     }
 }
 
@@ -1344,11 +1290,6 @@ class IRplusChartLibrary {
         return this.#_charts;
     }
     
-    createProperties() {
-        let _property = new IRplusProperties();
-        return _property;
-    }
-    
     createChart(properties=undefined){
         properties = IRplusProperties.validOrNew(properties);
         let _chart = this.get(properties.id);
@@ -1359,6 +1300,10 @@ class IRplusChartLibrary {
             _chart.properties = properties;
         }
         return _chart;
+    }
+
+    createStatsResult(gene){
+        return new IRplusStatsResult(gene);
     }
     
     createProperties(){
@@ -1374,10 +1319,22 @@ class IRplusChartLibrary {
     }
 }
 
+/*export { IRplusChartLibrary, IRplusChart, IRplusStatsResult,  IRplusResult, 
+    IRplusResultSerie, IRplusResultSerieDataItem, IRplusProperties, IRplusGeneType, 
+    IRplusResultSerieType, IRplusLogger};
+*/
+/*module.exports = { IRplusChartLibrary, IRplusChart, IRplusStatsResult,  IRplusResult, 
+    IRplusResultSerie, IRplusResultSerieDataItem, IRplusProperties, IRplusGeneType, 
+    IRplusResultSerieType, IRplusLogger};
+*/
 (function (windows) {
 
-  // We need that our library is globally accesible, then we save in the window
-  if(typeof(window.irpluscharts) === 'undefined'){
-    window.irpluscharts = new IRplusChartLibrary();
-  }
+    // We need that our library is globally accesible, then we save in the window
+    if(typeof(window.irpluscharts) === 'undefined'){
+        window.irpluscharts = new IRplusChartLibrary();
+    }
+/*
+    window.$ = $;
+    window.jQuery = jQuery;
+*/
 }(window));

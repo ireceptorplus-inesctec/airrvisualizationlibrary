@@ -12,11 +12,23 @@
     "jquery": "3.5.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "7.10.4",
+    "@babel/preset-env": "7.11.5",
+    "babelify": "10.0.0",
+    "browserify": "16.5.2",
     "chai": "4.2.0",
+    "esmify": "2.1.1",
+    "exorcist": "1.0.1",
     "mocha": "8.1.3"
   },
   "scripts": {
-    "test": "mocha test/index.test.js -w"
+    "___build_":  "browserify -e ./src/iRplusCharts.js -p esmify -o ./dist/iRplusCharts.js",
+    "__build_":   "browserify -e ./src/iRplusCharts.js -o ./dist/iRplusCharts.js",
+    "_build":     "browserify -t [ babelify ] ./src/iRplusCharts.js -o ./dist/iRplusCharts.js",
+    "build":      "browserify -t [ babelify ] ./src/iRplusCharts.js --debug | exorcist ./dist/iRplusCharts.js.map > ./dist/iRplusCharts.js",
+    "_build_":    "copy ./src/iRplusCharts.js ./dist/iRplusCharts.js",
+    "copy:jquery": "copy ./node_modules/jquery/dist/jquery.min.js ./dist/lib/",
+    "test": "mocha test/index.test.js"
   },
   "keywords": [
     "iReceptorPlus",

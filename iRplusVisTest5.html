@@ -1,0 +1,40 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <article class="repertoire" >
+            <h1>Stats API data</h1>
+            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/v_usage.json" x-gene="v">Load v_usage (1 repo)</button>
+            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="d">Load d_usage</button>
+            
+            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="x">Throw error</button>
+            
+            <button class="loader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo)</button>
+
+            <div id="usage_20200813_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200813</div>
+            
+            <div id="usage_20200828_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200828</div>
+        </article>
+
+        <script src="dist/lib/jquery.min.js"></script> 
+        <script  src="dist/iRplusCharts.js"></script>   
+
+        <script>
+            function redrawChart(gene, url, identifier){
+                $.get(url, function(data){
+                    //let d = new IRplusStatsResult(gene);
+                    let d = window.irpluscharts.createStatsResult(gene);
+                    d.setRawResult(data);
+                    //window.irpluscharts.setDebugLevel(0);
+                    let chart = window.irpluscharts.createChart(window.irpluscharts.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
+                });
+            }
+
+            $(function () {
+                $('.loader').click(function(){
+                    redrawChart($(this).attr('x-gene'), $(this).attr('x-data'), $(this).attr('x-target'));
+                });
+            });
+        </script>
+    </body>
+</html>
