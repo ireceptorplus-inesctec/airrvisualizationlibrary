@@ -4,12 +4,14 @@
     <body>
         <article class="repertoire" >
             <h1>Stats API data</h1>
-            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/v_usage.json" x-gene="v">Load v_usage (1 repo)</button>
+            <button class="vloader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/v_usage.json" x-gene="v">Load v_usage (1 repo)</button>
             <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="d">Load d_usage</button>
             
             <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="x">Throw error</button>
             
-            <button class="loader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo)</button>
+            <button class="vloader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo)</button>
+
+            <button class="loader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo, no drilldown)</button>
 
             <div id="usage_20200813_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200813</div>
             
@@ -25,14 +27,25 @@
                     //let d = new StatsResult(gene);
                     let d = window.airrvisualization.createGeneStatsResult(gene);
                     d.setRawResult(data);
-                    //window.airrvisualization.setDebugLevel(0);
+                    window.airrvisualization.setDebugLevel(0);
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
                 });
             }
-
+            function redrawChartV(url, identifier){
+                $.get(url, function(data){
+                    //let d = new StatsResult(gene);
+                    let d = window.airrvisualization.createVGeneStatsResult();
+                    d.setDrilldown(true).setRawResult(data);
+                    window.airrvisualization.setDebugLevel(0);
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
+                });
+            }
             $(function () {
                 $('.loader').click(function(){
                     redrawChart($(this).attr('x-gene'), $(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.vloader').click(function(){
+                    redrawChartV($(this).attr('x-data'), $(this).attr('x-target'));
                 });
             });
         </script>

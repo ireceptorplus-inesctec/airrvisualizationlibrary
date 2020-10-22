@@ -1,40 +1,55 @@
 {
   "name": "airrvisualizationlibrary",
+  "longname": "AIRR Visualization Library",
   "version": "0.1.0",
-  "description": "Build charts for AIIR data",
-  "main": "src/iRplusCharts.js",
+  "description": "Build Charts for AIIR Data Commons",
+  "main": "airrvisualization.js",
+  "homepage": "https://gitlab.inesctec.pt/ireceptorplus/irp-visualization/airrvisualizationlibrary",
   "directories": {
     "lib": "lib",
     "test": "test"
   },
-  "dependencies": {
-    "highcharts": "8.2.0",
-    "jquery": "3.5.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "7.10.4",
     "@babel/preset-env": "7.11.5",
+    "@jsdevtools/browserify-banner": "2.0.4",
     "babelify": "10.0.0",
     "browserify": "16.5.2",
+    "browserify-versionify": "1.0.6",
     "chai": "4.2.0",
     "esmify": "2.1.1",
     "exorcist": "1.0.1",
-    "mocha": "8.1.3"
+    "highcharts": "8.2.0",
+    "jquery": "3.5.1",
+    "jsdoc": "3.6.6",
+    "mocha": "8.1.3",
+    "uglifyify": "5.0.2"
   },
   "scripts": {
-    "___build_":  "browserify -e ./src/iRplusCharts.js -p esmify -o ./dist/iRplusCharts.js",
-    "__build_":   "browserify -e ./src/iRplusCharts.js -o ./dist/iRplusCharts.js",
-    "_build":     "browserify -t [ babelify ] ./src/iRplusCharts.js -o ./dist/iRplusCharts.js",
-    "build":      "browserify -t [ babelify ] ./src/iRplusCharts.js --debug | exorcist ./dist/iRplusCharts.js.map > ./dist/iRplusCharts.js",
-    "_build_":    "copy ./src/iRplusCharts.js ./dist/iRplusCharts.js",
+    "build-docs": "./node_modules/.bin/jsdoc -r .\\src\\index.js",
+    "build-dev": "DEL /S /F /Q .\\dist\\* & RD /S /Q .\\dist\\lib & xcopy /Q .\\node_modules\\jquery\\dist\\jquery.min.js .\\dist\\lib\\ & browserify -d -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js | exorcist ./dist/airrvisualization.js.map > ./dist/airrvisualization.js",
+    "build": "del /S /F /Q .\\dist\\* & copy .\\node_modules\\jquery\\dist\\jquery.min.js .\\dist\\lib\\ & xcopy /S /Q .\\node_modules\\highcharts\\*.* .\\dist\\lib\\ & browserify -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js -o ./dist/airrvisualization.js",
+    "_build": "browserify -t [ babelify ] ./src/index.js -o ./dist/airrvisualization.js",
+    "__build": "browserify -e ./src/index.js -p esmify -o ./dist/airrvisualization.js",
     "copy:jquery": "copy ./node_modules/jquery/dist/jquery.min.js ./dist/lib/",
     "test": "mocha test/index.test.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.inesctec.pt/ireceptorplus/irp-visualization/airrvisualizationlibrary.git"
+  },
   "keywords": [
     "iReceptorPlus",
+    "iR+",
+    "airr data commons",
     "Charts",
     "Visualization"
   ],
-  "author": "Marco A. Oliveira <mao@inesctec.pt> (http://www.inesctec.pt/)",
+  "author": {
+    "name": "Marco Amaro Oliveira",
+    "email": "mao@inesctec.pt",
+    "url": "https://www.linkedin.com/in/marcoamarooliveira/"
+  },
   "license": "UNLICENSED"
 }

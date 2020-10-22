@@ -1,0 +1,36 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <article class="repertoire" >
+            <h1>Stats API data</h1>
+            <button class="loader" x-target="usage_20200922_top_10_clone_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200922_stats_api/response_fraction_10.json">Load top 10 clone count</button>
+            <div id="usage_20200922_top_10_clone_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200922 Top 10</div>
+            
+            <button class="loader" x-target="usage_20200922_top_100_clone_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200922_stats_api/response_fraction_100.json">Load top 100 clone count</button>            
+            <div id="usage_20200922_top_100_clone_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200922 Top 100</div>
+
+            <button class="loader" x-target="usage_20200922_top_1000_clone_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200922_stats_api/response_fraction_1000.json">Load top 1000 clone count</button>
+            <div id="usage_20200922_top_1000_clone_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200922 Top 1000</div>
+        </article>
+
+        <script src="dist/lib/jquery.min.js"></script> 
+        <script  src="dist/airrvisualization.js"></script>   
+
+        <script>
+            function redrawChart(url, identifier){
+                $.get(url, function(data){
+                    let d = window.airrvisualization.createImmuneDbCloneCountResult();
+                    d.setRawResult(data);
+                    window.airrvisualization.setDebugLevel(40);
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
+                });
+            }
+            $(function () {
+                $('.loader').click(function(){
+                    redrawChart($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+            });
+        </script>
+    </body>
+</html>
