@@ -44,7 +44,10 @@ class JunctionLenghtParser extends Parser {
 }
 
 /**
- *  
+ * GeneStatsDrilldownParser assumes that when parsing a drilldown Gene Stats it will receive an 
+ * subgroup (family) > gene > call (allele) structure.
+ * If other structure is passed to the parser, then errors may arrise.
+ * 
  * @description GeneStatsDrilldownParser is a {Parser} for {GeneStatsResult} with drilldown capabilities
  * @author Marco Amaro Oliveira
  * @class GeneStatsDrilldownParser
