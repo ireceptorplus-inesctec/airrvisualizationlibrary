@@ -10,7 +10,8 @@
 import {Logger, ResultSeriesType, GeneType, DebugTimer} from './common';
 import {Properties} from './properties';
 import {ResultSeriesDataItem, ResultSeries} from "./series";
-import {Result, GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult} from "./result";
+import {Result} from "./result";
+import {GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult} from "./iReceptorStatsResult";
 import {ImmuneDbCloneCountResult} from "./immuneDbResult";
 
 // Import Hicharts into module

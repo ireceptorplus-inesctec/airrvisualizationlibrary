@@ -76,51 +76,11 @@ class DrilldownParser extends Parser {
 
 }
 
-/**
- *  
- * @description GeneStatsDrilldownParser is a {Parser} for {GeneStatsResult} with drilldown capabilities
- * @author Marco Amaro Oliveira
- * @class GeneStatsDrilldownParser
- * @extends {Parser}
- */
-class GeneStatsDrilldownParser extends DrilldownParser {
-    #_logger;
-    
-    #_geneType;
-    
-    #_multipleSeries;
-    
-    /**
-     * Creates an instance of GeneStatsDrilldownParser.
-     * @param {GeneType} type
-     * @memberof GeneStatsDrilldownParser
-     */
-    constructor(type) {
-        super();
-        this.#_logger = new Logger('GeneStatsDrilldownParser');
-        this.#_logger.debug("Constructor.");
-        if (!GeneType.contains(type)){
-            logger.fatal('type must exist in GeneType.genes');
-            throw 'type must exist in GeneType.genes';
-        }
-        this.#_geneType = type;
-        this.#_multipleSeries = false;
-     }
-
-     get geneType(){
-         return this.#_geneType;
-     }
-
-     get multipleSeries(){
-         return this.#_multipleSeries;
-     }
-}
 
 
 module.exports = {
     Parser: Parser,
-    DrilldownParser: DrilldownParser,
-    GeneStatsDrilldownParser: GeneStatsDrilldownParser
+    DrilldownParser: DrilldownParser
   };
 
-export {Parser, DrilldownParser, GeneStatsDrilldownParser};
+export {Parser, DrilldownParser};

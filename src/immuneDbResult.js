@@ -9,9 +9,7 @@ import {ImmuneDbCloneCountParser} from "./immuneDbParser";
 
 class ImmuneDbCloneCountResult extends Result {
     #_logger;
-    
-    #_geneType;
-    
+
     // Array of ResultSeries
     #_drilldownSeries;
     

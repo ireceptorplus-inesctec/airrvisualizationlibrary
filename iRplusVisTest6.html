@@ -4,12 +4,12 @@
     <body>
         <article class="repertoire" >
             <h1>Stats API data</h1>
-            <button class="vloader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/v_usage.json" x-gene="v">Load v_usage (1 repo)</button>
-            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="d">Load d_usage</button>
+            <button class="drilldownloader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/v_usage.json" x-gene="v">Load v_usage (1 repo)</button>
+            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="d">Load d_usage (1 repo, no drilldown)</button>
             
             <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="x">Throw error</button>
             
-            <button class="vloader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo)</button>
+            <button class="drilldownloader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo)</button>
 
             <button class="loader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo, no drilldown)</button>
 
@@ -31,7 +31,7 @@
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
                 });
             }
-            function redrawChartV(url, identifier){
+            function redrawDrilldownChart(url, identifier){
                 $.get(url, function(data){
                     //let d = new StatsResult(gene);
                     let d = window.airrvisualization.createVGeneStatsResult();
@@ -44,8 +44,8 @@
                 $('.loader').click(function(){
                     redrawChart($(this).attr('x-gene'), $(this).attr('x-data'), $(this).attr('x-target'));
                 });
-                $('.vloader').click(function(){
-                    redrawChartV($(this).attr('x-data'), $(this).attr('x-target'));
+                $('.drilldownloader').click(function(){
+                    redrawDrilldownChart($(this).attr('x-data'), $(this).attr('x-target'));
                 });
             });
         </script>
