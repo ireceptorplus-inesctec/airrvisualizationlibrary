@@ -28,12 +28,10 @@
   },
   "scripts": {
     "build-docs": "./node_modules/.bin/jsdoc -r .\\src\\index.js",
-    "build-dev": "DEL /S /F /Q .\\dist\\* & RD /S /Q .\\dist\\lib & xcopy /Q .\\node_modules\\jquery\\dist\\jquery.min.js .\\dist\\lib\\ & browserify -d -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js | exorcist ./dist/airrvisualization.js.map > ./dist/airrvisualization.js",
-    "build": "del /S /F /Q .\\dist\\* & copy .\\node_modules\\jquery\\dist\\jquery.min.js .\\dist\\lib\\ & xcopy /S /Q .\\node_modules\\highcharts\\*.* .\\dist\\lib\\ & browserify -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js -o ./dist/airrvisualization.js",
-    "_build": "browserify -t [ babelify ] ./src/index.js -o ./dist/airrvisualization.js",
-    "__build": "browserify -e ./src/index.js -p esmify -o ./dist/airrvisualization.js",
-    "copy:jquery": "copy ./node_modules/jquery/dist/jquery.min.js ./dist/lib/",
-    "test": "mocha test/index.test.js"
+    "build-dev":  "DEL /S /F /Q .\\dist\\* & browserify -d -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js | exorcist ./dist/airrvisualization.js.map > ./dist/airrvisualization.js",
+    "build":      "DEL /S /F /Q .\\dist\\* & browserify    -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js                                           -o ./dist/airrvisualization.js",
+    "copy-libs":  "DEL /S /F /Q .\\lib\\* & RD /S /Q .\\lib & xcopy /Q .\\node_modules\\jquery\\dist\\jquery.min.js .\\lib\\ ",
+    "test":       "mocha test/index.test.js"
   },
   "repository": {
     "type": "git",
