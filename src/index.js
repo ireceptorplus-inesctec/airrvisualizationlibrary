@@ -127,11 +127,13 @@ class Chart {
         if (this.#_properties.title) { p.title = { text: this.#_properties.title } };
         if (this.#_properties.subtitle) { p.subtitle = { text : this.#_properties.subtitle } };
         //not working (yet)
-        /*p.plotOptions.series = (p.plotOptions.series || {});
-        p.plotOptions.series.dataSorting = {
-            enabled: true,
-            sortKey: 'name'
-        };*/
+        if (this.#_properties.sort){
+            p.plotOptions.series = (p.plotOptions.series || {});
+            p.plotOptions.series.dataSorting = {
+                enabled: true,
+                sortKey: 'name'
+            };
+        }
         if (this.#_result.drilldown){
             this.#_logger.debug("YAY... this is a drilldown chart");
             // In an Highcharts chart, the drilldown value is an object that allows for inspect increasingly high resolution data,
@@ -150,10 +152,11 @@ class Chart {
             // Setup chart 3Doptions properties (in the future using #_properties and #_dataseries data).
             p.chart.options3d = {
                 enabled: true,
-                alpha: 20,
-                beta: 30,
-                depth: 200,
+                alpha: this.#_properties.alpha3D,
+                beta: this.#_properties.beta3D,
+                depth: this.#_properties.depth3D,
                 viewDistance: 5,
+                fitToPlot: true,
                 frame: {
                     bottom: {
                         size: 1,

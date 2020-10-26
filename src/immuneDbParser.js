@@ -116,7 +116,7 @@ class ImmuneDbCloneCountParser extends Parser {
         .setId('SeriesTop')
         .setName('Fraction of top n clones')
         .setFieldName('Fraction of top n clones')
-        .setType(ResultSeriesType.GENE_COUNT);
+        .setType(ResultSeriesType.getByName('top_clones'));
         let seriesTopData = seriesTop.data;
 
         let seriesRest = new ResultSeries()
@@ -126,7 +126,7 @@ class ImmuneDbCloneCountParser extends Parser {
         .setId('SeriesRest')
         .setName('Fraction of top 1-n clones')
         .setFieldName('Fraction of top 1-n clones')
-        .setType(ResultSeriesType.GENE_COUNT);
+        .setType(ResultSeriesType.getByName('top_clones'));
         let seriesRestData = seriesRest.data;
         
         timer.start("calculate");

@@ -265,8 +265,17 @@ class ResultSeries{
         return this;
     }
 
+    /**
+     * @description Sets the Type of the ResultSeries.
+     * @param {ResultSeriesType} type
+     * @returns {ResultSeries} 
+     * @memberof ResultSeries
+     */
     setType(type){
-        if (!ResultSeriesType.contains(type)){
+        if (!type instanceof ResultSeriesType){
+            throw 'type mus be an instance of ResultSeriesType';
+        }
+        if (!ResultSeriesType.contains(type.typeCode)){
             throw 'type must exist in ResultSeriesType.types';
         }
         this.#_type = type;

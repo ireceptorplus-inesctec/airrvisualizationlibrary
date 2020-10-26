@@ -153,15 +153,17 @@ class Result {
             function drag(e) {
                 // Get e.chartX and e.chartY
                 e = chart.pointer.normalize(e);
-    
+                let newAlpha = alpha + (e.chartY - posY) / sensitivity,
+                    newBeta = beta + (posX - e.chartX) / sensitivity;
                 chart.update({
                     chart: {
                         options3d: {
-                            alpha: alpha + (e.chartY - posY) / sensitivity,
-                            beta: beta + (posX - e.chartX) / sensitivity
+                            alpha: newAlpha,
+                            beta: newBeta
                         }
                     }
                 }, undefined, undefined, false);
+                console.log("alpha:" + newAlpha + ", beta:"+newBeta);
             }
     
             function unbindAll() {

@@ -4,18 +4,10 @@
     <body>
         <article class="repertoire" >
             <h1>Stats API data</h1>
-            <button class="drilldownloader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/v_usage.json" x-gene="v">Load v_usage (1 repo)</button>
-            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="d">Load d_usage (1 repo, no drilldown)</button>
-            
-            <button class="loader" x-target="usage_20200813_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200813_stats_api/d_usage.json" x-gene="x">Throw error</button>
-            
-            <button class="drilldownloader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo)</button>
+            <button class="drilldownloader" x-target="v_gene_usage_20201026_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201026_stats_api/gene_usage_response-v_call_unique_drilldown.json" x-gene="v">Load v_usage (2 repo, drilldown)</button>
+            <button class="loader" x-target="v_gene_usage_20201026_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201026_stats_api/gene_usage_response-v_call_unique_drilldown.json" x-gene="v">Load v_usage (2 repo, no drilldown)</button>
 
-            <button class="loader" x-target="usage_20200828_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200828_stats_api/v_usage.json" x-gene="v">Load v_usage (n repo, no drilldown)</button>
-
-            <div id="usage_20200813_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200813</div>
-            
-            <div id="usage_20200828_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200828</div>
+            <div id="v_gene_usage_20201026_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show v gene sample data from 2020/10/26</div>
         </article>
 
         <script src="lib/jquery.min.js"></script> 
@@ -28,7 +20,7 @@
                     let d = window.airrvisualization.createGeneStatsResult(gene);
                     d.setRawResult(data);
                     window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setSort(true)).setResult(d).plot();
                 });
             }
             function redrawDrilldownChart(url, identifier){

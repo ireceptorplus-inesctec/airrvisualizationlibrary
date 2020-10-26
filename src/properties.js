@@ -1,16 +1,32 @@
 import {Logger, Common} from './common';
 
 class Properties {
+    static CHART_TYPE = 'column';
+    static SORT = false;
+    static ANIMATION = false;
+    static ALPHA_3D = 20;
+    static BETA_3D = 0;
+    static DEPTH_3D = 100;
+
     #_logger;
     #_title;
     #_subtitle;
     #_xLabel;
     #_yLabel;
+    #_stackingType;
     #_id;
     #_sort;
     #_chartType;
     #_animation;
-    #_stackingType;
+    #_alpha3D;
+    #_beta3D;
+    #_depth3D;
+    #_sort_userDefined;
+    #_chartType_userDefined;
+    #_animation_userDefined;
+    #_alpha3D_userDefined;
+    #_beta3D_userDefined;
+    #_depth3D_userDefined;
                     
     constructor(){
         this.#_logger = new Logger('Properties');
@@ -19,12 +35,21 @@ class Properties {
         this.#_subtitle = undefined;
         this.#_xLabel = undefined;
         this.#_yLabel = undefined;
-        this.#_id = Common.makeid(12);
-        this.#_sort = false;
-        this.#_logger.trace(JSON.stringify(this));
-        this.#_chartType = 'column'; //defaults to column chart.
-        this.#_animation = false; //defaults to false.
         this.#_stackingType = undefined;
+        this.#_id = Common.makeid(12);
+        this.#_sort = Properties.SORT;
+        this.#_chartType = Properties.CHART_TYPE; //defaults to column chart.
+        this.#_animation = Properties.ANIMATION; //defaults to false.
+        this.#_alpha3D = Properties.ALPHA_3D; //defaults to 20;
+        this.#_beta3D = Properties.BETA_3D; //defaults to 0;
+        this.#_depth3D = Properties.DEPTH_3D; //defaults to 100;
+        this.#_logger.trace(JSON.stringify(this));
+        this.#_sort_userDefined = false;
+        this.#_chartType_userDefined = false;
+        this.#_animation_userDefined = false;
+        this.#_alpha3D_userDefined = false;
+        this.#_beta3D_userDefined = false;
+        this.#_depth3D_userDefined = false;
     }
 
     get title() {
@@ -45,6 +70,10 @@ class Properties {
         return this.#_yLabel;
     }
 
+    get stackingType() {
+        return this.#_stackingType;
+    }
+
     get id() {
         return this.#_id;
     }
@@ -61,8 +90,16 @@ class Properties {
         return this.#_animation;
     }
 
-    get stackingType() {
-        return this.#_stackingType;
+    get alpha3D() {
+        return this.#_alpha3D;
+    }
+
+    get beta3D() {
+        return this.#_beta3D;
+    }
+
+    get depth3D() {
+        return this.#_depth3D;
     }
 
     set title(value){
@@ -71,6 +108,10 @@ class Properties {
 
     set subtitle(value){
         this.setSubtitle(value);
+    }
+
+    set stackingType(value){
+        this.setStackingType(value);
     }
 
     set id(elementId){
@@ -89,8 +130,16 @@ class Properties {
         this.setAnimation(value);
     }
 
-    set stackingType(value){
-        this.setStackingType(value);
+    set alpha3D(value){
+        this.setAlpha3D(value);
+    }
+
+    set beta3D(value){
+        this.setBeta3D(value);
+    }
+
+    set depth3D(value){
+        this.setDepth3D(value);
     }
 
     setTitle (value) {
@@ -128,45 +177,77 @@ class Properties {
         console.log(JSON.stringify(this));
         return this;
     }
-
-    setSort (value) {
-        this.#_sort = value;
-        this.#_logger.debug("setSort.");
-        this.#_logger.trace(JSON.stringify(this));
-        return this;
-    }
-
-    setChartType (value) {
-        this.#_chartType = value;
-        this.#_logger.debug("setChartType.");
-        this.#_logger.trace(JSON.stringify(this));
-        return this;
-    }
-
-    setAnimation (value) {
-        this.#_animation = value;
-        this.#_logger.debug("setAnimation.");
-        this.#_logger.trace(JSON.stringify(this));
-        return this;
-    }
-
+    
     setStackingType (value) {
         this.#_stackingType = value;
         this.#_logger.debug("setStackingType.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
     }
+    
+    setSort (value) {
+        this.#_sort = value;
+        this.#_sort_userDefined = true;
+        this.#_logger.debug("setSort.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+
+    setChartType (value) {
+        this.#_chartType = value;
+        this.#_chartType_userDefined = true;
+        this.#_logger.debug("setChartType.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+    
+    setAnimation (value) {
+        this.#_animation = value;
+        this.#_animation_userDefined = true;
+        this.#_logger.debug("setAnimation.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+    
+    setAlpha3D (value) {
+        this.#_alpha3D = value;
+        this.#_alpha3D_userDefined = true;
+        this.#_logger.debug("setAlpha3D.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+    
+    setBeta3D (value) {
+        this.#_beta3D = value;
+        this.#_beta3D_userDefined = true;
+        this.#_logger.debug("setBeta3D.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+    
+    setDepth3D (value) {
+        this.#_depth3D = value;
+        this.#_depth3D_userDefined = true;
+        this.#_logger.debug("setDepth3D.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
         
     updateWith (anotherProperties){
-        if (! this.id) this.setId(anotherProperties.id);
         if (! this.title) this.setTitle(anotherProperties.title);
         if (! this.subtitle) this.setSubtitle(anotherProperties.subtitle);
         if (! this.xLabel) this.setXLabel(anotherProperties.xLabel);
         if (! this.yLabel) this.setYLabel(anotherProperties.yLabel);
-        if (! this.sort) this.setSort(anotherProperties.sort);
-        if (! this.chartType) this.setChartType(anotherProperties.chartType);
-        if (! this.animation) this.setAnimation(anotherProperties.animation);
         if (! this.stackingType) this.setStackingType(anotherProperties.stackingType);
+        if (! this.id) this.setId(anotherProperties.id);
+        if (! this.#_sort_userDefined) this.setSort(anotherProperties.sort);
+        if (! this.#_chartType_userDefined) this.setChartType(anotherProperties.chartType);
+        if (! this.#_animation_userDefined) this.setAnimation(anotherProperties.animation);
+
+        if (! this.#_alpha3D_userDefined) this.setAlpha3D(anotherProperties.alpha3D);
+        if (! this.#_beta3D_userDefined) this.setBeta3D(anotherProperties.beta3D);
+        if (! this.#_depth3D_userDefined) this.setDepth3D(anotherProperties.depth3D);
     }
         
     static validOrNew(properties){

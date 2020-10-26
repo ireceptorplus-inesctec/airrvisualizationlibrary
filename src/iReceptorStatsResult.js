@@ -2,9 +2,16 @@
 import {Logger, GeneType} from './common';
 import {Properties} from './properties';
 import {Result} from './result';
-import {JunctionLenghtParser, GeneStatsParser, GeneStatsDrilldownParser} from "./iReceptorStatsParser";
+import {JunctionLenghtParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser} from "./iReceptorStatsParser";
 
-class JunctionLenghtResult extends Result {
+
+class StatsResult extends Result{
+    constructor(data = undefined){
+        super(data);
+    }
+}
+
+class JunctionLenghtResult extends StatsResult {
     #_logger;
 
     // Array of ResultSeries
@@ -57,7 +64,7 @@ class JunctionLenghtResult extends Result {
     }
 }
 
-class GeneStatsResult extends Result {
+class GeneStatsResult extends StatsResult {
     #_logger;
     
     #_geneType;
@@ -77,9 +84,9 @@ class GeneStatsResult extends Result {
         this.#_defaultProperties = new Properties().setTitle("IR+ Repertoire Stats").setSubtitle("Families").setYLabel("Count");
 
 
-        //Default parser depends on the value of this.drilldown (either GeneStatsParser or GeneStatsDrilldownParser).
+        //Default parser depends on the value of this.drilldown (either GeneUsageStatsParser or GeneUsageDrilldownStatsParser).
 
-        this.setParser(this.drilldown ? new GeneStatsDrilldownParser(type) : new GeneStatsParser(type));
+        this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(type) : new GeneUsageStatsParser(type));
     }
 
     get series(){
@@ -123,7 +130,7 @@ class GeneStatsResult extends Result {
         if (this.drilldown == value)
             return this;
         super.setDrilldown(value);
-        return this.setParser(this.drilldown ? new GeneStatsDrilldownParser(this.#_geneType) : new GeneStatsParser(this.#_geneType));
+        return this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(this.#_geneType) : new GeneUsageStatsParser(this.#_geneType));
     }
 
     preparse(sourceData){

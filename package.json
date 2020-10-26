@@ -1,7 +1,7 @@
 {
   "name": "airrvisualizationlibrary",
   "longname": "AIRR Visualization Library",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Build Charts for AIIR Data Commons",
   "main": "airrvisualization.js",
   "homepage": "https://gitlab.inesctec.pt/ireceptorplus/irp-visualization/airrvisualizationlibrary",
@@ -49,5 +49,6 @@
     "email": "mao@inesctec.pt",
     "url": "https://www.linkedin.com/in/marcoamarooliveira/"
   },
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "copyright": "INESCTEC"
 }

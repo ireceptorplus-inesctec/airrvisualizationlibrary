@@ -6,3 +6,5 @@
 
 @author  <%= pkg.author.name %> <<%= pkg.author.email %>>  (<%= pkg.author.url %>)
 @license <%= pkg.license %>
+
+@copyright (c) <%= pkg.copyright %>. All rights reserved.

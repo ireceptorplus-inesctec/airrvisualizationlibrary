@@ -122,36 +122,172 @@ class Logger {
  */
 class ResultSeriesType {
 
-    static types = {
-        FAMILY: 'f',
-        GENE: 'g',
-        CELL: 'c',
-        GENE_COUNT: 'gc',
-        TOP_CLONES: 'tc'
+    static typeCode = {
+        FAMILY: {code: 'f', name: 'Subgroup'},
+        GENE: {code: 'g', name: 'Gene'},
+        CALL: {code: 'c', name: 'Allele'},
+        GENE_COUNT: {code: 'gc', name: 'Gene Count'},
+        TOP_CLONES: {code: 'tc', name: 'Top Clones'}
+    };
+
+    static names = {
+        "v_call_unique" : ResultSeriesType.typeCode.CALL,
+        "d_call_unique" : ResultSeriesType.typeCode.CALL,
+        "j_call_unique" : ResultSeriesType.typeCode.CALL,
+        "c_call_unique" : ResultSeriesType.typeCode.CALL,
+        "v_call_unique_productive" : ResultSeriesType.typeCode.CALL,
+        "d_call_unique_productive" : ResultSeriesType.typeCode.CALL,
+        "j_call_unique_productive" : ResultSeriesType.typeCode.CALL,
+        "c_call_unique_productive" : ResultSeriesType.typeCode.CALL,
+        "v_call_exists" : ResultSeriesType.typeCode.CALL,
+        "d_call_exists" : ResultSeriesType.typeCode.CALL,
+        "j_call_exists" : ResultSeriesType.typeCode.CALL,
+        "c_call_exists" : ResultSeriesType.typeCode.CALL,
+        "v_call_exists_productive" : ResultSeriesType.typeCode.CALL,
+        "d_call_exists_productive" : ResultSeriesType.typeCode.CALL,
+        "j_call_exists_productive" : ResultSeriesType.typeCode.CALL,
+        "c_call_exists_productive" : ResultSeriesType.typeCode.CALL,
+        "v_gene_unique" : ResultSeriesType.typeCode.GENE,
+        "d_gene_unique" : ResultSeriesType.typeCode.GENE,
+        "j_gene_unique" : ResultSeriesType.typeCode.GENE,
+        "c_gene_unique" : ResultSeriesType.typeCode.GENE,
+        "v_gene_unique_productive" : ResultSeriesType.typeCode.GENE,
+        "d_gene_unique_productive" : ResultSeriesType.typeCode.GENE,
+        "j_gene_unique_productive" : ResultSeriesType.typeCode.GENE,
+        "c_gene_unique_productive" : ResultSeriesType.typeCode.GENE,
+        "v_gene_exists" : ResultSeriesType.typeCode.GENE,
+        "d_gene_exists" : ResultSeriesType.typeCode.GENE,
+        "j_gene_exists" : ResultSeriesType.typeCode.GENE,
+        "c_gene_exists" : ResultSeriesType.typeCode.GENE,
+        "v_gene_exists_productive" : ResultSeriesType.typeCode.GENE,
+        "d_gene_exists_productive" : ResultSeriesType.typeCode.GENE,
+        "j_gene_exists_productive" : ResultSeriesType.typeCode.GENE,
+        "c_gene_exists_productive" : ResultSeriesType.typeCode.GENE,
+        "v_subgroup_unique" : ResultSeriesType.typeCode.FAMILY,
+        "d_subgroup_unique" : ResultSeriesType.typeCode.FAMILY,
+        "j_subgroup_unique" : ResultSeriesType.typeCode.FAMILY,
+        "c_subgroup_unique" : ResultSeriesType.typeCode.FAMILY,
+        "v_subgroup_unique_productive" : ResultSeriesType.typeCode.FAMILY,
+        "d_subgroup_unique_productive" : ResultSeriesType.typeCode.FAMILY,
+        "j_subgroup_unique_productive" : ResultSeriesType.typeCode.FAMILY,
+        "c_subgroup_unique_productive" : ResultSeriesType.typeCode.FAMILY,
+        "v_subgroup_exists" : ResultSeriesType.typeCode.FAMILY,
+        "d_subgroup_exists" : ResultSeriesType.typeCode.FAMILY,
+        "j_subgroup_exists" : ResultSeriesType.typeCode.FAMILY,
+        "c_subgroup_exists" : ResultSeriesType.typeCode.FAMILY,
+        "v_subgroup_exists_productive" : ResultSeriesType.typeCode.FAMILY,
+        "d_subgroup_exists_productive" : ResultSeriesType.typeCode.FAMILY,
+        "j_subgroup_exists_productive" : ResultSeriesType.typeCode.FAMILY,
+        "c_subgroup_exists_productive" : ResultSeriesType.typeCode.FAMILY,
+        "top_clones" : ResultSeriesType.typeCode.TOP_CLONES
     };
 
     static get FAMILY() {
-        return ResultSeriesType.types.FAMILY;
+        return ResultSeriesType.typeCode.FAMILY.code;
     }
 
     static get GENE() {
-        return ResultSeriesType.types.GENE;
+        return ResultSeriesType.typeCode.GENE.code;
     }
 
-    static get CELL() {
-        return ResultSeriesType.types.CELL;
+    static get CALL() {
+        return ResultSeriesType.typeCode.CALL.code;
     }
 
     static get GENE_COUNT() {
-        return ResultSeriesType.types.GENE_COUNT;
+        return ResultSeriesType.typeCode.GENE_COUNT.code;
     }
 
     static get TOP_CLONES() {
-        return ResultSeriesType.types.TOP_CLONES;
+        return ResultSeriesType.typeCode.TOP_CLONES.code;
     }
 
-    static contains(value) {
-        return Object.values(ResultSeriesType.types).includes(value);
+    /**
+     * @description return true if the code is a valid code (i.e. exists in the list of possible codes).
+     * @static
+     * @param {String} code
+     * @returns {boolean} 
+     * @memberof ResultSeriesType
+     */
+    static contains(code) {
+        return Object.values(ResultSeriesType.typeCode).map( a => a.code).includes(code);
+    }
+
+    static getByName(name){
+        //TODO: Verify if name is not undefined.
+        if (!name){
+            throw 'undefined name value. Name parameter is required.';
+        }
+
+        let unique = name.includes('unique');
+        let exists = name.includes('exists');
+        let productive = name.includes('productive');
+        let type = ResultSeriesType.names[name];
+        //TODO: throw error if result is undefined.
+        return new ResultSeriesType(type.code, type.name, unique, exists, productive);
+
+    }
+
+    #_typeCode;
+    #_typeName;
+    #_unique;
+    #_exists;
+    #_productive;
+
+    constructor(typeCode, typeName, unique, exists, productive){
+        this.#_typeCode = typeCode;
+        this.#_typeName = typeName;
+        this.#_unique = unique;
+        this.#_exists = exists;
+        this.#_productive = productive;
+    }
+
+    get typeCode(){
+        return this.#_typeCode;
+    }
+    
+    get typeName(){
+        return this.#_typeName;
+    }
+
+    get unique(){
+        return this.#_unique;
+    }
+
+    get exists(){
+        return this.#_exists;
+    }
+
+    get productive(){
+        return this.#_productive;
+    }
+
+    toString(){
+        let result = this.#_typeName;
+        if (this.#_exists || this.#_productive || this.#_unique){
+            let first = true;
+            result.concat('[');
+            if (this.#_exists){
+                result.concat('exists');
+                first = false;
+            }
+            if (this.#_unique){
+                if (!first){
+                    result.concat(', ')    
+                }
+                result.concat('unique');
+                first = false;
+            }
+            if (this.#_productive){
+                if (!first){
+                    result.concat(', ')    
+                }
+                result.concat('productive');
+                first = false;
+            }
+            result.concat(']');
+        }
+        return result; 
     }
 }
 
