@@ -11,7 +11,7 @@ import {Logger, ResultSeriesType, GeneType, DebugTimer} from './common';
 import {Properties} from './properties';
 import {ResultSeriesDataItem, ResultSeries} from "./series";
 import {Result} from "./result";
-import {GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult} from "./iReceptorStatsResult";
+import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtResult} from "./iReceptorStatsResult";
 import {ImmuneDbCloneCountResult} from "./immuneDbResult";
 
 // Import Hicharts into module
@@ -126,7 +126,9 @@ class Chart {
         console.log(p);
         if (this.#_properties.title) { p.title = { text: this.#_properties.title } };
         if (this.#_properties.subtitle) { p.subtitle = { text : this.#_properties.subtitle } };
-        //not working (yet)
+        //Sort has a huge problem with drilldown.
+        //We cannot rely on Highcharts Sort. To apply sort we need to sort DataItems within the Result.
+        /*
         if (this.#_properties.sort){
             p.plotOptions.series = (p.plotOptions.series || {});
             p.plotOptions.series.dataSorting = {
@@ -134,6 +136,7 @@ class Chart {
                 sortKey: 'name'
             };
         }
+        */
         if (this.#_result.drilldown){
             this.#_logger.debug("YAY... this is a drilldown chart");
             // In an Highcharts chart, the drilldown value is an object that allows for inspect increasingly high resolution data,
@@ -246,7 +249,24 @@ class VisualizationLibrary {
     }
 
     createGeneStatsResult(gene){
-        return new GeneStatsResult(gene);
+        let statsResult = undefined;
+        switch (gene) {
+            case GeneType.V_GENE:
+                statsResult = this.createVGeneStatsResult();
+                break;
+            case GeneType.D_GENE:
+                statsResult = this.createDGeneStatsResult();
+                break;
+            case GeneType.J_GENE:
+                statsResult = this.createJGeneStatsResult();
+                break;
+            case GeneType.C_GENE:
+                statsResult = this.createCGeneStatsResult();
+                break;
+            default:
+                break;
+        }
+        return statsResult;
     }
     
     createVGeneStatsResult(){
@@ -259,6 +279,10 @@ class VisualizationLibrary {
     
     createJGeneStatsResult(){
         return new JGeneStatsResult();
+    }
+    
+    createCGeneStatsResult(){
+        return new CGeneStatsResult();
     }
 
     createImmuneDbCloneCountResult(){
@@ -278,11 +302,23 @@ class VisualizationLibrary {
     }
 }
 
-module.exports = { VisualizationLibrary, Chart, Result, GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, 
-    ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
-    ResultSeriesType, Logger};
+module.exports = { 
+        VisualizationLibrary: VisualizationLibrary,
+        Chart: Chart, 
+        Result: Result, 
+        VGeneStatsResult: VGeneStatsResult, 
+        DGeneStatsResult: DGeneStatsResult, 
+        JGeneStatsResult: JGeneStatsResult, 
+        CGeneStatsResult: CGeneStatsResult,
+        ResultSeries: ResultSeries, 
+        ResultSeriesDataItem: ResultSeriesDataItem, 
+        Properties: Properties, 
+        GeneType: GeneType, 
+        ResultSeriesType: ResultSeriesType, 
+        Logger: Logger
+    };
 
-export { VisualizationLibrary, Chart, Result, GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, 
+export { VisualizationLibrary, Chart, Result, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, 
     ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
     ResultSeriesType, Logger};
 

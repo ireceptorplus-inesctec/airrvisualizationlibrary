@@ -29,9 +29,10 @@ class Result {
     setRawResult(sourceData) {
         this.#_rawResult = sourceData;  
         this.#_logger.debug("setRawResult.");
-        if (this.parser){
+        if (this.#_parser){
             this.preparse(sourceData);
             this.parse(sourceData);
+            this.postparse(sourceData);
         }
         //this.parseSingleRepertoireStatsData(sourceData);
         return this;
@@ -61,9 +62,10 @@ class Result {
             throw 'parser value must be an instance of Parser.';
         }
         this.#_parser = parser;
-        if (this.sourceData){     
+        if (this.#_rawResult){     
             this.preparse(sourceData);
             this.parse(sourceData);
+            this.postparse(sourceData);
         }
         return this;
     }
@@ -116,6 +118,11 @@ class Result {
     parse(sourceData){
         this.#_logger.fatal("'this parse() method should never execute, specializations of Result need to overload it.'");
         throw 'This method should not be called, implementations need to overload it.';
+    }
+
+    postparse(sourceData){
+        this.#_logger.fatal("'this preparse() method should never execute, specializations of Result need to overload it.'");
+        throw 'This method should not be called, implementations need to overload it.';        
     }
 
     get multipleSeries(){

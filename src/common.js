@@ -296,7 +296,8 @@ class GeneType {
     static genes = {
         V_GENE: 'v',
         D_GENE: 'd',
-        J_GENE: 'j'
+        J_GENE: 'j',
+        C_GENE: 'c'
     };
 
     static get V_GENE() {
@@ -309,6 +310,10 @@ class GeneType {
 
     static get J_GENE() {
         return GeneType.genes.J_GENE;
+    }
+
+    static get C_GENE() {
+        return GeneType.genes.C_GENE;
     }
 
     static contains(value) {

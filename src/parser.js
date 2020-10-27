@@ -8,6 +8,7 @@ import {Logger, ResultSeriesType, GeneType} from './common';
  * @class Parser
  */
 class Parser {
+    //TODO: Parser should have a properties object that is updated acording to data parsing. This properties will be sync with Result's default properties to build the visualization.
     #_logger;
 
     /**

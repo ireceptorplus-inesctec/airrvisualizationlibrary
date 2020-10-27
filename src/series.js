@@ -191,43 +191,43 @@ class ResultSeries{
     }
 
     set repertoireId(repertoireId){
-        setRepertoireId(repertoireId);
+        this.setRepertoireId(repertoireId);
     }
 
     set sampleProcessingId(sampleProcessingId){
-        setSampleProcessingId(sampleProcessingId);
+        this.setSampleProcessingId(sampleProcessingId);
     }
 
     set dataProcessingId(dataProcessingId){
-        setDataProcessingId(dataProcessingId);
+        this.setDataProcessingId(dataProcessingId);
     }
 
     set id(id){
-        setId(id);
+        this.setId(id);
     }
 
     set name(name){
-        setName(name);
+        this.setName(name);
     }
 
     set fieldName(fieldName){
-        setFieldName(fieldName);
+        this.setFieldName(fieldName);
     }
 
     set data(data){
-        setData(data);
+        this.setData(data);
     }
 
     set type(type){
-        setType(type);
+        this.setType(type);
     }
 
     set parentName(name){
-        setParentName(name);
+        this.setParentName(name);
     }
 
     set color(color){
-        setColor(color);
+        this.setColor(color);
     }
 
     setRepertoireId(repertoireId){

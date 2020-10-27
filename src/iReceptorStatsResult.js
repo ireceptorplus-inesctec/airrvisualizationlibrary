@@ -2,7 +2,7 @@
 import {Logger, GeneType} from './common';
 import {Properties} from './properties';
 import {Result} from './result';
-import {JunctionLenghtParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser} from "./iReceptorStatsParser";
+import {JunctionLenghtParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser} from "./iReceptorStatsParser";
 
 
 class StatsResult extends Result{
@@ -62,6 +62,11 @@ class JunctionLenghtResult extends StatsResult {
         this.#_logger.debug("parse.");
         this.parser.parse(sourceData);
     }
+
+    postparse(sourceData){
+        this.#_logger.debug("postparse.");  
+        //TODO:Get Properties from parser and update this.#_defaultProperties
+    }
 }
 
 class GeneStatsResult extends StatsResult {
@@ -81,11 +86,10 @@ class GeneStatsResult extends StatsResult {
         }
         this.#_geneType = type;            
         
-        this.#_defaultProperties = new Properties().setTitle("IR+ Repertoire Stats").setSubtitle("Families").setYLabel("Count");
+        this.#_defaultProperties = new Properties().setTitle("IR+ Repertoire Stats").setSubtitle("Subgroups").setYLabel("Count");
 
 
         //Default parser depends on the value of this.drilldown (either GeneUsageStatsParser or GeneUsageDrilldownStatsParser).
-
         this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(type) : new GeneUsageStatsParser(type));
     }
 
@@ -124,14 +128,6 @@ class GeneStatsResult extends StatsResult {
     isMultipleSeries(){
         return this.parser.multipleSeries;
     }
-    
-    setDrilldown(value){
-        this.#_logger.debug("setting drilldown to " + value);
-        if (this.drilldown == value)
-            return this;
-        super.setDrilldown(value);
-        return this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(this.#_geneType) : new GeneUsageStatsParser(this.#_geneType));
-    }
 
     preparse(sourceData){
         this.#_logger.debug("preparse.");
@@ -142,6 +138,11 @@ class GeneStatsResult extends StatsResult {
         this.#_logger.debug("parse.");
         this.parser.parse(data);
     }
+
+    postparse(sourceData){
+        this.#_logger.debug("postparse.");  
+        //TODO:Get Properties from parser and update this.#_defaultProperties
+    }
 }
 
 class VGeneStatsResult extends GeneStatsResult {
@@ -151,6 +152,14 @@ class VGeneStatsResult extends GeneStatsResult {
         super(GeneType.V_GENE, data);
         this.#_logger = new Logger('VGeneStatsResult');
         this.#_logger.debug("Constructor.");
+    }
+    
+    setDrilldown(value){
+        this.#_logger.debug("setting drilldown to " + value);
+        if (this.drilldown == value)
+            return this;
+        super.setDrilldown(value);
+        return this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(GeneType.V_GENE) : new GeneUsageStatsParser(GeneType.V_GENE));
     }
 }
 
@@ -163,6 +172,14 @@ class DGeneStatsResult extends GeneStatsResult {
         this.#_logger = new Logger('VGeneStatsResult');
         this.#_logger.debug("Constructor.");
     }
+    
+    setDrilldown(value){
+        this.#_logger.debug("setting drilldown to " + value);
+        if (this.drilldown == value)
+            return this;
+        super.setDrilldown(value);
+        return this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(GeneType.D_GENE) : new GeneUsageStatsParser(GeneType.D_GENE));
+    }
 }
 
 
@@ -173,7 +190,46 @@ class JGeneStatsResult extends GeneStatsResult {
         super(GeneType.J_GENE, data);
         this.#_logger = new Logger('VGeneStatsResult');
         this.#_logger.debug("Constructor.");
+        
+        // GeneStatsResult constructor already set the default Parser.
+        // Only force the change on the parser if this.drilldown is true because parser with drilldown capabilities is specific for J Gene.
+        if (this.drilldown){
+            //TODO: Factory for GeneStatsParser that receives the GeneType and drilldown value?
+            this.setParser(new JGeneUsageDrilldownStatsParser(GeneType.J_GENE));
+        }
     }
+    
+    setDrilldown(value){
+        this.#_logger.debug("setting drilldown to " + value);
+        if (this.drilldown == value)
+            return this;
+        super.setDrilldown(value);
+        return this.setParser(this.drilldown ? new JGeneUsageDrilldownStatsParser(GeneType.J_GENE) : new GeneUsageStatsParser(GeneType.J_GENE));
+    }
+
+
+
+}
+
+
+class CGeneStatsResult extends GeneStatsResult {
+    #_logger;
+    
+    constructor(data = undefined) {
+        super(GeneType.C_GENE, data);
+        this.#_logger = new Logger('CGeneStatsResult');
+        this.#_logger.debug("Constructor.");
+    }
+    
+    setDrilldown(value){
+        this.#_logger.debug("setting drilldown to " + value);
+        if (this.drilldown == value)
+            return this;
+        super.setDrilldown(value);
+        return this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(GeneType.C_GENE) : new GeneUsageStatsParser(GeneType.C_GENE));
+    }
+
+
 }
 
 
@@ -182,7 +238,8 @@ module.exports = {
     GeneStatsResult: GeneStatsResult,
     VGeneStatsResult: VGeneStatsResult,
     DGeneStatsResult: DGeneStatsResult,
-    JGeneStatsResult: JGeneStatsResult
+    JGeneStatsResult: JGeneStatsResult,
+    CGeneStatsResult: CGeneStatsResult
   };
 
-export {JunctionLenghtResult};
+export {JunctionLenghtResult, GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult};
