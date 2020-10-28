@@ -11,7 +11,7 @@ import {Logger, ResultSeriesType, GeneType, DebugTimer} from './common';
 import {Properties} from './properties';
 import {ResultSeriesDataItem, ResultSeries} from "./series";
 import {Result} from "./result";
-import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtResult} from "./iReceptorStatsResult";
+import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtResult, JunctionLenghtStatsResult} from "./iReceptorStatsResult";
 import {ImmuneDbCloneCountResult} from "./immuneDbResult";
 
 // Import Hicharts into module
@@ -123,9 +123,12 @@ class Chart {
         p.series = this.#_result.series.map(series => series.asHighchartSeries());
         timer.end(".asHighchartSeries");
 
-        console.log(p);
         if (this.#_properties.title) { p.title = { text: this.#_properties.title } };
         if (this.#_properties.subtitle) { p.subtitle = { text : this.#_properties.subtitle } };
+        if (this.#_properties.yLabel) {
+            p.yAxis = (p.yAxis || {});
+            p.yAxis.title = { text: this.#_properties.yLabel };
+        }
         //Sort has a huge problem with drilldown.
         //We cannot rely on Highcharts Sort. To apply sort we need to sort DataItems within the Result.
         /*
@@ -289,6 +292,10 @@ class VisualizationLibrary {
         return new ImmuneDbCloneCountResult();
     }
 
+    createJunctionLengthStatsResult(){
+        return new JunctionLenghtStatsResult();
+    }
+
     createProperties(){
         return new Properties();
     }
@@ -310,6 +317,7 @@ module.exports = {
         DGeneStatsResult: DGeneStatsResult, 
         JGeneStatsResult: JGeneStatsResult, 
         CGeneStatsResult: CGeneStatsResult,
+        JunctionLenghtStatsResult: JunctionLenghtStatsResult,
         ResultSeries: ResultSeries, 
         ResultSeriesDataItem: ResultSeriesDataItem, 
         Properties: Properties, 
@@ -318,7 +326,7 @@ module.exports = {
         Logger: Logger
     };
 
-export { VisualizationLibrary, Chart, Result, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, 
+export { VisualizationLibrary, Chart, Result, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtStatsResult,
     ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
     ResultSeriesType, Logger};
 

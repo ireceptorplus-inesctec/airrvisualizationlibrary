@@ -2,7 +2,7 @@
 import {Logger, GeneType} from './common';
 import {Properties} from './properties';
 import {Result} from './result';
-import {JunctionLenghtParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser} from "./iReceptorStatsParser";
+import {JunctionLenghtStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser} from "./iReceptorStatsParser";
 
 
 class StatsResult extends Result{
@@ -11,7 +11,7 @@ class StatsResult extends Result{
     }
 }
 
-class JunctionLenghtResult extends StatsResult {
+class JunctionLenghtStatsResult extends StatsResult {
     #_logger;
 
     // Array of ResultSeries
@@ -23,16 +23,16 @@ class JunctionLenghtResult extends StatsResult {
 
     constructor(data = undefined) {
         super(data);
-        this.#_logger = new Logger('JunctionLenghtResult');
+        this.#_logger = new Logger('JunctionLenghtStatsResult');
         this.#_logger.debug("Constructor.");
    
         this.#_drilldownSeries = {series: []};
         this.#_multipleSeries = false;
 
         
-        this.#_defaultProperties = new Properties().setTitle("Junction Length").setYLabel("Count").setStackingType("normal");
+        this.#_defaultProperties = new Properties().setTitle("Junction Length").setYLabel("Percentage");
 
-        this.setParser(new JunctionLenghtParser());
+        this.setParser(new JunctionLenghtStatsParser());
     }
 
     get series(){
@@ -50,7 +50,9 @@ class JunctionLenghtResult extends StatsResult {
     }
         
     isMultipleSeries(){
-        return this.#_multipleSeries;
+        //FIXME: Forcing for debug and tests.
+        return false;
+        //return this.parser.isMultipleSeries();
     }
 
     preparse(sourceData){
@@ -234,7 +236,7 @@ class CGeneStatsResult extends GeneStatsResult {
 
 
 module.exports = {
-    JunctionLenghtResult: JunctionLenghtResult,
+    JunctionLenghtStatsResult: JunctionLenghtStatsResult,
     GeneStatsResult: GeneStatsResult,
     VGeneStatsResult: VGeneStatsResult,
     DGeneStatsResult: DGeneStatsResult,
@@ -242,4 +244,4 @@ module.exports = {
     CGeneStatsResult: CGeneStatsResult
   };
 
-export {JunctionLenghtResult, GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult};
+export {JunctionLenghtStatsResult, GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult};

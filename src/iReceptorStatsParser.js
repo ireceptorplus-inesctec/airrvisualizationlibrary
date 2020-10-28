@@ -1,4 +1,5 @@
 import { Logger, ResultSeriesType, Common, DebugTimer, GeneType } from './common';
+import { Properties} from "./properties";
 import { Parser, DrilldownParser } from "./parser";
 import { ResultSeriesDataItem, ResultSeries } from "./series";
 
@@ -92,11 +93,12 @@ class StatsParserConstants{
     }
 }
 
-class JunctionLenghtParser extends Parser {
+class JunctionLenghtStatsParser extends Parser {
     #_logger;
 
     // Array of ResultSeries
     #_series;
+    #_seriesByRepertoire;
 
     #_multipleSeries;
 
@@ -107,6 +109,7 @@ class JunctionLenghtParser extends Parser {
 
         this.#_multipleSeries = false;
         this.#_series = [];
+        this.#_seriesByRepertoire = [];
     }
 
     get series() {
@@ -118,20 +121,124 @@ class JunctionLenghtParser extends Parser {
         return this.#_multipleSeries;
     }
 
-    preparse(sourceData) {
+    _initializeRepertoire(repertoire_id) {
+        this.#_logger.debug("Initializing repertoire " + repertoire_id);
+        if (!this.#_seriesByRepertoire[repertoire_id]) {
+             this.#_seriesByRepertoire[repertoire_id] = []; 
+        }
+    }
+
+    preparse(data) {
         this.#_logger.trace("preparse.");
 
     }
 
-    parse(sourceData) {
+    parse(data) {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
+        //TOOD: Will need to get this from properties.
+        let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
+        let colorIndex = 0;
+        let colorIndexJumper = 1;
+        //let gene = this.#_geneType;
+        let mainSeries = [];
+        
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+        //Will do a first attempt with a Properties in the parser.
+        //The idea is that the parser add to this properties and then the Result will join the parser properties with the default Result properties.
+        let properties = new Properties();
+        
+        let messageArray = data[StatsParserConstants.MESSAGE];
+        let messageArrayLength = messageArray.length;
+        this.#_logger.debug("Data Result length = " + messageArrayLength);
+        if (messageArrayLength > 1) {
+            //Why is this important? If we have a multiple repertoires, the name of the series will be the name of the repertoire,
+            //otherwise the name of the series will be the name of the field.
+            this.#_logger.debug("Representing " + messageArrayLength + " repertoires. Will need a 3D chart.");
 
+            //TODO: Will require both is3D() and isMultipleSeries() because we may need to plot a side by side multiple series chart instead of a 3D one.
+            this.#_multipleSeries = true;
+
+            if (seriesColors.length < messageArrayLength) {
+                this.#_logger.error('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
+                throw 'Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.';
+            }
+            colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
+
+        }
+
+        for (let j = 0; j < messageArrayLength; j++) {
+            let color = seriesColors[colorIndex];
+            colorIndex += colorIndexJumper;
+            let messageArrayObject = messageArray[j];
+            let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRES];
+            
+            //fetch the StatsParserConstants.REPERTOIRE_ID
+            let repID = messageArrayObjectRepertoires[StatsParserConstants.REPERTOIRE_ID];
+ 
+            //If we have at least one StatsParserConstants.STATISTIC for this repertoire
+            //we will ignore if more than one statistics is received.
+            if(messageArrayObject[StatsParserConstants.STATISTICS].length > 0) {
+                //Initialize the repertoire
+                this._initializeRepertoire(repID);
+                //fetch the first object of StatsParserConstants.STATISTICS
+                let firstObject = messageArrayObject[StatsParserConstants.STATISTICS][0];
+                //fetch the StatsParserConstants.STATISTICS_NAME
+                let statisticName = firstObject[StatsParserConstants.STATISTICS_NAME];
+                //Build ResultSeriesId
+                let resultSeriesId = 'rep'.concat(repID).concat(statisticName);
+                //calculate the resutType by its name
+                let type = ResultSeriesType.getByName(statisticName);
+                //Use type to build the chart subtitle
+                properties.subtitle = type.toString();
+                //Build ResultSeriesName
+                //let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                // We use the type for subtitle, no need to use it in series name.
+                let resultSeriesName = 'Repertoire '.concat(repID);
+                //fetch the StatsParserConstants.TOTAL
+                let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
+                //Junction length will be displayed as percentages, will need the total UsageCount
+                //generate the series
+                let series = new ResultSeries()
+                    .setRepertoireId(repID)
+                    .setSampleProcessingId(messageArrayObjectRepertoires[StatsParserConstants.SAMPLE_PROCESSING_ID])
+                    .setDataProcessingId(messageArrayObjectRepertoires[StatsParserConstants.DATA_PROCESSING_ID])
+                    .setId(resultSeriesId)
+                    .setName(resultSeriesName)
+                    .setFieldName(statisticName)
+                    .setColor(color)
+                    .setType(type);
+                let seriesData = series.data;
+                //fetch the data into ResultSeriesDataItem
+                let totalUsageCountValidator = 0;
+                for (let i = 0, count = 0; i < firstObject[StatsParserConstants.DATA].length; i++) {
+                    let dataObject = firstObject[StatsParserConstants.DATA][i];
+                    //Remenber that it is to be set as percentage, I expect this.totalUsageCount is correct, but will do a validation count
+                    let value = dataObject[StatsParserConstants.VALUE];
+                    totalUsageCountValidator += value;
+                    let dataItem = new ResultSeriesDataItem().setName(dataObject[StatsParserConstants.KEY]).setY(value/totalUsageCount);                    
+                    seriesData.push(dataItem);
+                }
+                if (totalUsageCountValidator != totalUsageCount){
+                    this.#_logger.error("Inconsistency between the statistics value for total " + statisticName + " and the sun of the individual values (" + totalUsageCount + "/" + totalUsageCountValidator + ").");
+                }
+                //Sort elements by name 
+                seriesData.sort((a, b) => a.name-b.name);
+                mainSeries.push(series);
+                //{name: (this.#_multipleSeries ? "Repertoire: " + repertoireName : familySeriesName),data: seriesData})
+            } else {
+                //Probably we have an error in the result. Should abort and return?
+            }
+        }
+        this.#_series = mainSeries;
         timer.end("parse");
         timer.print();
     }
 }
+
 
 /**
  * GeneUsageDrilldownStatsParser assumes that when parsing a drilldown Gene Stats it will receive an 
@@ -790,11 +897,11 @@ class GeneUsageStatsParser extends Parser {
             } else {
                 //Probably we have an error in the result. Should abort and return?
             }
+            
+        }
         this.#_series = mainSeries;
-
         timer.end("parse");
         timer.print();
-        }
     }
 }
 
@@ -1194,10 +1301,10 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
 }
 
 module.exports = {
-    JunctionLenghtParser: JunctionLenghtParser,
+    JunctionLenghtStatsParser: JunctionLenghtStatsParser,
     GeneUsageStatsParser: GeneUsageStatsParser,
     GeneUsageDrilldownStatsParser: GeneUsageDrilldownStatsParser,
     JGeneUsageDrilldownStatsParser: JGeneUsageDrilldownStatsParser
 };
 
-export { JunctionLenghtParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser };
+export { JunctionLenghtStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser };

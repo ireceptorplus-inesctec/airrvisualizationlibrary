@@ -123,11 +123,13 @@ class Logger {
 class ResultSeriesType {
 
     static typeCode = {
-        FAMILY: {code: 'f', name: 'Subgroup'},
-        GENE: {code: 'g', name: 'Gene'},
-        CALL: {code: 'c', name: 'Allele'},
-        GENE_COUNT: {code: 'gc', name: 'Gene Count'},
-        TOP_CLONES: {code: 'tc', name: 'Top Clones'}
+        FAMILY : {code: 'f', name: 'Subgroup'},
+        GENE : {code: 'g', name: 'Gene'},
+        CALL : {code: 'c', name: 'Allele'},
+        GENE_COUNT : {code: 'gc', name: 'Gene Count'},
+        TOP_CLONES : {code: 'tc', name: 'Top Clones'},
+        JUNCTION_LENGTH : {code: 'jl', name: 'Junction Length'},
+        JUNCTION_AA_LENGTH : {code: 'jal', name: 'Junction aa Length'},
     };
 
     static names = {
@@ -179,7 +181,11 @@ class ResultSeriesType {
         "d_subgroup_exists_productive" : ResultSeriesType.typeCode.FAMILY,
         "j_subgroup_exists_productive" : ResultSeriesType.typeCode.FAMILY,
         "c_subgroup_exists_productive" : ResultSeriesType.typeCode.FAMILY,
-        "top_clones" : ResultSeriesType.typeCode.TOP_CLONES
+        "top_clones" : ResultSeriesType.typeCode.TOP_CLONES,
+        "junction_length" : ResultSeriesType.typeCode.JUNCTION_LENGTH,
+        "junction_length_productive" : ResultSeriesType.typeCode.JUNCTION_LENGTH,
+        "junction_aa_length" : ResultSeriesType.typeCode.JUNCTION_AA_LENGTH,
+        "junction_aa_length_productive" : ResultSeriesType.typeCode.JUNCTION_AA_LENGTH
     };
 
     static get FAMILY() {
@@ -200,6 +206,14 @@ class ResultSeriesType {
 
     static get TOP_CLONES() {
         return ResultSeriesType.typeCode.TOP_CLONES.code;
+    }
+
+    static get JUNCTION_LENGTH() {
+        return ResultSeriesType.typeCode.JUNCTION_LENGTH.code;
+    }
+
+    static get JUNCTION_AA_LENGTH() {
+        return ResultSeriesType.typeCode.JUNCTION_AA_LENGTH.code;
     }
 
     /**
@@ -266,26 +280,26 @@ class ResultSeriesType {
         let result = this.#_typeName;
         if (this.#_exists || this.#_productive || this.#_unique){
             let first = true;
-            result.concat('[');
+            result += '[';
             if (this.#_exists){
-                result.concat('exists');
+                result += 'exists';
                 first = false;
             }
             if (this.#_unique){
                 if (!first){
-                    result.concat(', ')    
+                    result += ', ';   
                 }
-                result.concat('unique');
+                result += 'unique';
                 first = false;
             }
             if (this.#_productive){
                 if (!first){
-                    result.concat(', ')    
+                    result += ', ';
                 }
-                result.concat('productive');
+                result += 'productive';
                 first = false;
             }
-            result.concat(']');
+            result += ']';
         }
         return result; 
     }

@@ -24,6 +24,10 @@
 
             <div id="c_gene_usage_20201026_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show C gene sample data from 2020/10/26</div>
 
+            <button class="junctionloader" x-target="junction_length_20201021_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201021_stats_api/junction_length_results.json">Load junction_length (2 repo, no drilldown)</button>
+
+            <div id="junction_length_20201021_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Junction Length sample data from 2020/10/21</div>
+
         </article>
 
         <script src="lib/jquery.min.js"></script> 
@@ -72,6 +76,14 @@
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
                 });
             }
+            function redrawJunctionChart(url, identifier){
+                $.get(url, function(data){
+                    //let d = new StatsResult(gene);
+                    let d = window.airrvisualization.createJunctionLengthStatsResult().setRawResult(data);
+                    window.airrvisualization.setDebugLevel(0);
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier)).setResult(d).plot();
+                });
+            }
             $(function () {
                 $('.loader').click(function(){
                     redrawChart($(this).attr('x-gene'), $(this).attr('x-data'), $(this).attr('x-target'));
@@ -87,6 +99,9 @@
                 });
                 $('.drilldownCloader').click(function(){
                     redrawDrilldownCChart($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.junctionloader').click(function(){
+                    redrawJunctionChart($(this).attr('x-data'), $(this).attr('x-target'));
                 });
             });
         </script>
