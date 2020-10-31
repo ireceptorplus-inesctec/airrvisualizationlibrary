@@ -1,11 +1,5 @@
 import {Logger, ResultSeriesType, GeneType, Common} from './common';
-import {Properties} from './properties';
 import {Parser, DrilldownParser} from "./parser";
-import {ResultSeriesDataItem, ResultSeries} from "./series";
-import {GeneStatsDrilldownParser} from "./iReceptorStatsParser";
-
-// HIGHCHARTS
-import Highcharts from 'highcharts';
 
 class Result {
     #_logger;
@@ -129,67 +123,6 @@ class Result {
         return false;
     }
 
-    /*
-     * This MouseDownEvent is specific for Highcharts.
-     */
-    /**
-     * 
-     * @param {Highchart} targetChart 
-     */
-    getMousedownEvent(targetChart){
-        this.#_logger.debug("getMousedownEvent");
-        let logger = this.#_logger;
-        if (!this.multipleSeries){
-            this.#_logger.debug("retrieving default mousedown event on charts.");
-            return function(e) {
-                logger.trace("Default mouse down event on chart.");
-            };    
-        }
-        return function(eStart) {
-            let chart = targetChart;
-            console.log("Mousedown in multiple series");
-            eStart = chart.pointer.normalize(eStart);
-
-            let posX = eStart.chartX,
-                posY = eStart.chartY,
-                alpha = chart.options.chart.options3d.alpha,
-                beta = chart.options.chart.options3d.beta,
-                sensitivity = 5,  // lower is more sensitive
-                handlers = [];
-    
-            function drag(e) {
-                // Get e.chartX and e.chartY
-                e = chart.pointer.normalize(e);
-                let newAlpha = alpha + (e.chartY - posY) / sensitivity,
-                    newBeta = beta + (posX - e.chartX) / sensitivity;
-                chart.update({
-                    chart: {
-                        options3d: {
-                            alpha: newAlpha,
-                            beta: newBeta
-                        }
-                    }
-                }, undefined, undefined, false);
-                console.log("alpha:" + newAlpha + ", beta:"+newBeta);
-            }
-    
-            function unbindAll() {
-                handlers.forEach(function (unbind) {
-                    if (unbind) {
-                        unbind();
-                    }
-                });
-                handlers.length = 0;
-            }
-            // Here we can add the listeners to chart.container or to document.
-            // IF added to chart.container thechart will change only when the event is within the chart area.
-            handlers.push(Highcharts.addEvent(document, 'mousemove', drag));
-            handlers.push(Highcharts.addEvent(document, 'touchmove', drag));
-            handlers.push(Highcharts.addEvent(document, 'mouseup', unbindAll));
-            handlers.push(Highcharts.addEvent(document, 'touchend', unbindAll));
-            logger.trace(eStart.toString());
-        };  
-    }
 }
 
 

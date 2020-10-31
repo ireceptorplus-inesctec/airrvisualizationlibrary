@@ -2,7 +2,6 @@
 import {Logger, ResultSeriesType} from './common';
 import {Properties} from './properties';
 import {Result} from './result';
-import {ResultSeriesDataItem, ResultSeries} from "./series";
 import {ImmuneDbCloneCountParser} from "./immuneDbParser";
 
 

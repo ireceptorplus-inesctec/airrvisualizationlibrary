@@ -8,3 +8,4 @@
 @license <%= pkg.license %>
 
 @copyright (c) <%= pkg.copyright %>. All rights reserved.
+

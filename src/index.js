@@ -11,12 +11,13 @@ import {Logger, ResultSeriesType, GeneType, DebugTimer} from './common';
 import {Properties} from './properties';
 import {ResultSeriesDataItem, ResultSeries} from "./series";
 import {Result} from "./result";
-import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtResult, JunctionLenghtStatsResult} from "./iReceptorStatsResult";
+import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtStatsResult} from "./iReceptorStatsResult";
 import {ImmuneDbCloneCountResult} from "./immuneDbResult";
 
 // Import Hicharts into module
-import Highcharts from 'highcharts';
-import highcharts3d from 'highcharts/highcharts-3d';
+/*
+import Highcharts from 'highcharts/highcharts';
+import highcharts3d from 'highcharts/highcharts/highcharts-3d';
 highcharts3d(Highcharts);
 import Exporting from 'highcharts/modules/exporting';
 Exporting(Highcharts);
@@ -24,17 +25,20 @@ import Data from 'highcharts/modules/data';
 Data(Highcharts);
 import Drilldown from 'highcharts/modules/drilldown';
 Drilldown(Highcharts);
+*/
 
-class Chart {
+class HichartsChart {
     #_id;
     #_properties;
     #_result;
     #_chart;
     #_logger;
+    #_highcharts;
     
     constructor(properties){
         this.#_logger = new Logger('Chart');
         this.#_logger.debug("Constructor.");
+        this.checkHighcharts();
         this.#_result = {};
         this.#_chart = undefined;
         this.#_properties = undefined;
@@ -44,7 +48,32 @@ class Chart {
             this.#_properties = new Properties();
         }
         this.#_id = this.#_properties.id;
+        this.#_highcharts = window.Highcharts;
         this.#_logger.trace(JSON.stringify(this));
+    }
+
+    checkHighcharts(){
+        let Highcharts = window.Highcharts;
+        if (!Highcharts) {
+            this.#_logger.error('Highcharts not available');
+            throw 'Required Highcharts Library not available';
+        }
+        if (!Highcharts._modules.hasOwnProperty("Extensions/Drilldown.js")) {
+            this.#_logger.error('Highcharts Drilldown module not available');
+            throw 'Required Highcharts Drilldown module not available';
+        }
+        if (!Highcharts._modules.hasOwnProperty("Extensions/Exporting.js")) {
+            this.#_logger.error('Highcharts Exporting module not available');
+            throw 'Required Highcharts Exporting module not available';
+        }
+        if (!Highcharts._modules.hasOwnProperty("Extensions/Data.js")) {
+            this.#_logger.error('Highcharts Data module not available');
+            throw 'Required Highcharts Data module not available';
+        }
+        if (!(Highcharts._modules.hasOwnProperty("Extensions/Math3D.js"))) {
+            this.#_logger.error('Highcharts 3D module not available');
+            throw 'Required Highcharts 3D module not available';
+        }
     }
 
     //setter
@@ -203,14 +232,80 @@ class Chart {
         timer.end("build_Highcharts_structure");
         console.log(p);
         // If Hicharts is imported as a module than we don't need jquery to plot the chart into the DOM.
-        this.#_chart  = Highcharts.chart(this.#_properties.id, p);
+        //this.#_chart  = Highcharts.chart(this.#_properties.id, p);
+        this.#_chart  = this.#_highcharts.chart(this.#_properties.id, p);
         //$('#'+this.#_properties.id).highcharts(p);
         this.#_logger.trace(JSON.stringify(p));
         this.#_logger.debug("Plotting into " + this.#_properties.id);
         this.#_logger.trace(JSON.stringify(this.#_result));
-        Highcharts.addEvent(this.#_chart.container, "mousedown", this.#_result.getMousedownEvent(this.#_chart));
-        console.log(this);
+        //Highcharts.addEvent(this.#_chart.container, "mousedown", this.getMousedownEvent(this.#_chart, this.#_result.isMultipleSeries()));
+        this.#_highcharts.addEvent(this.#_chart.container, "mousedown", this.getMousedownEvent(this.#_chart, this.#_result.isMultipleSeries()));
         timer.print();
+    }
+
+    /**
+     * This MouseDownEvent is specific for Highcharts.
+     * 
+     * @param {Highchart} targetChart 
+     */
+    getMousedownEvent(targetChart, is3D){
+        this.#_logger.debug("getMousedownEvent");
+        let logger = this.#_logger;
+        if (!is3D){
+            this.#_logger.debug("retrieving default mousedown event on charts.");
+            return function(e) {
+                logger.trace("Default mouse down event on chart.");
+            };    
+        }
+        let highcharts = this.#_highcharts;
+        return function(eStart) {
+            let chart = targetChart;
+            console.log("Mousedown in multiple series");
+            eStart = chart.pointer.normalize(eStart);
+
+            let posX = eStart.chartX,
+                posY = eStart.chartY,
+                alpha = chart.options.chart.options3d.alpha,
+                beta = chart.options.chart.options3d.beta,
+                sensitivity = 5,  // lower is more sensitive
+                handlers = [];
+    
+            function drag(e) {
+                // Get e.chartX and e.chartY
+                e = chart.pointer.normalize(e);
+                let newAlpha = alpha + (e.chartY - posY) / sensitivity,
+                    newBeta = beta + (posX - e.chartX) / sensitivity;
+                chart.update({
+                    chart: {
+                        options3d: {
+                            alpha: newAlpha,
+                            beta: newBeta
+                        }
+                    }
+                }, undefined, undefined, false);
+                console.log("alpha:" + newAlpha + ", beta:"+newBeta);
+            }
+    
+            function unbindAll() {
+                handlers.forEach(function (unbind) {
+                    if (unbind) {
+                        unbind();
+                    }
+                });
+                handlers.length = 0;
+            }
+            // Here we can add the listeners to chart.container or to document.
+            // IF added to chart.container thechart will change only when the event is within the chart area.
+            //handlers.push(Highcharts.addEvent(document, 'mousemove', drag));
+            //handlers.push(Highcharts.addEvent(document, 'touchmove', drag));
+            //handlers.push(Highcharts.addEvent(document, 'mouseup', unbindAll));
+            //handlers.push(Highcharts.addEvent(document, 'touchend', unbindAll));
+            handlers.push(highcharts.addEvent(document, 'mousemove', drag));
+            handlers.push(highcharts.addEvent(document, 'touchmove', drag));
+            handlers.push(highcharts.addEvent(document, 'mouseup', unbindAll));
+            handlers.push(highcharts.addEvent(document, 'touchend', unbindAll));
+            logger.trace(eStart.toString());
+        };  
     }
 }
 
@@ -223,11 +318,13 @@ class VisualizationLibrary {
     #_charts;
     #_logger;
     #_version;
+    #_product;
     
     constructor(){
         this.#_logger = new Logger('VisualizationLibrary');
         this.#_logger.debug("Constructor.");
         this.#_version = "__VERSION__";
+        this.#_product = "AIRR Visualization Library";
         this.#_charts = {};
     }
     
@@ -239,7 +336,7 @@ class VisualizationLibrary {
         properties = Properties.validOrNew(properties);
         let _chart = this.get(properties.id);
         if (_chart == undefined) {
-            _chart = new Chart(properties);
+            _chart = new HichartsChart(properties);
             this.#_charts[_chart.id] = _chart;
         }else{
             _chart.properties = properties;
@@ -311,7 +408,7 @@ class VisualizationLibrary {
 
 module.exports = { 
         VisualizationLibrary: VisualizationLibrary,
-        Chart: Chart, 
+        HichartsChart: HichartsChart, 
         Result: Result, 
         VGeneStatsResult: VGeneStatsResult, 
         DGeneStatsResult: DGeneStatsResult, 
@@ -326,20 +423,16 @@ module.exports = {
         Logger: Logger
     };
 
-export { VisualizationLibrary, Chart, Result, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtStatsResult,
+export { VisualizationLibrary, HichartsChart, Result, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtStatsResult,
     ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
     ResultSeriesType, Logger};
 
 
 
 (function (windows) {
-
     // We need that our library is globally accesible, then we save in the window
     if(typeof(window.airrvisualization) === 'undefined'){
         window.airrvisualization = new VisualizationLibrary();
     }
-/*
-    window.$ = $;
-    window.jQuery = jQuery;
-*/
+    
 }(window));
