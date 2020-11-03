@@ -78,6 +78,7 @@ class Logger {
     }
 
     _log(type, text) {
+        //TODO: Allow logging to the chart window. For example when error that chart plot.
         console.log(this._datetime().concat(' ').concat(this.#_source).concat(' ').concat(type).concat(': \r\n').concat(text));
     }
 

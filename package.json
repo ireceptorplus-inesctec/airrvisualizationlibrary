@@ -22,7 +22,6 @@
     "chai": "4.2.0",
     "esmify": "2.1.1",
     "exorcist": "1.0.1",
-    "highcharts": "8.2.0",
     "jquery": "3.5.1",
     "jsdoc": "3.6.6",
     "mocha": "8.1.3",
@@ -30,7 +29,7 @@
   },
   "scripts": {
     "build-docs": "./node_modules/.bin/jsdoc -r .\\src\\index.js",
-    "build-dev":  "DEL /S /F /Q .\\dist\\* & browserify -d -u highcharts/highcharts -u highcharts -u highcharts/highcharts-3d -u highcharts/modules/exporting -u highcharts/modules/data -u highcharts/modules/drilldown -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js | exorcist ./dist/airrvisualization.js.map > ./dist/airrvisualization.js",
+    "build-dev":  "DEL /S /F /Q .\\dist\\* & browserify -d -u highcharts -u highcharts/highcharts-3d -u highcharts/modules/exporting -u highcharts/modules/data -u highcharts/modules/drilldown -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js | exorcist ./dist/airrvisualization.js.map > ./dist/airrvisualization.js",
     "build":      "DEL /S /F /Q .\\dist\\* & browserify    -u highcharts -u highcharts/highcharts-3d -u highcharts/modules/exporting -u highcharts/modules/data -u highcharts/modules/drilldown -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js                                           -o ./dist/airrvisualization.js",
     "copy-libs":  "DEL /S /F /Q .\\lib\\* & RD /S /Q .\\lib & xcopy /Q .\\node_modules\\jquery\\dist\\jquery.min.js .\\lib\\ & xcopy /S /Q .\\node_modules\\highcharts .\\lib\\highcharts\\ ",
     "test":       "mocha test/index.test.js"

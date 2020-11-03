@@ -36,6 +36,36 @@ class Parser {
         this.#_logger.debug("getting series.");
         return this.#_series;
     }
+
+    /**
+     * @description preparse() method holds all the actions required to be executed before the parsing of the data starts. Parser subclasses need to overwrite this method.
+     * @param {JSON} sourceData An Airr Data Commons JSON file
+     * @memberf Result
+     */
+    preparse(sourceData){
+        this.#_logger.fatal("this preparse() method should never execute, specializations of Result need to overload it.");
+        throw 'This method should not be called, implementations need to overload it.';        
+    }    
+    
+    /**
+     * @description onparse() method executes the data parsing from the Airr Data Commons file to the internal ResultSeries. Parser subclasses need to overwrite this method.
+     * @param {JSON} sourceData An Airr Data Commons JSON file
+     * @memberof Result
+     */
+    onparse(sourceData){
+        this.#_logger.fatal("this parse() method should never execute, specializations of Result need to overload it.");
+        throw 'This method should not be called, implementations need to overload it.';
+    }
+
+    /**
+     * @description postparse() method holds all the actions required to be executed after the parsing of the data ends. Parser subclasses need to overwrite this method.
+     * @param {JSON} sourceData An Airr Data Commons JSON file
+     * @memberof Result
+     */
+    postparse(sourceData){
+        this.#_logger.fatal("this preparse() method should never execute, specializations of Result need to overload it.");
+        throw 'This method should not be called, implementations need to overload it.';        
+    }
 }
 
 /**

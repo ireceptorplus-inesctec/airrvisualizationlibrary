@@ -1,5 +1,14 @@
 <html>
     <head>
+        <link rel="icon" type="image/vnd.microsoft.icon" sizes="16x16"  href="icon.ico" />
+        <link rel="apple-touch-icon" type="image/vnd.microsoft.icon" sizes="16x16"  href="icon.ico" />
+        <title>IMMUNE DB data visualization Examples.</title>
+        <script src="lib/jquery.min.js"></script> 
+        <script src="lib/highcharts/highcharts.js"></script> 
+        <script src="lib/highcharts/highcharts-3d.js"></script> 
+        <script src="lib/highcharts/modules/data.js"></script> 
+        <script src="lib/highcharts/modules/exporting.js"></script> 
+        <script src="lib/highcharts/modules/drilldown.js"></script> 
     </head>
     <body>
         <article class="repertoire" >
@@ -21,7 +30,7 @@
             function redrawChart(url, identifier){
                 $.get(url, function(data){
                     let d = window.airrvisualization.createImmuneDbCloneCountResult();
-                    d.setRawResult(data);
+                    d.setData(data);
                     window.airrvisualization.setDebugLevel(40);
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
                 });

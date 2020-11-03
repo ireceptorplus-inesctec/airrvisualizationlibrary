@@ -4,6 +4,7 @@ class Properties {
     static CHART_TYPE = 'column';
     static SORT = false;
     static ANIMATION = false;
+    static PERCENTAGE = false;
     static ALPHA_3D = 20;
     static BETA_3D = 0;
     static DEPTH_3D = 100;
@@ -18,10 +19,12 @@ class Properties {
     #_sort;
     #_chartType;
     #_animation;
+    #_percentage;
     #_alpha3D;
     #_beta3D;
     #_depth3D;
     #_sort_userDefined;
+    #_percentage_userDefined;
     #_chartType_userDefined;
     #_animation_userDefined;
     #_alpha3D_userDefined;
@@ -38,6 +41,7 @@ class Properties {
         this.#_stackingType = undefined;
         this.#_id = Common.makeid(12);
         this.#_sort = Properties.SORT;
+        this.#_percentage = Properties.PERCENTAGE;
         this.#_chartType = Properties.CHART_TYPE; //defaults to column chart.
         this.#_animation = Properties.ANIMATION; //defaults to false.
         this.#_alpha3D = Properties.ALPHA_3D; //defaults to 20;
@@ -45,6 +49,7 @@ class Properties {
         this.#_depth3D = Properties.DEPTH_3D; //defaults to 100;
         this.#_logger.trace(JSON.stringify(this));
         this.#_sort_userDefined = false;
+        this.#_percentage_userDefined = false;
         this.#_chartType_userDefined = false;
         this.#_animation_userDefined = false;
         this.#_alpha3D_userDefined = false;
@@ -60,7 +65,6 @@ class Properties {
     get subtitle() {
         return this.#_subtitle;
     }
-
 
     get xLabel() {
         return this.#_xLabel;
@@ -102,12 +106,24 @@ class Properties {
         return this.#_depth3D;
     }
 
+    get percentage() {
+        return this.#_percentage;
+    }
+
     set title(value){
         this.setTitle(value);
     }
 
     set subtitle(value){
         this.setSubtitle(value);
+    }
+
+    set xLabel(value) {
+        this.setXLabel(value);
+    }
+
+    set yLabel(value) {
+        this.setYLabel(value);
     }
 
     set stackingType(value){
@@ -140,6 +156,10 @@ class Properties {
 
     set depth3D(value){
         this.setDepth3D(value);
+    }
+
+    set percentage(value){
+        this.setPercentage(value);
     }
 
     setTitle (value) {
@@ -193,7 +213,6 @@ class Properties {
         return this;
     }
 
-
     setChartType (value) {
         this.#_chartType = value;
         this.#_chartType_userDefined = true;
@@ -233,7 +252,20 @@ class Properties {
         this.#_logger.trace(JSON.stringify(this));
         return this;
     }
-        
+    
+    setPercentage (value) {
+        this.#_percentage = value;
+        this.#_percentage_userDefined = true;
+        this.#_logger.debug("setPercentage.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+    /**
+     * @description Updates a Properties with another properties contents. The contents of the first will only be updated if their where not previously 
+     * @param {*} anotherProperties
+     * @memberof Properties
+     */
     updateWith (anotherProperties){
         if (! this.title) this.setTitle(anotherProperties.title);
         if (! this.subtitle) this.setSubtitle(anotherProperties.subtitle);
@@ -244,34 +276,36 @@ class Properties {
         if (! this.#_sort_userDefined) this.setSort(anotherProperties.sort);
         if (! this.#_chartType_userDefined) this.setChartType(anotherProperties.chartType);
         if (! this.#_animation_userDefined) this.setAnimation(anotherProperties.animation);
-
         if (! this.#_alpha3D_userDefined) this.setAlpha3D(anotherProperties.alpha3D);
         if (! this.#_beta3D_userDefined) this.setBeta3D(anotherProperties.beta3D);
         if (! this.#_depth3D_userDefined) this.setDepth3D(anotherProperties.depth3D);
+        if (! this.#_percentage_userDefined) this.setPercentage(anotherProperties.percentage);
     }
         
     static validOrNew(properties){
-        console.log(properties);
+        let p = undefined;
         if (properties == null){
             console.log("properties is null");
-            return new Properties();
-        }
-        if (properties instanceof Properties){
+            p = new Properties();
+        }else if (properties instanceof Properties){
             console.log("properties is instance of Properties");
-            return properties;
+            p = properties;
+        }else if (typeof properties === "string") {
+            properties = JSON.parse(properties);
         }
-        if (properties.constructor == Common.objectConstructor ){
-            let p = new Properties();
+        
+        if (p == undefined && properties.constructor == Common.objectConstructor ){
+            p = new Properties();
             try {
                 Object.seal(p);
-                return Object.assign(p, properties);
+                Object.assign(p, properties);
             } catch(e){
                 console.log(e);
-                console.log("Properties: tried to build a Object with the wrong structure. Returning an empty Properties instance.");
-                return p;
-                
+                this.#_logger.error("Properties: tried to build a Object with the wrong structure. Returning an empty Properties instance.");
+                p = new Properties();  
             }
         }
+        return (p || new Properties());
     }
 }
 

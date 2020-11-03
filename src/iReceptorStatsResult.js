@@ -60,9 +60,9 @@ class JunctionLenghtStatsResult extends StatsResult {
         this.parser.preparse(sourceData);
     }   
            
-    parse (sourceData){
+    onparse (sourceData){
         this.#_logger.debug("parse.");
-        this.parser.parse(sourceData);
+        this.parser.onparse(sourceData);
     }
 
     postparse(sourceData){
@@ -136,9 +136,9 @@ class GeneStatsResult extends StatsResult {
         this.parser.preparse(sourceData);
     }   
            
-    parse (data){
+    onparse (data){
         this.#_logger.debug("parse.");
-        this.parser.parse(data);
+        this.parser.onparse(data);
     }
 
     postparse(sourceData){

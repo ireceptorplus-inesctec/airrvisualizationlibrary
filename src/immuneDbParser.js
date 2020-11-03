@@ -33,7 +33,7 @@ class ImmuneDbCloneCountParser extends Parser {
         
     }   
            
-    parse (sourceData){
+    onparse (sourceData){
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");

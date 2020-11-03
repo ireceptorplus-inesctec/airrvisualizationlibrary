@@ -63,9 +63,14 @@ class ImmuneDbCloneCountResult extends Result {
         this.parser.preparse(sourceData);
     }   
            
-    parse (sourceData){
+    onparse (sourceData){
         this.#_logger.debug("parse.");
-        this.parser.parse(sourceData);
+        this.parser.onparse(sourceData);
+    }
+
+    postparse(sourceData){
+        this.#_logger.debug("postparse.");  
+        //TODO:Get Properties from parser and update this.#_defaultProperties
     }
 }
 

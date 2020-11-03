@@ -133,7 +133,7 @@ class JunctionLenghtStatsParser extends Parser {
 
     }
 
-    parse(data) {
+    onparse(data) {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
@@ -225,6 +225,7 @@ class JunctionLenghtStatsParser extends Parser {
                 if (totalUsageCountValidator != totalUsageCount){
                     this.#_logger.error("Inconsistency between the statistics value for total " + statisticName + " and the sun of the individual values (" + totalUsageCount + "/" + totalUsageCountValidator + ").");
                 }
+                //TODO: Before sorting I need to normalize data structures (for example ensure that all series have all named values, set to zero the missing ones.)
                 //Sort elements by name 
                 seriesData.sort((a, b) => a.name-b.name);
                 mainSeries.push(series);
@@ -492,7 +493,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
 
     }
 
-    parse(data) {
+    onparse(data) {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
@@ -818,7 +819,7 @@ class GeneUsageStatsParser extends Parser {
 
     }
 
-    parse(data) {
+    onparse(data) {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
@@ -1121,7 +1122,7 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
 
     }
 
-    parse(data) {
+    onparse(data) {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
@@ -1216,6 +1217,7 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                     let dataItem = new ResultSeriesDataItem().setName(geneName).setY(dataObject[StatsParserConstants.VALUE]).setDrilldown(callGroupName);
                     seriesData.push(dataItem);
                 }
+                //TODO: Before sorting I need to normalize data structures (for example ensure that all series have all named values, set to zero the missing ones.)
                 //Sort elements by name 
                 seriesData.sort((a, b) => a.name.localeCompare(b.name));
                 mainSeries.push(series);
@@ -1270,6 +1272,7 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                     seriesData.push(dataItem);
                     cellSeriesDict[geneName].data.push(dataItem);
                 }
+                //TODO: Before sorting I need to normalize data structures (for example ensure that all series have all named values, set to zero the missing ones.)
                 //sort elements by name
 
                 seriesData.sort((a, b) => a.name.localeCompare(b.name));

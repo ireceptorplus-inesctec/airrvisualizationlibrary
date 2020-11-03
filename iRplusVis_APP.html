@@ -1,5 +1,8 @@
 <html>
     <head>
+        <link rel="icon" type="image/vnd.microsoft.icon" sizes="16x16"  href="icon.ico" />
+        <link rel="apple-touch-icon" type="image/vnd.microsoft.icon" sizes="16x16"  href="icon.ico" />
+        <title>iReceptor Data Visualization Examples.</title>
     </head>
     <body>
         <article class="repertoire" >
@@ -43,7 +46,7 @@
                 $.get(url, function(data){
                     //let d = new StatsResult(gene);
                     let d = window.airrvisualization.createGeneStatsResult(gene);
-                    d.setRawResult(data);
+                    d.setData(data);
                     //window.airrvisualization.setDebugLevel(0);
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setSort(true)).setResult(d).plot();
                 });
@@ -52,23 +55,23 @@
                 $.get(url, function(data){
                     //let d = new StatsResult(gene);
                     let d = window.airrvisualization.createVGeneStatsResult();
-                    d.setDrilldown(true).setRawResult(data);
+                    d.setDrilldown(true).setData(data);
                     //window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
+                    let chart = window.airrvisualization.createChart("{\"id\": \""+identifier+"\", \"xLabel\":\"Category\", \"yLabel\":\"Count\"}").setResult(d).plot();
                 });
             }
             function redrawDrilldownDChart(url, identifier){
                 $.get(url, function(data){
                     //let d = new StatsResult(gene);
-                    let d = window.airrvisualization.createDGeneStatsResult().setDrilldown(true).setRawResult(data);
+                    let d = window.airrvisualization.createDGeneStatsResult().setDrilldown(true).setData(data);
                     //window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
+                    let chart = window.airrvisualization.createChart({"id": identifier, "xLabel":"Category", "yLabel":"Example"}).setResult(d).plot();
                 });
             }
             function redrawDrilldownJChart(url, identifier){
                 $.get(url, function(data){
                     //let d = new StatsResult(gene);
-                    let d = window.airrvisualization.createJGeneStatsResult().setDrilldown(true).setRawResult(data);
+                    let d = window.airrvisualization.createJGeneStatsResult().setDrilldown(true).setData(data);
                     //window.airrvisualization.setDebugLevel(0);
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category")).setResult(d).plot();
                 });
@@ -76,7 +79,7 @@
             function redrawDrilldownCChart(url, identifier){
                 $.get(url, function(data){
                     //let d = new StatsResult(gene);
-                    let d = window.airrvisualization.createCGeneStatsResult().setDrilldown(true).setRawResult(data);
+                    let d = window.airrvisualization.createCGeneStatsResult().setDrilldown(true).setData(data);
                     window.airrvisualization.setDebugLevel(0);
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
                 });
@@ -84,7 +87,7 @@
             function redrawJunctionChart(url, identifier){
                 $.get(url, function(data){
                     //let d = new StatsResult(gene);
-                    let d = window.airrvisualization.createJunctionLengthStatsResult().setRawResult(data);
+                    let d = window.airrvisualization.createJunctionLengthStatsResult().setData(data);
                     window.airrvisualization.setDebugLevel(0);
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier)).setResult(d).plot();
                 });
