@@ -51,7 +51,7 @@
     "build:dev": "run-s clean:dist setup:dist & browserify -d -u highcharts -u highcharts/highcharts-3d -u highcharts/modules/exporting -u highcharts/modules/data -u highcharts/modules/drilldown -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js | exorcist ./dist/airrvisualization.js.map > ./dist/airrvisualization.js",
     "build": "run-s clean:dist setup:dist & browserify    -u highcharts -u highcharts/highcharts-3d -u highcharts/modules/exporting -u highcharts/modules/data -u highcharts/modules/drilldown -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js                                           -o ./dist/airrvisualization.js",
     "test:watch": "npm t -- -w",
-    "test": "mocha --require jsdom-global --require @babel/register --require esm  test/all.tests.js",
+    "test": "mocha --require jsdom-global/register --require @babel/register test/all.tests.js",
     "cover": "nyc npm t"
   },
   "repository": {
