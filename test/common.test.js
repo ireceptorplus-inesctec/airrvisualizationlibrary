@@ -1,4 +1,4 @@
-import {DebugTimer} from './common';
+import {DebugTimer} from '../src/common';
 let timer = new DebugTimer();
 
 (async () => {

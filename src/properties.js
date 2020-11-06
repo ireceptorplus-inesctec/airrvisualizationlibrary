@@ -1,5 +1,9 @@
 import {Logger, Common} from './common';
 
+/**
+ * @description Properties class for setting visualization costumizations.
+ * @class Properties
+ */
 class Properties {
     static CHART_TYPE = 'column';
     static SORT = false;
