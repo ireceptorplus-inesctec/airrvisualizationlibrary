@@ -7,9 +7,11 @@ function importTest(name, path) {
 import {options, assert, expect, should} from './common';
 
 describe("All Tests", function () {
+ /*
     beforeEach(function () {
        console.log("running something before each test");
     });
+*/
     importTest("Index", './index.test.js');
     importTest("Common", './common.test.js');
     after(function () {
