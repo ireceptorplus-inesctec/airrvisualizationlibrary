@@ -44,7 +44,7 @@
     "clean:nodemodules": "rimraf node_modules",
     "clean": "run-p clean:dist clean:lib clean:doc clean:nyc",
     "setup:lib:jquery": "copyfiles -f node_modules/jquery/dist/jquery.min.js ./lib ",
-    "setup:lib:highcharts": "copyfiles -u 1  node_modules/highcharts/** ./lib ",
+    "setup:lib:highcharts": "copyfiles -u 1  \"node_modules/highcharts/**\" ./lib ",
     "setup:lib": "run-p setup:lib:jquery setup:lib:highcharts",
     "setup:dist": "make-dir dist",
     "install": "run-p setup:lib setup:dist",
