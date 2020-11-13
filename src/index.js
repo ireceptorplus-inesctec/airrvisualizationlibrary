@@ -60,20 +60,20 @@ class VisualizationLibrary {
         return _chart;
     }
 
-    createGeneStatsResult(gene){
+    createGeneUsageStatsResult(gene){
         let statsResult = undefined;
         switch (gene) {
             case GeneType.V_GENE:
-                statsResult = this.createVGeneStatsResult();
+                statsResult = this.createVGeneUsageStatsResult();
                 break;
             case GeneType.D_GENE:
-                statsResult = this.createDGeneStatsResult();
+                statsResult = this.createDGeneUsageStatsResult();
                 break;
             case GeneType.J_GENE:
-                statsResult = this.createJGeneStatsResult();
+                statsResult = this.createJGeneUsageStatsResult();
                 break;
             case GeneType.C_GENE:
-                statsResult = this.createCGeneStatsResult();
+                statsResult = this.createCGeneUsageStatsResult();
                 break;
             default:
                 break;
@@ -81,19 +81,19 @@ class VisualizationLibrary {
         return statsResult;
     }
     
-    createVGeneStatsResult(){
+    createVGeneUsageStatsResult(){
         return new VGeneStatsResult();
     }
     
-    createDGeneStatsResult(){
+    createDGeneUsageStatsResult(){
         return new DGeneStatsResult();
     }
     
-    createJGeneStatsResult(){
+    createJGeneUsageStatsResult(){
         return new JGeneStatsResult();
     }
     
-    createCGeneStatsResult(){
+    createCGeneUsageStatsResult(){
         return new CGeneStatsResult();
     }
 
@@ -103,6 +103,10 @@ class VisualizationLibrary {
 
     createJunctionLengthStatsResult(){
         return new JunctionLenghtStatsResult();
+    }
+
+    createCountStatsResult(){
+        return undefined;
     }
 
     createProperties(){

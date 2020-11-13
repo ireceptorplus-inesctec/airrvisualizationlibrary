@@ -1,5 +1,6 @@
 .vscode
 .nyc_output
+package-lock.json
 node_modules
 data
 dist

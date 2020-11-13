@@ -6,7 +6,7 @@ import { ResultSeriesDataItem, ResultSeries } from "./series";
 class StatsParserConstants{
     static VOCABULARY = {
         INFO : "Info",
-        MESSAGE : "Message",
+        MESSAGE : "Result",
         STATISTICS : "statistics",
         STATISTICS_NAME : "statistic_name",
         REPERTOIRES : "repertoires",
