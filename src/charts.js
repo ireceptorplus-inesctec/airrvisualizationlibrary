@@ -144,7 +144,10 @@ class HichartsChart extends Chart{
                 type: this.properties.chartType,
                 // animation
                 animation: this.properties.animation
-             },
+            },
+            credits: {
+               enabled: false
+            },
             xAxis: {
                 type: 'category'
             },

@@ -131,6 +131,7 @@ class ResultSeries{
     #_type;
     #_parentName;
     #_color;
+    #_stack;
     
     constructor(){
         this.#_logger = new Logger('ResultSeries');
@@ -145,6 +146,7 @@ class ResultSeries{
         this.#_type = undefined;
         this.#_parentName = undefined;
         this.#_color = undefined;
+        this.#_stack = undefined;
     }
 
     get repertoireId(){
@@ -189,6 +191,10 @@ class ResultSeries{
     get color(){
         return this.#_color;
     }
+    
+    get stack(){
+        return this.#_stack;
+    }
 
     set repertoireId(repertoireId){
         this.setRepertoireId(repertoireId);
@@ -228,6 +234,10 @@ class ResultSeries{
 
     set color(color){
         this.setColor(color);
+    }
+    
+    set stack(value){
+        this.setStack(value);
     }
 
     setRepertoireId(repertoireId){
@@ -289,6 +299,11 @@ class ResultSeries{
     
     setColor(color){
         this.#_color = color;
+        return this;
+    }
+
+    setStack(value){
+        this.#_stack = value;
         return this;
     }
     

@@ -1,7 +1,5 @@
 <html>
     <head>
-        <link rel="icon" type="image/vnd.microsoft.icon" sizes="16x16"  href="icon.ico" />
-        <link rel="apple-touch-icon" type="image/vnd.microsoft.icon" sizes="16x16"  href="icon.ico" />
         <title>iReceptor Data Visualization Examples.</title>
     </head>
     <body>
@@ -30,6 +28,10 @@
             <button class="junctionloader" x-target="junction_length_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_junction_length_response.json">Load Rearrangement junction_length (2 repo, no drilldown)</button>
 
             <div id="junction_length_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Junction Length sample data from 2020/10/21</div>
+ 
+            <button class="countloader" x-target="count_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_count_response.json">Load Rearrangement Count (2 repo, no drilldown)</button>
+
+            <div id="count_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Rearrangement Count sample data from 2020/10/21</div>
 
         </article>
 
@@ -39,6 +41,7 @@
         <script src="lib/highcharts/modules/data.js"></script> 
         <script src="lib/highcharts/modules/exporting.js"></script> 
         <script src="lib/highcharts/modules/drilldown.js"></script> 
+        <script src="lib/highcharts/modules/bullet.js"></script>
         <script  src="dist/airrvisualization.js"></script>   
 
         <script>

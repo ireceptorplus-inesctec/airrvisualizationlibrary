@@ -186,7 +186,11 @@ class ResultSeriesType {
         "junction_length" : ResultSeriesType.typeCode.JUNCTION_LENGTH,
         "junction_length_productive" : ResultSeriesType.typeCode.JUNCTION_LENGTH,
         "junction_aa_length" : ResultSeriesType.typeCode.JUNCTION_AA_LENGTH,
-        "junction_aa_length_productive" : ResultSeriesType.typeCode.JUNCTION_AA_LENGTH
+        "junction_aa_length_productive" : ResultSeriesType.typeCode.JUNCTION_AA_LENGTH,
+        "rearrangement_count" : ResultSeriesType.typeCode.GENE_COUNT,
+        "rearrangement_count_productive" : ResultSeriesType.typeCode.GENE_COUNT,
+        "duplicate_count" : ResultSeriesType.typeCode.GENE_COUNT,
+        "duplicate_count_productive" : ResultSeriesType.typeCode.GENE_COUNT,
     };
 
     static get FAMILY() {
@@ -237,6 +241,8 @@ class ResultSeriesType {
         let unique = name.includes('unique');
         let exists = name.includes('exists');
         let productive = name.includes('productive');
+        let rearrangement = name.includes('rearrangement');
+        let duplicate = name.includes('duplicate');
         let type = ResultSeriesType.names[name];
         //TODO: throw error if result is undefined.
         return new ResultSeriesType(type.code, type.name, unique, exists, productive);
@@ -248,13 +254,17 @@ class ResultSeriesType {
     #_unique;
     #_exists;
     #_productive;
+    #_rearrangement;
+    #_duplicate;
 
-    constructor(typeCode, typeName, unique, exists, productive){
+    constructor(typeCode, typeName, unique, exists, productive, rearrangement, duplicate){
         this.#_typeCode = typeCode;
         this.#_typeName = typeName;
         this.#_unique = unique;
         this.#_exists = exists;
         this.#_productive = productive;
+        this.#_rearrangement = rearrangement;
+        this.#_duplicate = duplicate;
     }
 
     get typeCode(){
@@ -275,6 +285,14 @@ class ResultSeriesType {
 
     get productive(){
         return this.#_productive;
+    }
+
+    get rearrangement(){
+        return this.#_rearrangement;
+    }
+
+    get duplicate(){
+        return this.#_duplicate;
     }
 
     toString(){
@@ -298,6 +316,20 @@ class ResultSeriesType {
                     result += ', ';
                 }
                 result += 'productive';
+                first = false;
+            }
+            if (this.#_rearrangement){
+                if (!first){
+                    result += ', ';
+                }
+                result += 'rearrangement';
+                first = false;
+            }
+            if (this.#_duplicate){
+                if (!first){
+                    result += ', ';
+                }
+                result += 'duplicate';
                 first = false;
             }
             result += ']';

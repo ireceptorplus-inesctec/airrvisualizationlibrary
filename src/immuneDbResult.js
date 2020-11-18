@@ -32,6 +32,8 @@ class ImmuneDbCloneCountResult extends Result {
 
     get series(){
         this.#_logger.debug("getting series.");
+        //TODO: I may need to get the properties to know how to build the series to return.
+        //At the moment I'm returning two series directly from the parser. This may have to change according to properties content.
         return this.parser.series;
     }
 

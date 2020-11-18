@@ -12,7 +12,7 @@ import {Logger, ResultSeriesType, GeneType} from './common';
 import {Properties} from './properties';
 import {ResultSeriesDataItem, ResultSeries} from "./series";
 import {Result} from "./result";
-import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtStatsResult} from "./iReceptorStatsResult";
+import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtStatsResult, CountStatsResult} from "./iReceptorStatsResult";
 import {ImmuneDbCloneCountResult} from "./immuneDbResult";
 import {HichartsChart} from "./charts";
 
@@ -106,7 +106,7 @@ class VisualizationLibrary {
     }
 
     createCountStatsResult(){
-        return undefined;
+        return new CountStatsResult();
     }
 
     createProperties(){
@@ -132,6 +132,7 @@ module.exports = {
         JGeneStatsResult: JGeneStatsResult, 
         CGeneStatsResult: CGeneStatsResult,
         JunctionLenghtStatsResult: JunctionLenghtStatsResult,
+        CountStatsResult: CountStatsResult,
         ResultSeries: ResultSeries, 
         ResultSeriesDataItem: ResultSeriesDataItem, 
         Properties: Properties, 
@@ -141,7 +142,7 @@ module.exports = {
     };
 
 export { VisualizationLibrary, HichartsChart, Result, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtStatsResult,
-    ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
+    CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
     ResultSeriesType, Logger};
 
 

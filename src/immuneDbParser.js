@@ -107,7 +107,7 @@ class ImmuneDbCloneCountParser extends Parser {
             colorIndex+=colorIndexJumper;
         }
         
-        const colorRest = "rgb(0,0,0)";
+        const colorRest = "rgb(192,192,192)";
 
         let seriesTop = new ResultSeries()
         .setRepertoireId('')
@@ -147,8 +147,8 @@ class ImmuneDbCloneCountParser extends Parser {
 
         //let dataItem = new ResultSeriesDataItem().setName(familyName).setY(familySeries.data[i].count);
         //seriesData.push(dataItem);
-        //this.#_series.push(seriesTop, seriesRest);
-        this.#_series.push(seriesTop);
+        this.#_series.push(seriesTop, seriesRest);
+        //this.#_series.push(seriesTop);
         timer.end("parse");
         timer.print();
     }  
