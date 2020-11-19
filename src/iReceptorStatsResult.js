@@ -30,7 +30,7 @@ class CountStatsResult extends StatsResult {
         this.#_multipleSeries = false;
 
         
-        this.#_defaultProperties = new Properties().setChartType("bullet").setTitle("Count").setYLabel("Percentage");
+        this.#_defaultProperties = new Properties().setTitle("Count").setYLabel("Percentage");
 
         this.setParser(new CountStatsParser());
     }
@@ -51,8 +51,8 @@ class CountStatsResult extends StatsResult {
         
     isMultipleSeries(){
         //FIXME: Forcing for debug and tests.
-        return false;
-        //return this.parser.isMultipleSeries();
+        // return false;
+        return this.parser.isMultipleSeries();
     }
 
     preparse(sourceData){
