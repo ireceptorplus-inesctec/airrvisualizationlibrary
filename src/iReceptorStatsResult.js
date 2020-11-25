@@ -30,7 +30,7 @@ class CountStatsResult extends StatsResult {
         this.#_multipleSeries = false;
 
         
-        this.#_defaultProperties = new Properties().setTitle("Count").setYLabel("Percentage");
+        this.#_defaultProperties = new Properties().setTitle("Count").setYLabel("Count");
 
         this.setParser(new CountStatsParser());
     }

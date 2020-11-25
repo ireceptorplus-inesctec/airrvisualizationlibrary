@@ -5,6 +5,7 @@
     <body>
         <article class="repertoire" >
             <h1>Stats API data</h1>
+            <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown-single_repertoire.json" x-gene="v">Load Rearrangement v_usage (1 repo, drilldown)</button>
             <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-gene="v">Load Rearrangement v_usage (2 repo, drilldown)</button>
             <button class="loader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-gene="v">Load Rearrangement v_usage (2 repo, no drilldown)</button>
 
@@ -77,7 +78,8 @@
                     //let d = new StatsResult(gene);
                     let d = window.airrvisualization.createJGeneUsageStatsResult().setDrilldown(true).setData(data);
                     //window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category")).setResult(d).plot();
+                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category");
+                    let chart = window.airrvisualization.createChart(prop).setResult(d).plot();
                 });
             }
             function redrawDrilldownCountChart(url, identifier){
