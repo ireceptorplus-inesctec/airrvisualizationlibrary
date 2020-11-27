@@ -1,7 +1,8 @@
 import {Logger, Common} from './common';
 
 /**
- * @description Properties class for setting visualization costumizations.
+ * @description Properties class for setting visualization properties and costumizations.
+ * @author Marco Amaro Oliveira
  * @class Properties
  */
 class Properties {
@@ -34,7 +35,11 @@ class Properties {
     #_alpha3D_userDefined;
     #_beta3D_userDefined;
     #_depth3D_userDefined;
-                    
+    
+    /**
+     * Creates an instance of Properties.
+     * @memberof Properties
+     */
     constructor(){
         this.#_logger = new Logger('Properties');
         this.#_logger.debug("Constructor.");
@@ -62,108 +67,111 @@ class Properties {
     }
 
     get title() {
+        return this.getTitle();
+    }
+
+    getTitle() {
         return this.#_title;
     }
 
-
     get subtitle() {
+        return this.getSubtitle();
+    }
+
+    getSubtitle() {
         return this.#_subtitle;
     }
 
     get xLabel() {
+        return this.getXLabel();
+    }
+
+    getXLabel() {
         return this.#_xLabel;
     }
 
     get yLabel() {
+        return this.getYLabel();
+    }
+
+    getYLabel() {
         return this.#_yLabel;
     }
-
-    get stackingType() {
-        return this.#_stackingType;
-    }
-
+    
     get id() {
+        return this.getId();
+    }
+    
+    getId() {
         return this.#_id;
     }
 
+    get stackingType() {
+        return this.getStackingType();
+    }
+
+    getStackingType() {
+        return this.#_stackingType;
+    }
+
     get sort() {
+        return this.getSort();
+    }
+
+    getSort() {
         return this.#_sort;
     }
 
     get chartType() {
+        return this.getChartType();
+    }
+
+    getChartType() {
         return this.#_chartType;
     }
 
     get animation() {
+        return this.getAnimation();
+    }
+
+    getAnimation() {
         return this.#_animation;
     }
 
     get alpha3D() {
+        return this.getAlpha3D();
+    }
+
+    getAlpha3D() {
         return this.#_alpha3D;
     }
 
     get beta3D() {
+        return this.getBeta3D();
+    }
+
+    getBeta3D() {
         return this.#_beta3D;
     }
 
     get depth3D() {
+        return this.getDepth3D();
+    }
+
+    getDepth3D() {
         return this.#_depth3D;
     }
 
     get percentage() {
+        return this.getPercentage();
+    }
+
+    getPercentage() {
         return this.#_percentage;
     }
 
     set title(value){
         this.setTitle(value);
-    }
-
-    set subtitle(value){
-        this.setSubtitle(value);
-    }
-
-    set xLabel(value) {
-        this.setXLabel(value);
-    }
-
-    set yLabel(value) {
-        this.setYLabel(value);
-    }
-
-    set stackingType(value){
-        this.setStackingType(value);
-    }
-
-    set id(elementId){
-        this.setId(elementId);
-    }
-
-    set sort(value){
-        this.setSort(value);
-    }
-
-    set chartType(value){
-        this.setChartType(value);
-    }
-
-    set animation(value){
-        this.setAnimation(value);
-    }
-
-    set alpha3D(value){
-        this.setAlpha3D(value);
-    }
-
-    set beta3D(value){
-        this.setBeta3D(value);
-    }
-
-    set depth3D(value){
-        this.setDepth3D(value);
-    }
-
-    set percentage(value){
-        this.setPercentage(value);
     }
 
     setTitle (value) {
@@ -173,11 +181,19 @@ class Properties {
         return this;
     }
 
+    set subtitle(value){
+        this.setSubtitle(value);
+    }
+
     setSubtitle(value) {
         this.#_subtitle = value;
         this.#_logger.debug("setSubtitle");
         this.#_logger.trace(JSON.stringify(this));
         return this;
+    }
+
+    set xLabel(value) {
+        this.setXLabel(value);
     }
     
     setXLabel( label) {
@@ -187,11 +203,19 @@ class Properties {
         return this;
     }
 
+    set yLabel(value) {
+        this.setYLabel(value);
+    }
+
     setYLabel (label) {
         this.#_yLabel = label;
         this.#_logger.debug("setYLabel.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
+    }
+
+    set id(elementId){
+        this.setId(elementId);
     }
 
     setId (elementId) {
@@ -201,12 +225,20 @@ class Properties {
         console.log(JSON.stringify(this));
         return this;
     }
+
+    set stackingType(value){
+        this.setStackingType(value);
+    }
     
     setStackingType (value) {
         this.#_stackingType = value;
         this.#_logger.debug("setStackingType.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
+    }
+
+    set sort(value){
+        this.setSort(value);
     }
     
     setSort (value) {
@@ -217,12 +249,20 @@ class Properties {
         return this;
     }
 
+    set chartType(value){
+        this.setChartType(value);
+    }
+
     setChartType (value) {
         this.#_chartType = value;
         this.#_chartType_userDefined = true;
         this.#_logger.debug("setChartType.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
+    }
+
+    set animation(value){
+        this.setAnimation(value);
     }
     
     setAnimation (value) {
@@ -232,6 +272,10 @@ class Properties {
         this.#_logger.trace(JSON.stringify(this));
         return this;
     }
+
+    set alpha3D(value){
+        this.setAlpha3D(value);
+    }
     
     setAlpha3D (value) {
         this.#_alpha3D = value;
@@ -240,6 +284,10 @@ class Properties {
         this.#_logger.trace(JSON.stringify(this));
         return this;
     }
+
+    set beta3D(value){
+        this.setBeta3D(value);
+    }
     
     setBeta3D (value) {
         this.#_beta3D = value;
@@ -247,6 +295,10 @@ class Properties {
         this.#_logger.debug("setBeta3D.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
+    }
+
+    set depth3D(value){
+        this.setDepth3D(value);
     }
     
     setDepth3D (value) {
@@ -257,6 +309,10 @@ class Properties {
         return this;
     }
     
+    set percentage(value){
+        this.setPercentage(value);
+    }
+
     setPercentage (value) {
         this.#_percentage = value;
         this.#_percentage_userDefined = true;
@@ -266,26 +322,33 @@ class Properties {
     }
 
     /**
-     * @description Updates a Properties with another properties contents. The contents of the first will only be updated if their where not previously 
-     * @param {*} anotherProperties
+     * @description Updates a Properties with another properties contents. Own contents will only be updated if not yet set.
+     * @param {Properties} anotherProperties
      * @memberof Properties
      */
     updateWith (anotherProperties){
+        if (! this.#_chartType_userDefined) this.setChartType(anotherProperties.chartType);
         if (! this.title) this.setTitle(anotherProperties.title);
         if (! this.subtitle) this.setSubtitle(anotherProperties.subtitle);
         if (! this.xLabel) this.setXLabel(anotherProperties.xLabel);
         if (! this.yLabel) this.setYLabel(anotherProperties.yLabel);
         if (! this.stackingType) this.setStackingType(anotherProperties.stackingType);
-        if (! this.id) this.setId(anotherProperties.id);
         if (! this.#_sort_userDefined) this.setSort(anotherProperties.sort);
-        if (! this.#_chartType_userDefined) this.setChartType(anotherProperties.chartType);
         if (! this.#_animation_userDefined) this.setAnimation(anotherProperties.animation);
+        if (! this.#_percentage_userDefined) this.setPercentage(anotherProperties.percentage);
         if (! this.#_alpha3D_userDefined) this.setAlpha3D(anotherProperties.alpha3D);
         if (! this.#_beta3D_userDefined) this.setBeta3D(anotherProperties.beta3D);
         if (! this.#_depth3D_userDefined) this.setDepth3D(anotherProperties.depth3D);
-        if (! this.#_percentage_userDefined) this.setPercentage(anotherProperties.percentage);
+        if (! this.id) this.setId(anotherProperties.id);
     }
-        
+    
+    /**
+     * @description Returns a valid Properties instance. Will create a new Properties if the parameter is invalid, or will return the Properties instance otherwise.
+     * @static
+     * @param {Properties} properties A Properties instance or a JSON representation of a properties instance
+     * @returns {Properties} 
+     * @memberof Properties
+     */
     static validOrNew(properties){
         let p = undefined;
         if (properties == null){

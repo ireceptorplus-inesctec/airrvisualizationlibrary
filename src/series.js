@@ -1,6 +1,11 @@
 // Import and export other modules from AIIR Visualization Library
 import {Logger, ResultSeriesType} from './common';
 
+/**
+ * @description A Data Item in a Result Series
+ * @author Marco Amaro Oliveira
+ * @class ResultSeriesDataItem
+ */
 class ResultSeriesDataItem{
     #_logger;
     #_name;
@@ -22,83 +27,178 @@ class ResultSeriesDataItem{
     }
     
     get name(){
+        return this.getName();
+    }
+    
+    /**
+     * @description returns the name of the Data item
+     * @returns {string} 
+     * @memberof ResultSeriesDataItem
+     */
+    getName(){
         return this.#_name;
     }
     
     get x(){
+        return this.getX();
+    }
+        
+    /**
+     * @description returns the x value of the Data item
+     * @returns {Number} 
+     * @memberof ResultSeriesDataItem
+     */
+    getX(){
         return this.#_x;
     }
     
     get y(){
+        return this.getY();
+    }
+            
+    /**
+     * @description returns the y value of the Data item
+     * @returns {Number} 
+     * @memberof ResultSeriesDataItem
+     */
+    getY(){
         return this.#_y;
     }
     
     get z(){
+        return this.getZ();
+    }
+            
+    /**
+     * @description returns the z value of the Data item
+     * @returns {Number} 
+     * @memberof ResultSeriesDataItem
+     */
+    getZ(){
         return this.#_z;
     }
     
     get color(){
+        return this.getColor();
+    }
+            
+    /**
+     * @description returns the color value of the Data item
+     * @returns {Number} 
+     * @memberof ResultSeriesDataItem
+     */
+    getColor(){
         return this.#_color;
     }
     
     get drilldown(){
+        return this.getDrilldown();
+    }
+            
+    /**
+     * @description returns the name of the ResultSeries that is to be used as drilldown for the Data item
+     * @returns {Number} 
+     * @memberof ResultSeriesDataItem
+     */
+    getDrilldown(){
         return this.#_drilldown;
     }
 
     set name(name){
         this.setName(name);
     }
+
+    /**
+     * @description Sets the name of this Data item
+     * @param {string} name
+     * @returns {DataItem} this data item
+     * @memberof ResultSeriesDataItem
+     */
+    setName(name){
+        this.#_name = name;
+        return this;
+    }
     
     set x(x){
         this.setX(x);
     }
     
+    /**
+     * @description Sets the x value of this Data item
+     * @param {Number} xValue
+     * @returns {DataItem} this data item
+     * @memberof ResultSeriesDataItem
+     */
+    setX(xValue){
+        this.#_x = xValue;
+        return this;
+    }
+    
     set y(y){
         this.setY(y);
+    }
+
+    /**
+     * @description Sets the y value of this Data item
+     * @param {Number} yValue
+     * @returns {DataItem} this data item
+     * @memberof ResultSeriesDataItem
+     */
+    setY(yValue){
+        this.#_y = yValue;
+        return this;
     }
     
     set z(z){
         this.setZ(z);
     }
+        
+    /**
+     * @description Sets the z value of this Data item
+     * @param {Number} zValue
+     * @returns {DataItem} this data item
+     * @memberof ResultSeriesDataItem
+     */
+    setZ(zValue){
+        this.#_z = zValue;
+        return this;
+    }
     
     set color(value){
         this.setColor(value);
+    }
+
+    /**
+     * @description Sets the color value of this Data item
+     * @param {Number} value
+     * @returns {DataItem} this data item
+     * @memberof ResultSeriesDataItem
+     */
+    setColor(value){
+        this.#_color = value;
+        return this;
     }
     
     set drilldown(drilldown){
         this.setDrilldown(drilldown);
     }
 
-    setName(name){
-        this.#_name = name;
-        return this;
-    }
-    
-    setX(x){
-        this.#_x = x;
-        return this;
-    }
-    
-    setY(y){
-        this.#_y = y;
-        return this;
-    }
-    
-    setZ(z){
-        this.#_z = z;
-        return this;
-    }
-    
-    setColor(value){
-        this.#_color = value;
+    /**
+     * @description Sets the name of the drilldown series of this Data item
+     * @param {string} drilldownName
+     * @returns {DataItem} this data item
+     * @memberof ResultSeriesDataItem
+     */
+    setDrilldown(drilldownName){
+        this.#_drilldown = drilldownName;
         return this;
     }
 
-    setDrilldown(drilldown){
-        this.#_drilldown = drilldown;
-        return this;
-    }
-
+    /**
+     * @description Returns a JSON representation of this object
+     * @returns {*} 
+     * @memberof ResultSeriesDataItem
+     */
     toJSON(){
         let {name, x, y, z, color, drilldown} = this;
         let json = {name, x, y, z, color, drilldown};
@@ -119,6 +219,11 @@ class ResultSeriesDataItem{
     }
 }
 
+/**
+ * @description A ResultSeries is a set of ResultSeriesDataItem and the metadata of that set.
+ * @author Marco Amaro Oliveira
+ * @class ResultSeries
+ */
 class ResultSeries{
     #_logger;
     #_repertoireId;
@@ -302,16 +407,33 @@ class ResultSeries{
         return this;
     }
 
-    setStack(value){
-        this.#_stack = value;
+    /**
+     * @description Sets the stack name to be used by this Series when using stacked Charts
+     * @param {string} stackName
+     * @returns {ResultSeries} 
+     * @memberof ResultSeries
+     */
+    setStack(stackName){
+        this.#_stack = stackName;
         return this;
     }
     
+    /**
+     * @description Returns a JSON representation of the ResultSeries
+     * @returns {JSON} 
+     * @memberof ResultSeries
+     */
     toJSON(){
         let {repertoireId, sampleProcessingId, dataProcessingId, name, fieldName, parentName, type, color, data} = this;
         return {repertoireId, sampleProcessingId, dataProcessingId, name, fieldName, parentName, type, color, data};
     }
         
+    //TODO: This method (or this action) must be moved into a Highcharts 'package'. Probably into HighchartsChart class.
+    /**
+     * @description Returns a this ResultSeries formatted as an HighCharts.series
+     * @returns {HighCharts.series} 
+     * @memberof ResultSeries
+     */
     asHighchartSeries(){
 
         let {id, name, color} = this;

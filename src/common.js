@@ -118,8 +118,11 @@ class Logger {
         }
     }
 }
+
+
 /**
- * Result Series types
+ * @description ResultSeries types
+ * @class ResultSeriesType
  */
 class ResultSeriesType {
 
@@ -267,34 +270,74 @@ class ResultSeriesType {
         this.#_duplicate = duplicate;
     }
 
+    /**
+     * @description the code for this type
+     * @readonly
+     * @memberof ResultSeriesType
+     */
     get typeCode(){
         return this.#_typeCode;
     }
     
+    /**
+     * @description the name of the type
+     * @readonly
+     * @memberof ResultSeriesType
+     */
     get typeName(){
         return this.#_typeName;
     }
 
+    /**
+     * @description returns true if unique flag is set, returns false otherwise.
+     * @readonly
+     * @memberof ResultSeriesType
+     */
     get unique(){
         return this.#_unique;
     }
 
+    /**
+     * @description returns true if exists flag is set, returns false otherwise.
+     * @readonly
+     * @memberof ResultSeriesType
+     */
     get exists(){
         return this.#_exists;
     }
 
+    /**
+     * @description returns true if productive flag is set, returns false otherwise.
+     * @readonly
+     * @memberof ResultSeriesType
+     */
     get productive(){
         return this.#_productive;
     }
 
+    /**
+     * @description returns true if rearrangement flag is set, returns false otherwise.
+     * @readonly
+     * @memberof ResultSeriesType
+     */
     get rearrangement(){
         return this.#_rearrangement;
     }
 
+    /**
+     * @description returns true if duplicate flag is set, returns false otherwise.
+     * @readonly
+     * @memberof ResultSeriesType
+     */
     get duplicate(){
         return this.#_duplicate;
     }
 
+    /**
+     * @description Build a String representation of the ResultSeriesType
+     * @returns {string} 
+     * @memberof ResultSeriesType
+     */
     toString(){
         let result = this.#_typeName;
         if (this.#_exists || this.#_productive || this.#_unique){

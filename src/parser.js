@@ -4,6 +4,7 @@ import {Logger, ResultSeriesType, GeneType} from './common';
 /**
  * The Parser class
  * @description The Parser class
+ * @abstract
  * @author Marco Amaro Oliveira
  * @class Parser
  */
@@ -27,12 +28,21 @@ class Parser {
     }
 
     /**
-     * Array of ResultSeries
-     * @description the main series for the chart
-     * @memberof Parser
+     * @description returns this.getSeries()
      * @type ResultSeries[]
+     * @memberof Parser
      */
     get series(){
+        return this.getSeries();
+    }
+
+    /**
+     * Array of ResultSeries
+     * @description the main series for the chart
+     * @returns {ResultSeries[]}
+     * @memberof Parser
+     */
+    getSeries(){
         this.#_logger.debug("getting series.");
         return this.#_series;
     }
@@ -40,6 +50,7 @@ class Parser {
     /**
      * @description preparse() method holds all the actions required to be executed before the parsing of the data starts. Parser subclasses need to overwrite this method.
      * @param {JSON} sourceData An Airr Data Commons JSON file
+     * @abstract
      * @memberf Result
      */
     preparse(sourceData){
@@ -50,6 +61,7 @@ class Parser {
     /**
      * @description onparse() method executes the data parsing from the Airr Data Commons file to the internal ResultSeries. Parser subclasses need to overwrite this method.
      * @param {JSON} sourceData An Airr Data Commons JSON file
+     * @abstract
      * @memberof Result
      */
     onparse(sourceData){
@@ -60,6 +72,7 @@ class Parser {
     /**
      * @description postparse() method holds all the actions required to be executed after the parsing of the data ends. Parser subclasses need to overwrite this method.
      * @param {JSON} sourceData An Airr Data Commons JSON file
+     * @abstract
      * @memberof Result
      */
     postparse(sourceData){
@@ -96,7 +109,6 @@ class DrilldownParser extends Parser {
     /**
      * Array of ResultSeries, if unused returns an empty array.
      * @description the series used for drilldown
-     * @author Marco Amaro Oliveira
      * @memberof Parser
      * @type ResultSeries[]
      */

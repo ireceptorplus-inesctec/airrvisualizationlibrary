@@ -15,6 +15,13 @@ Data(Highcharts);
 import Drilldown from 'highcharts/modules/drilldown';
 Drilldown(Highcharts);
 */
+
+/**
+ * @description Abstract Class for the Chart type.
+ * @abstract
+ * @author Marco Amaro Oliveira
+ * @class Chart
+ */
 class Chart {
     #_logger;
     #_id;
@@ -34,7 +41,11 @@ class Chart {
         }
         this.#_id = this.#_properties.id;
     }
-
+    
+    set result(result){
+        setResult(result);
+    }
+    
     //setter
     setResult(result){
         this.#_logger.debug("setResult");
@@ -51,10 +62,16 @@ class Chart {
         return this;
     }
     
-    set result(result){
-        setResult(result);
+    set properties(properties){
+        this.setProperties(properties);
     }
     
+    /**
+     * @description Sets the Properties for this chart
+     * @param {Properties} properties
+     * @returns {Chart} 
+     * @memberof Chart
+     */
     setProperties(properties){
         if (properties instanceof Properties){
             this.#_properties = properties;
@@ -65,29 +82,62 @@ class Chart {
     }
     
     get properties(){
-        return this.#_properties;
+        return this.getProperties();
     }
     
-    set properties(properties){
-        this.setProperties(properties);
+    /**
+     * @description Returns the Properties of this chart
+     * @returns {Properties} 
+     * @memberof Chart
+     */
+    getProperties(){
+        return this.#_properties;
     }
     
     //getter
     get result(){
+        return this.getResult();
+    }
+
+    /**
+     * @description returns the Result of this Chart.
+     * @returns {Result} 
+     * @memberof Chart
+     */
+    getResult(){
         return this.#_result;
     }
 
     get id(){
+        return this.getId();
+    }
+
+    /**
+     * @description Returns the ID of this Chart
+     * @returns {String} 
+     * @memberof Chart
+     */
+    getId(){
         return this.#_id;
     }
 
+    /**
+     * @description Abstract method. All subclasses must implement this method.
+     * @abstract
+     * @throws Throws Error if directly called.
+     * @memberof Chart
+     */
     plot(){
         this.#_logger.fatal("this plot() method should never execute, specializations of Chart need to overload it.");
         throw 'This method should not be called, implementations need to overload it.';        
     }
 }
 
-
+/**
+ * @description Chart that uses the Highcharts Libary to plot graphs
+ * @class HichartsChart
+ * @extends {Chart}
+ */
 class HichartsChart extends Chart{
     #_chart;
     #_logger;
@@ -104,9 +154,23 @@ class HichartsChart extends Chart{
     }
 
     get chart(){
+        return this.getChart();
+    }
+
+    /**
+     * @description Returns a pointer to the Highcharts.chart created in this class.
+     * @returns {Highcharts.chart} 
+     * @memberof HichartsChart
+     */
+    getChart(){
         return this.#_chart;
     }
 
+    /**
+     * @description Verifies if Highcharts Library and all required Highcharts modules are loaded before creating instances of this module.
+     * @throws Error if Highcharts Library or any of the required modules are missing.
+     * @memberof HichartsChart
+     */
     checkHighcharts(){
         this.#_logger.debug("Checking if highcharts resources are available.");
         let Highcharts = window.Highcharts;
@@ -132,7 +196,10 @@ class HichartsChart extends Chart{
         }
     }
 
-    //plot
+    /**
+     * @description Creates an Highcharts.chart and displays it on the HTML container as defined in the Properties object.
+     * @memberof HichartsChart
+     */
     plot(){
         let timer = new DebugTimer();
         this.#_logger.debug("Ploting chart");
@@ -253,9 +320,11 @@ class HichartsChart extends Chart{
     }
 
     /**
-     * This MouseDownEvent is specific for Highcharts.
-     * 
-     * @param {Highchart} targetChart 
+     * @description MouseDownEvent specific for Highcharts.chart
+     * @param {Highchart.chart} targetChart
+     * @param {boolean} is3D
+     * @returns {function} the MousedownEvent function 
+     * @memberof HichartsChart
      */
     getMousedownEvent(targetChart, is3D){
         this.#_logger.debug("getMousedownEvent");

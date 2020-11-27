@@ -71,7 +71,7 @@ class CountStatsResult extends StatsResult {
     }
 }
 
-class JunctionLenghtStatsResult extends StatsResult {
+class JunctionLengthStatsResult extends StatsResult {
     #_logger;
 
     // Array of ResultSeries
@@ -83,7 +83,7 @@ class JunctionLenghtStatsResult extends StatsResult {
 
     constructor(data = undefined) {
         super(data);
-        this.#_logger = new Logger('JunctionLenghtStatsResult');
+        this.#_logger = new Logger('JunctionLengthStatsResult');
         this.#_logger.debug("Constructor.");
    
         this.#_drilldownSeries = {series: []};
@@ -292,7 +292,7 @@ class CGeneStatsResult extends GeneStatsResult {
 }
 
 module.exports = {
-    JunctionLenghtStatsResult: JunctionLenghtStatsResult,
+    JunctionLengthStatsResult: JunctionLengthStatsResult,
     CountStatsResult: CountStatsResult,
     GeneStatsResult: GeneStatsResult,
     VGeneStatsResult: VGeneStatsResult,
@@ -301,4 +301,4 @@ module.exports = {
     CGeneStatsResult: CGeneStatsResult
   };
 
-export {JunctionLenghtStatsResult, CountStatsResult, GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult};
+export {JunctionLengthStatsResult, CountStatsResult, GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult};

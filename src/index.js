@@ -12,14 +12,19 @@ import {Logger, ResultSeriesType, GeneType} from './common';
 import {Properties} from './properties';
 import {ResultSeriesDataItem, ResultSeries} from "./series";
 import {Result} from "./result";
-import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtStatsResult, CountStatsResult} from "./iReceptorStatsResult";
+import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLengthStatsResult, CountStatsResult} from "./iReceptorStatsResult";
 import {ImmuneDbCloneCountResult} from "./immuneDbResult";
 import {HichartsChart} from "./charts";
 
-/**
+/*
  * Several dependencies may be required for testing if they are not imported.
  * iR+ partners required that Highcharts is not imported and bundled with AIRR Visualization Library.
  * 
+ */
+/**
+ * @description A AIRR Data Visualization Library.
+ * @author Marco Amaro Oliveira
+ * @class VisualizationLibrary
  */
 class VisualizationLibrary {
     #_charts;
@@ -47,6 +52,12 @@ class VisualizationLibrary {
         return this.#_version;
     }
     
+    /**
+     * @description Create a Chart provided a Properties Object. At the moment only Highcharts Library is supported to plot the Graphs.
+     * @param {Properties} [properties=undefined]
+     * @returns {Chart} 
+     * @memberof VisualizationLibrary
+     */
     createChart(properties=undefined){
         properties = Properties.validOrNew(properties);
         let _chart = this.get(properties.id);
@@ -60,6 +71,12 @@ class VisualizationLibrary {
         return _chart;
     }
 
+    /**
+     * @description Creates a GeneUsage Stats Result. The gene parameter defines the specific type of Result that is returned.
+     * @param {GeneType} gene
+     * @returns {StatsResult} 
+     * @memberof VisualizationLibrary
+     */
     createGeneUsageStatsResult(gene){
         let statsResult = undefined;
         switch (gene) {
@@ -81,42 +98,93 @@ class VisualizationLibrary {
         return statsResult;
     }
     
+    /**
+     * @description Creates a new V Gene Usage StatsResult
+     * @returns {VGeneStatsResult} 
+     * @memberof VisualizationLibrary
+     */
     createVGeneUsageStatsResult(){
         return new VGeneStatsResult();
     }
     
+    /**
+     * @description Creates a new D Gene Usage StatsResult
+     * @returns {DGeneStatsResult} 
+     * @memberof VisualizationLibrary
+     */
     createDGeneUsageStatsResult(){
         return new DGeneStatsResult();
     }
     
+    /**
+     * @description Creates a new J Gene Usage StatsResult
+     * @returns {JGeneStatsResult} 
+     * @memberof VisualizationLibrary
+     */
     createJGeneUsageStatsResult(){
         return new JGeneStatsResult();
     }
     
+    /**
+     * @description Creates a new C Gene Usage StatsResult
+     * @returns {CGeneStatsResult} 
+     * @memberof VisualizationLibrary
+     */
     createCGeneUsageStatsResult(){
         return new CGeneStatsResult();
     }
-
+    
+    /**
+     * @description Creates a new ImmuneDb Clone Count Result
+     * @returns {ImmuneDbCloneCountResult} 
+     * @memberof VisualizationLibrary
+     */
     createImmuneDbCloneCountResult(){
         return new ImmuneDbCloneCountResult();
     }
-
+    
+    /**
+     * @description Creates a new Junction Length StatsResult
+     * @returns {JunctionLengthStatsResult} 
+     * @memberof VisualizationLibrary
+     */
     createJunctionLengthStatsResult(){
-        return new JunctionLenghtStatsResult();
+        return new JunctionLengthStatsResult();
     }
 
+    /**
+     * @description Creates a new Count StatsResult
+     * @returns {CountStatsResult} 
+     * @memberof VisualizationLibrary
+     */
     createCountStatsResult(){
         return new CountStatsResult();
     }
 
+    /**
+     * @description Creates a new Properties Object
+     * @returns {Properties} 
+     * @memberof VisualizationLibrary
+     */
     createProperties(){
         return new Properties();
     }
     
+    /**
+     * @description Returns the chart whose identifier is passed as parameter, or null if not exists.
+     * @param {string} identifier
+     * @returns {Chart} 
+     * @memberof VisualizationLibrary
+     */
     get(identifier) {
         return this.#_charts[identifier];
     }
     
+    /**
+     * @description Sets the logging level globally for the library. See Logger.level for details and values.
+     * @param {Number} level
+     * @memberof VisualizationLibrary
+     */
     setDebugLevel(level){
         //FIXME: Setting degub level at class level should be avoided. It will set debug level systemwise.
         Logger.setDebugLevel(level);
@@ -131,7 +199,7 @@ module.exports = {
         DGeneStatsResult: DGeneStatsResult, 
         JGeneStatsResult: JGeneStatsResult, 
         CGeneStatsResult: CGeneStatsResult,
-        JunctionLenghtStatsResult: JunctionLenghtStatsResult,
+        JunctionLengthStatsResult: JunctionLengthStatsResult,
         CountStatsResult: CountStatsResult,
         ResultSeries: ResultSeries, 
         ResultSeriesDataItem: ResultSeriesDataItem, 
@@ -141,7 +209,7 @@ module.exports = {
         Logger: Logger
     };
 
-export { VisualizationLibrary, HichartsChart, Result, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLenghtStatsResult,
+export { VisualizationLibrary, HichartsChart, Result, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLengthStatsResult,
     CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
     ResultSeriesType, Logger};
 
