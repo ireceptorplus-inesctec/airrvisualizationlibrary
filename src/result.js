@@ -1,5 +1,5 @@
-import {Logger} from './common';
-import {Parser} from "./parser";
+import {Logger} from './common.js';
+import {Parser} from "./parser.js";
 
 /**
  * @description Class that represents a Result. This is an Abstract Class and should not be instanciated.
@@ -242,9 +242,10 @@ class Result {
 
 }
 
-
+/*
 module.exports = {
     Result: Result
-  };
+};
+*/
 
 export {Result};

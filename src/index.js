@@ -8,13 +8,13 @@
 */
 
 // Import and export other modules from AIIR Visualization Library
-import {Logger, ResultSeriesType, GeneType} from './common';
-import {Properties} from './properties';
-import {ResultSeriesDataItem, ResultSeries} from "./series";
-import {Result} from "./result";
-import {VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLengthStatsResult, CountStatsResult} from "./iReceptorStatsResult";
-import {ImmuneDbCloneCountResult} from "./immuneDbResult";
-import {HichartsChart} from "./charts";
+import {Logger, ResultSeriesType, GeneType} from './common.js';
+import {Properties} from './properties.js';
+import {ResultSeriesDataItem, ResultSeries} from "./series.js";
+import {Result} from "./result.js";
+import {VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult, CountStatsResult} from "./iReceptorStatsResult.js";
+import {ImmuneDbCloneCountResult} from "./immuneDbResult.js";
+import {HighchartsChart} from "./charts.js";
 
 /*
  * Several dependencies may be required for testing if they are not imported.
@@ -62,7 +62,7 @@ class VisualizationLibrary {
         properties = Properties.validOrNew(properties);
         let _chart = this.get(properties.id);
         if (_chart == undefined) {
-            _chart = new HichartsChart(properties);
+            _chart = new HighchartsChart(properties);
             this.#_charts[_chart.id] = _chart;
         }else{
             //FIXME: Properties should only be set through chart constructor. Changing properties otherwise may lead to unknown results.
@@ -100,38 +100,38 @@ class VisualizationLibrary {
     
     /**
      * @description Creates a new V Gene Usage StatsResult
-     * @returns {VGeneStatsResult} 
+     * @returns {VGeneUsageStatsResult} 
      * @memberof VisualizationLibrary
      */
     createVGeneUsageStatsResult(){
-        return new VGeneStatsResult();
+        return new VGeneUsageStatsResult();
     }
     
     /**
      * @description Creates a new D Gene Usage StatsResult
-     * @returns {DGeneStatsResult} 
+     * @returns {DGeneUsageStatsResult} 
      * @memberof VisualizationLibrary
      */
     createDGeneUsageStatsResult(){
-        return new DGeneStatsResult();
+        return new DGeneUsageStatsResult();
     }
     
     /**
      * @description Creates a new J Gene Usage StatsResult
-     * @returns {JGeneStatsResult} 
+     * @returns {JGeneUsageStatsResult} 
      * @memberof VisualizationLibrary
      */
     createJGeneUsageStatsResult(){
-        return new JGeneStatsResult();
+        return new JGeneUsageStatsResult();
     }
     
     /**
      * @description Creates a new C Gene Usage StatsResult
-     * @returns {CGeneStatsResult} 
+     * @returns {CGeneUsageStatsResult} 
      * @memberof VisualizationLibrary
      */
     createCGeneUsageStatsResult(){
-        return new CGeneStatsResult();
+        return new CGeneUsageStatsResult();
     }
     
     /**
@@ -191,14 +191,15 @@ class VisualizationLibrary {
     }
 }
 
+/*
 module.exports = { 
         VisualizationLibrary: VisualizationLibrary,
-        HichartsChart: HichartsChart, 
+        HighchartsChart: HighchartsChart, 
         Result: Result, 
-        VGeneStatsResult: VGeneStatsResult, 
-        DGeneStatsResult: DGeneStatsResult, 
-        JGeneStatsResult: JGeneStatsResult, 
-        CGeneStatsResult: CGeneStatsResult,
+        VGeneUsageStatsResult: VGeneUsageStatsResult, 
+        DGeneUsageStatsResult: DGeneUsageStatsResult, 
+        JGeneUsageStatsResult: JGeneUsageStatsResult, 
+        CGeneUsageStatsResult: CGeneUsageStatsResult,
         JunctionLengthStatsResult: JunctionLengthStatsResult,
         CountStatsResult: CountStatsResult,
         ResultSeries: ResultSeries, 
@@ -208,8 +209,9 @@ module.exports = {
         ResultSeriesType: ResultSeriesType, 
         Logger: Logger
     };
+*/
 
-export { VisualizationLibrary, HichartsChart, Result, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult, JunctionLengthStatsResult,
+export { VisualizationLibrary, HighchartsChart, Result, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult,
     CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
     ResultSeriesType, Logger};
 

@@ -1,6 +1,6 @@
-import {Logger, ResultSeriesType, Common, DebugTimer} from './common';
-import {Parser, DrilldownParser} from "./parser";
-import {ResultSeriesDataItem, ResultSeries} from "./series";
+import {Logger, ResultSeriesType, Common, DebugTimer} from './common.js';
+import {Parser, DrilldownParser} from "./parser.js";
+import {ResultSeriesDataItem, ResultSeries} from "./series.js";
 
 class ImmuneDbCloneCountParser extends Parser {
     #_logger;
@@ -154,9 +154,10 @@ class ImmuneDbCloneCountParser extends Parser {
     }  
 }
 
-
+/*
 module.exports = {
     ImmuneDbCloneCountParser: ImmuneDbCloneCountParser
-  };
+};
+*/
 
 export {ImmuneDbCloneCountParser};

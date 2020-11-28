@@ -1,7 +1,7 @@
-import { Logger, ResultSeriesType, Common, DebugTimer, GeneType } from './common';
-import { Properties} from "./properties";
-import { Parser, DrilldownParser } from "./parser";
-import { ResultSeriesDataItem, ResultSeries } from "./series";
+import { Logger, ResultSeriesType, Common, DebugTimer, GeneType } from './common.js';
+import { Properties} from "./properties.js";
+import { Parser, DrilldownParser } from "./parser.js";
+import { ResultSeriesDataItem, ResultSeries } from "./series.js";
 
 class StatsParserConstants{
     static VOCABULARY = {
@@ -1449,6 +1449,7 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
     }
 }
 
+/*
 module.exports = {
     JunctionLenghtStatsParser: JunctionLenghtStatsParser,
     CountStatsParser: CountStatsParser,
@@ -1456,5 +1457,6 @@ module.exports = {
     GeneUsageDrilldownStatsParser: GeneUsageDrilldownStatsParser,
     JGeneUsageDrilldownStatsParser: JGeneUsageDrilldownStatsParser
 };
+*/
 
 export { JunctionLenghtStatsParser, CountStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser };

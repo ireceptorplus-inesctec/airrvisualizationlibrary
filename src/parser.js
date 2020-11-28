@@ -1,5 +1,5 @@
 // Import and export other modules from AIIR Visualization Library
-import {Logger, ResultSeriesType, GeneType} from './common';
+import {Logger, ResultSeriesType, GeneType} from './common.js';
 
 /**
  * The Parser class
@@ -120,10 +120,11 @@ class DrilldownParser extends Parser {
 }
 
 
-
+/*
 module.exports = {
     Parser: Parser,
     DrilldownParser: DrilldownParser
-  };
+};
+*/
 
 export {Parser, DrilldownParser};

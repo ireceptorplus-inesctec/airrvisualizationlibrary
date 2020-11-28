@@ -1,8 +1,8 @@
 // Import and export other modules from AIIR Visualization Library
-import {Logger, ResultSeriesType} from './common';
-import {Properties} from './properties';
-import {Result} from './result';
-import {ImmuneDbCloneCountParser} from "./immuneDbParser";
+import {Logger, ResultSeriesType} from './common.js';
+import {Properties} from './properties.js';
+import {Result} from './result.js';
+import {ImmuneDbCloneCountParser} from "./immuneDbParser.js";
 
 
 
@@ -76,9 +76,10 @@ class ImmuneDbCloneCountResult extends Result {
     }
 }
 
-
+/*
 module.exports = {
     ImmuneDbCloneCountResult: ImmuneDbCloneCountResult
-  };
+};
+*/
 
 export {ImmuneDbCloneCountResult};

@@ -1,7 +1,7 @@
 // Import and export other modules from AIIR Visualization Library
-import {Logger, DebugTimer} from './common';
-import {Properties} from './properties';
-import {Result} from "./result";
+import {Logger, DebugTimer} from './common.js';
+import {Properties} from './properties.js';
+import {Result} from "./result.js";
 
 // Import Hicharts into module
 /*
@@ -135,10 +135,10 @@ class Chart {
 
 /**
  * @description Chart that uses the Highcharts Libary to plot graphs
- * @class HichartsChart
+ * @class HighchartsChart
  * @extends {Chart}
  */
-class HichartsChart extends Chart{
+class HighchartsChart extends Chart{
     #_chart;
     #_logger;
     #_highcharts;
@@ -160,7 +160,7 @@ class HichartsChart extends Chart{
     /**
      * @description Returns a pointer to the Highcharts.chart created in this class.
      * @returns {Highcharts.chart} 
-     * @memberof HichartsChart
+     * @memberof HighchartsChart
      */
     getChart(){
         return this.#_chart;
@@ -169,7 +169,7 @@ class HichartsChart extends Chart{
     /**
      * @description Verifies if Highcharts Library and all required Highcharts modules are loaded before creating instances of this module.
      * @throws Error if Highcharts Library or any of the required modules are missing.
-     * @memberof HichartsChart
+     * @memberof HighchartsChart
      */
     checkHighcharts(){
         this.#_logger.debug("Checking if highcharts resources are available.");
@@ -198,7 +198,7 @@ class HichartsChart extends Chart{
 
     /**
      * @description Creates an Highcharts.chart and displays it on the HTML container as defined in the Properties object.
-     * @memberof HichartsChart
+     * @memberof HighchartsChart
      */
     plot(){
         let timer = new DebugTimer();
@@ -324,7 +324,7 @@ class HichartsChart extends Chart{
      * @param {Highchart.chart} targetChart
      * @param {boolean} is3D
      * @returns {function} the MousedownEvent function 
-     * @memberof HichartsChart
+     * @memberof HighchartsChart
      */
     getMousedownEvent(targetChart, is3D){
         this.#_logger.debug("getMousedownEvent");
@@ -387,10 +387,10 @@ class HichartsChart extends Chart{
     }
 }
 
-
+/*
 module.exports = { 
     Chart: Chart,
-    HichartsChart: HichartsChart
+    HighchartsChart: HighchartsChart
 };
-
-export { Chart, HichartsChart};
+*/
+export { Chart, HighchartsChart};

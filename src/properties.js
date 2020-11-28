@@ -1,4 +1,4 @@
-import {Logger, Common} from './common';
+import {Logger, Common} from './common.js';
 
 /**
  * @description Properties class for setting visualization properties and costumizations.
@@ -376,8 +376,10 @@ class Properties {
     }
 }
 
+/*
 module.exports = {
     Properties: Properties
-  };
+};
+*/
 
   export {Properties};

@@ -1,4 +1,4 @@
-<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>120</x><y>1330</y><w>160</w><h>240</h></coordinates><panel_attributes>Logger
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>210</x><y>1330</y><w>160</w><h>240</h></coordinates><panel_attributes>Logger
 
 --
 _+ DEBUG_LEVEL: number_
@@ -14,7 +14,7 @@ _+ setDebugLevel(level)_
 + error(text)
 + fatal(text)
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1900</x><y>850</y><w>230</w><h>360</h></coordinates><panel_attributes>ResultSeriesType
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1990</x><y>850</y><w>230</w><h>360</h></coordinates><panel_attributes>ResultSeriesType
 --
 _+ FAMILY_
 _+ GENE_
@@ -38,7 +38,7 @@ _+ JUNCTION_AA_LENGTH_
 _+ contains(code) : boolean_
 _+ getByName(name) : ResultSeriesType_
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1630</x><y>1040</y><w>100</w><h>30</h></coordinates><panel_attributes>GeneType</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>1590</y><w>100</w><h>30</h></coordinates><panel_attributes>Common</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>580</x><y>780</y><w>320</w><h>410</h></coordinates><panel_attributes>Properties
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1720</x><y>1040</y><w>100</w><h>30</h></coordinates><panel_attributes>GeneType</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>210</x><y>1590</y><w>100</w><h>30</h></coordinates><panel_attributes>Common</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>670</x><y>780</y><w>320</w><h>410</h></coordinates><panel_attributes>Properties
 
 --
 - chartType : string;
@@ -65,7 +65,7 @@ style=autoresize
 
 _+ validOrNew(properties : Properties | JSON) : Properties_
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1900</x><y>1220</y><w>250</w><h>410</h></coordinates><panel_attributes>ResultSeriesDataItem
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1990</x><y>1220</y><w>250</w><h>410</h></coordinates><panel_attributes>ResultSeriesDataItem
 
 --
 - name: string
@@ -92,7 +92,7 @@ style=autoresize
 + getDrilldown() : Name
 + toJSON() : JSON
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1630</x><y>1090</y><w>180</w><h>390</h></coordinates><panel_attributes>ResultSeries
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1720</x><y>1090</y><w>180</w><h>390</h></coordinates><panel_attributes>ResultSeries
 
 --
 - type: ResultSerieType
@@ -118,7 +118,7 @@ style=autoresize
 + asHighchartSeries()
 
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1180</x><y>500</y><w>220</w><h>350</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1270</x><y>500</y><w>220</w><h>350</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
 /Result/
 --
 - data: JSON
@@ -141,7 +141,7 @@ style=autoresize
 /+ onparse(data : JSON)/
 /+ postparse(data : JSON)/
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1110</x><y>980</y><w>320</w><h>350</h></coordinates><panel_attributes>StatsResult
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1200</x><y>980</y><w>320</w><h>350</h></coordinates><panel_attributes>StatsResult
 
 --
 - geneType: GeneType
@@ -164,7 +164,7 @@ style=autoresize
 + parse(originalResult:JSON)
 
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>500</y><w>260</w><h>260</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>210</x><y>500</y><w>260</w><h>260</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
 /Chart/
 --
 - id: string
@@ -181,21 +181,21 @@ style=autoresize
 + getId() : String
 /+ plot()/
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>370</x><y>590</y><w>830</w><h>40</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>460</x><y>590</y><w>830</w><h>40</h></coordinates><panel_attributes>lt=-
 m1=
 m2=
-result</panel_attributes><additional_attributes>810;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1260</x><y>840</y><w>30</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>1420</x><y>1150</y><w>230</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
-series</panel_attributes><additional_attributes>10;20;210;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1800</x><y>1230</y><w>120</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
-data</panel_attributes><additional_attributes>10;20;100;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1800</x><y>1120</y><w>120</w><h>40</h></coordinates><panel_attributes>lt=-
+result</panel_attributes><additional_attributes>810;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1350</x><y>840</y><w>30</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>1510</x><y>1150</y><w>230</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+series</panel_attributes><additional_attributes>10;20;210;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1890</x><y>1230</y><w>120</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+data</panel_attributes><additional_attributes>10;20;100;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1890</x><y>1120</y><w>120</w><h>40</h></coordinates><panel_attributes>lt=-
 m1=
 m2=
-type</panel_attributes><additional_attributes>10;20;100;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1420</x><y>1040</y><w>230</w><h>40</h></coordinates><panel_attributes>lt=-
+type</panel_attributes><additional_attributes>10;20;100;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1510</x><y>1040</y><w>230</w><h>40</h></coordinates><panel_attributes>lt=-
 m1=
 m2=
-geneType</panel_attributes><additional_attributes>10;20;210;20</additional_attributes></element><element><id>Relation</id><coordinates><x>890</x><y>880</y><w>240</w><h>310</h></coordinates><panel_attributes>lt=-
+geneType</panel_attributes><additional_attributes>10;20;210;20</additional_attributes></element><element><id>Relation</id><coordinates><x>980</x><y>880</y><w>240</w><h>310</h></coordinates><panel_attributes>lt=-
 m1=
 m2=
-defaultProperties</panel_attributes><additional_attributes>10;10;90;10;90;290;220;290</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>0</y><w>330</w><h>330</h></coordinates><panel_attributes>ChartLibrary
+defaultProperties</panel_attributes><additional_attributes>10;10;90;10;90;290;220;290</additional_attributes></element><element><id>UMLClass</id><coordinates><x>90</x><y>0</y><w>330</w><h>330</h></coordinates><panel_attributes>ChartLibrary
 --
 - charts : { id: Chart }
 + product
@@ -217,7 +217,7 @@ defaultProperties</panel_attributes><additional_attributes>10;10;90;10;90;290;22
 + createCountStatsResult() : Result
 + createImmuneDbCloneCountResult() : Result
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>150</x><y>900</y><w>210</w><h>170</h></coordinates><panel_attributes>HichartsChart
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>240</x><y>900</y><w>210</w><h>170</h></coordinates><panel_attributes>HichartsChart
 --
 - chart: Highcharts.chart
 - highcharts: Highcharts
@@ -228,7 +228,7 @@ style=autoresize
 + constructor(properties: Properties)
 + getChart() : Highcharts.chart
 + plot()
-style=autoresize</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>750</y><w>30</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1650</x><y>503</y><w>170</w><h>210</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
+style=autoresize</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>750</y><w>30</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1740</x><y>503</y><w>170</w><h>210</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
 /Parser/
 --
 - series : ResultSeries[]
@@ -242,10 +242,10 @@ style=autoresize</panel_attributes><additional_attributes></additional_attribute
 /+ onparse(data : JSON)/
 /+ postparse(data : JSON)/
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1396</x><y>569</y><w>270</w><h>50</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1486</x><y>569</y><w>270</w><h>50</h></coordinates><panel_attributes>lt=-
 m1=
 m2=
-parser </panel_attributes><additional_attributes>10;20;250;24</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1625</x><y>749</y><w>220</w><h>150</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
+parser </panel_attributes><additional_attributes>10;20;250;24</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1715</x><y>749</y><w>220</w><h>150</h></coordinates><panel_attributes>&lt;&lt;Abstract&gt;&gt;
 /DrilldownParser/
 --
 - drilldownSeries : ResultSeries[]
@@ -255,7 +255,16 @@ parser </panel_attributes><additional_attributes>10;20;250;24</additional_attrib
 + constructor()
 + getDrilldownSeries() : ResultSeries[]
 style=autoresize
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1725</x><y>709</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>115</x><y>1631</y><w>100</w><h>30</h></coordinates><panel_attributes>DebugTimer</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>375</x><y>643</y><w>220</w><h>310</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1815</x><y>709</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>205</x><y>1631</y><w>100</w><h>30</h></coordinates><panel_attributes>DebugTimer</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>465</x><y>643</y><w>220</w><h>310</h></coordinates><panel_attributes>lt=-
 m1=
 m2=
-properties</panel_attributes><additional_attributes>10;10;110;10;110;290;200;290</additional_attributes></element></diagram>
+properties</panel_attributes><additional_attributes>10;10;110;10;110;290;200;290</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1296</x><y>1402</y><w>110</w><h>140</h></coordinates><panel_attributes>VGeneStatsResult
+
+--
+
+
+--
+
+
+style=autoresize
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1344</x><y>1320</y><w>30</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element></diagram>

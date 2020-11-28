@@ -44,96 +44,69 @@
         <script src="lib/highcharts/modules/exporting.js"></script> 
         <script src="lib/highcharts/modules/drilldown.js"></script> 
         <script src="lib/highcharts/modules/bullet.js"></script>
-        <script  src="dist/airrvisualization.js"></script>   
+        <!-- script src="dist/airrvisualization.js"></script -->   
 
-        <script>
-            function redrawChart(gene, url, identifier){
+        <script type="module">
+            /*
+             * Example using the Library as a module.
+             */
+            import {VisualizationLibrary, HighchartsChart, Result, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult, CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, ResultSeriesType, Logger} from './src/index.js';
+            
+
+            function redrawDrilldownJChart(url, identifier){
                 $.get(url, function(data){
-                    //let d = new StatsResult(gene);
+                    let d = new JGeneUsageStatsResult().setDrilldown(true).setData(data);
+                    let prop = new Properties().setId(identifier).setSort(true).setXLabel("Category");
+                    let chart = new HighchartsChart(prop).setResult(d).plot();
+                });
+            }
+
+            function redrawChart(gene, url, identifier){
+                /*
+                 * window.airrvisualization is still available
+                 */
+                $.get(url, function(data){
                     let result = window.airrvisualization.createGeneUsageStatsResult(gene).setData(data);
-                    //window.airrvisualization.setDebugLevel(0);
-                    
-                    //Example using Properties as an instance of Properties (through Library)
                     let properties = window.airrvisualization.createProperties();
                     properties.setId(identifier).setXLabel("Category").setSort(true).setTitle("My title");
-                    
-                    /*
-                    Change the creation of the result to within the constructor of the Chart.
-                    For this I need to set :
-                        properties.setDataType("VGeneUsage");
-                        properties.setData(data);
-                    at the properties Level.
-                    Results : don't need anymore to create...Result at the Library level! Might make it easier to pass the properties file to the Result and to the Parser!
-
-                    Problems:
-                        if datetype is not set? thorws Error upon Chart creation.
-                        if data is not set? Will not work...
-
-                    */
-                   // Make properties object mandatory
-                   let chart = window.airrvisualization.createChart(properties).setResult(result);
-                   
-                   //Have logic here..
-                   
-                   chart.plot();
+                    let chart = window.airrvisualization.createChart(properties).setResult(result);
+                    chart.plot();
                 });
             }
             function redrawDrilldownVChart(url, identifier){
                 $.get(url, function(data){
-                    //let d = new StatsResult(gene);
-                    let result = window.airrvisualization.createVGeneUsageStatsResult();
+                    let result = new VGeneUsageStatsResult();
                     result.setDrilldown(true).setData(data);
-                    //window.airrvisualization.setDebugLevel(0);
-
-                    //Example using Properties as a String
                     let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"Category\", \"yLabel\":\"Count\"}";
-                    let chart = window.airrvisualization.createChart(stringProperties).setResult(result).plot();
+                    let chart = new HighchartsChart(Properties.validOrNew(stringProperties)).setResult(result).plot();
                 });
             }
             function redrawDrilldownDChart(url, identifier){
                 $.get(url, function(data){
-                    //let d = new StatsResult(gene);
-                    let d = window.airrvisualization.createDGeneUsageStatsResult().setDrilldown(true).setData(data);
-                    //window.airrvisualization.setDebugLevel(0);
-
-                    //Example using Properties as a JSON Object
+                    let result = new DGeneUsageStatsResult().setDrilldown(true).setData(data);
                     let jsonProperties = {"id": identifier, "xLabel":"Category", "yLabel":"Example"};
-                    let chart = window.airrvisualization.createChart(jsonProperties).setResult(d).plot();
+                    let chart = new HighchartsChart(Properties.validOrNew(jsonProperties)).setResult(result).plot();
                 });
             }
-            function redrawDrilldownJChart(url, identifier){
-                $.get(url, function(data){
-                    //let d = new StatsResult(gene);
-                    let d = window.airrvisualization.createJGeneUsageStatsResult().setDrilldown(true).setData(data);
-                    //window.airrvisualization.setDebugLevel(0);
 
-                    //Example using Properties as a instance of Properties Class
-                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category");
-                    let chart = window.airrvisualization.createChart(prop).setResult(d).plot();
-                });
-            }
             function redrawDrilldownCountChart(url, identifier){
                 $.get(url, function(data){
-                    //let d = new StatsResult(gene);
-                    let d = window.airrvisualization.createCountStatsResult().setDrilldown(true).setData(data);
+                    let result = new CountStatsResult().setDrilldown(true).setData(data);
                     window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene")).setResult(d).plot();
+                    let chart = new HighchartsChart(new Properties().setId(identifier).setXLabel("Gene")).setResult(result).plot();
                 });
             }
             function redrawCountChart(url, identifier){
                 $.get(url, function(data){
-                    //let d = new StatsResult(gene);
-                    let d = window.airrvisualization.createCountStatsResult().setData(data);
-                    window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene")).setResult(d).plot();
+                    let result = new CountStatsResult().setData(data);
+                    Logger.setDebugLevel(0);
+                    let chart = new HighchartsChart(new Properties().setId(identifier).setXLabel("Gene")).setResult(result).plot();
                 });
             }
             function redrawJunctionChart(url, identifier){
                 $.get(url, function(data){
-                    //let d = new StatsResult(gene);
-                    let d = window.airrvisualization.createJunctionLengthStatsResult().setData(data);
-                    window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier)).setResult(d).plot();
+                    let result = new JunctionLengthStatsResult().setData(data);
+                    let chart = new HighchartsChart(new Properties().setId(identifier)).setResult(result).plot();
                 });
             }
             $(function () {

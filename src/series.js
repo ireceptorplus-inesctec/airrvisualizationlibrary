@@ -1,5 +1,5 @@
 // Import and export other modules from AIIR Visualization Library
-import {Logger, ResultSeriesType} from './common';
+import {Logger, ResultSeriesType} from './common.js';
 
 /**
  * @description A Data Item in a Result Series
@@ -459,9 +459,11 @@ class ResultSeries{
     }
 }
 
+/*
 module.exports = {
     ResultSeriesDataItem: ResultSeriesDataItem,
     ResultSeries: ResultSeries
-  };
+};
+*/
 
 export {ResultSeriesDataItem, ResultSeries};

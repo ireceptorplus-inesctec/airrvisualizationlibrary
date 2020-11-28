@@ -486,7 +486,7 @@ class DebugTimer {
     }
 }
 
-
+/*
 module.exports = {
     Logger: Logger,
     ResultSeriesType: ResultSeriesType,
@@ -494,5 +494,6 @@ module.exports = {
     Common: Common,
     DebugTimer: DebugTimer
 };
+*/
 
 export { Logger, ResultSeriesType, GeneType, Common, DebugTimer };

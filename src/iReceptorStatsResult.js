@@ -1,8 +1,8 @@
 // Import and export other modules from AIIR Visualization Library
-import {Logger, GeneType} from './common';
-import {Properties} from './properties';
-import {Result} from './result';
-import {JunctionLenghtStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser, CountStatsParser} from "./iReceptorStatsParser";
+import {Logger, GeneType} from './common.js';
+import {Properties} from './properties.js';
+import {Result} from './result.js';
+import {JunctionLenghtStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser, CountStatsParser} from "./iReceptorStatsParser.js";
 
 
 class StatsResult extends Result{
@@ -131,7 +131,7 @@ class JunctionLengthStatsResult extends StatsResult {
     }
 }
 
-class GeneStatsResult extends StatsResult {
+class GeneUsageStatsResult extends StatsResult {
     #_logger;
     
     #_geneType;
@@ -140,7 +140,7 @@ class GeneStatsResult extends StatsResult {
     
     constructor(type, data = undefined) {
         super(data);
-        this.#_logger = new Logger('GeneStatsResult');
+        this.#_logger = new Logger('GeneUsageStatsResult');
         this.#_logger.debug("Constructor.");
         if (!GeneType.contains(type)){
             logger.fatal('type must exist in GeneType.genes');
@@ -207,12 +207,12 @@ class GeneStatsResult extends StatsResult {
     }
 }
 
-class VGeneStatsResult extends GeneStatsResult {
+class VGeneUsageStatsResult extends GeneUsageStatsResult {
     #_logger;
     
     constructor(data = undefined) {
         super(GeneType.V_GENE, data);
-        this.#_logger = new Logger('VGeneStatsResult');
+        this.#_logger = new Logger('VGeneUsageStatsResult');
         this.#_logger.debug("Constructor.");
     }
     
@@ -225,12 +225,12 @@ class VGeneStatsResult extends GeneStatsResult {
     }
 }
 
-class DGeneStatsResult extends GeneStatsResult {
+class DGeneUsageStatsResult extends GeneUsageStatsResult {
     #_logger;
     
     constructor(data = undefined) {
         super(GeneType.D_GENE, data);
-        this.#_logger = new Logger('VGeneStatsResult');
+        this.#_logger = new Logger('DGeneUsageStatsResult');
         this.#_logger.debug("Constructor.");
     }
     
@@ -243,12 +243,12 @@ class DGeneStatsResult extends GeneStatsResult {
     }
 }
 
-class JGeneStatsResult extends GeneStatsResult {
+class JGeneUsageStatsResult extends GeneUsageStatsResult {
     #_logger;
     
     constructor(data = undefined) {
         super(GeneType.J_GENE, data);
-        this.#_logger = new Logger('VGeneStatsResult');
+        this.#_logger = new Logger('JGeneUsageStatsResult');
         this.#_logger.debug("Constructor.");
         
         // GeneStatsResult constructor already set the default Parser.
@@ -271,12 +271,12 @@ class JGeneStatsResult extends GeneStatsResult {
 
 }
 
-class CGeneStatsResult extends GeneStatsResult {
+class CGeneUsageStatsResult extends GeneUsageStatsResult {
     #_logger;
     
     constructor(data = undefined) {
         super(GeneType.C_GENE, data);
-        this.#_logger = new Logger('CGeneStatsResult');
+        this.#_logger = new Logger('CGeneUsageStatsResult');
         this.#_logger.debug("Constructor.");
     }
     
@@ -291,14 +291,16 @@ class CGeneStatsResult extends GeneStatsResult {
 
 }
 
+/*
 module.exports = {
     JunctionLengthStatsResult: JunctionLengthStatsResult,
     CountStatsResult: CountStatsResult,
-    GeneStatsResult: GeneStatsResult,
-    VGeneStatsResult: VGeneStatsResult,
-    DGeneStatsResult: DGeneStatsResult,
-    JGeneStatsResult: JGeneStatsResult,
-    CGeneStatsResult: CGeneStatsResult
-  };
+    GeneUsageStatsResult: GeneUsageStatsResult,
+    VGeneUsageStatsResult: VGeneUsageStatsResult,
+    DGeneUsageStatsResult: DGeneUsageStatsResult,
+    JGeneUsageStatsResult: JGeneUsageStatsResult,
+    CGeneUsageStatsResult: CGeneUsageStatsResult
+};
+*/
 
-export {JunctionLengthStatsResult, CountStatsResult, GeneStatsResult, VGeneStatsResult, DGeneStatsResult, JGeneStatsResult, CGeneStatsResult};
+export {JunctionLengthStatsResult, CountStatsResult, GeneUsageStatsResult, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult};
