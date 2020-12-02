@@ -791,8 +791,31 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     this._initializeCellGroup(repID, cellGroupName);
                     let geneSpliterIndex = geneName.indexOf(geneSpliter);
                     let familyName = geneName.substring(0, geneSpliterIndex);
+                    /*
+                    if (true){
+                        console.log(dataObject);
+                        console.log(geneName);
+                        console.log(cellGroupName);
+                        console.log(geneSpliterIndex);
+                        console.log(familyName);
+                        console.log(dataItem);
+                        console.log(geneSeriesDict[familyName]);
+                        console.log(geneSeriesDict);
+                    }
+                    if (!geneSeriesDict[familyName]) {
+                        console.log("No geneSeriesDict for family " + familyName);
+                    }
+                    */
+                    if (geneSpliterIndex == -1 && geneName){
+                        let errorMessage = "Error in parsed document structure. Received an element of type " + type.typeName + " with incompatible name " + Common.quote(geneName);
+                        this.#_logger.fatal(errorMessage);
+                        throw errorMessage; 
+                    }
                     let dataItem = new ResultSeriesDataItem().setName(geneName).setY(dataObject[StatsParserConstants.VALUE]).setDrilldown(cellGroupName);
                     seriesData.push(dataItem);
+                    
+                    
+                    
                     geneSeriesDict[familyName].data.push(dataItem);
                 }
                 this.#_logger.trace("All Gene data series for Repertoire " + repID + ": ");

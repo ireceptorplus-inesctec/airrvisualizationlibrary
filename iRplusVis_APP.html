@@ -1,6 +1,13 @@
 <html>
     <head>
         <title>iReceptor Data Visualization Examples.</title>
+        <style>
+            .error{
+                color: white;
+                text-align: center;
+                background-color: crimson;
+            }
+        </style>
     </head>
     <body>
         <article class="repertoire" >
@@ -34,6 +41,11 @@
             <button class="countloader" x-target="count_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_count_response-single_Repertoire.json">Load Rearrangement Count (1 repo, no drilldown)</button>
 
             <div id="count_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Rearrangement Count sample data from 2020/11/11</div>
+
+            <button class="failandsuccessloader" x-target="failandsuccess_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201202_stats_api/fail.json">Fail (1 repo, drilldown)</button>
+            <button class="failandsuccessloader" x-target="failandsuccess_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201202_stats_api/success.json">Success (1 repo, drilldown)</button>
+
+            <div id="failandsuccess_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Fail and Success sample data from 2020/12/02</div>
 
         </article>
 
@@ -136,6 +148,19 @@
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier)).setResult(d).plot();
                 });
             }
+            function redrawFailandsuccessChart(url, identifier){
+                $.get(url, function(data){
+                    //let d = new StatsResult(gene);
+                    try {
+                        let d = window.airrvisualization.createVGeneUsageStatsResult().setDrilldown(true).setData(data);
+                        window.airrvisualization.setDebugLevel(70);
+                        let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier)).setResult(d).plot();
+                    } catch (error) {
+                        $('#'+identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                        console.error(error);
+                    }
+                });
+            }
             $(function () {
                 $('.loader').click(function(){
                     redrawChart($(this).attr('x-gene'), $(this).attr('x-data'), $(this).attr('x-target'));
@@ -157,6 +182,9 @@
                 });
                 $('.junctionloader').click(function(){
                     redrawJunctionChart($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.failandsuccessloader').click(function(){
+                    redrawFailandsuccessChart($(this).attr('x-data'), $(this).attr('x-target'));
                 });
             });
         </script>

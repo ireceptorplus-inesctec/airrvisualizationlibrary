@@ -431,6 +431,10 @@ class Common {
         return +(Math.round(number + "e+" + precision) + "e-" + precision);
     }
 
+    static quote(text){
+        return "\'"+text+"\'";
+    }
+
 }
 
 /**
