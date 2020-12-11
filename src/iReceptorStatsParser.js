@@ -3,6 +3,18 @@ import { Properties} from "./properties.js";
 import { Parser, DrilldownParser } from "./parser.js";
 import { ResultSeriesDataItem, ResultSeries } from "./series.js";
 
+/*
+Allele will always have a *
+Gene might not have a - it means gene and subgroup are the same. An 'n'nmight be used instead of '-'
+
+
+
+IMGT has the germeline genes (nomenclator for human genes)
+
+resolver o sorting dos elementos no gráfico.
+
+*/
+
 class StatsParserConstants{
     static VOCABULARY = {
         INFO : "Info",
@@ -790,6 +802,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     geneNames.push(geneName);
                     this._initializeCellGroup(repID, cellGroupName);
                     let geneSpliterIndex = geneName.indexOf(geneSpliter);
+                    //Required for when geneName is equal to familyName. See http://www.imgt.org/IMGTScientificChart/Nomenclature/IMGTnomenclature.html and TRBV on http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=human&group.
+                    if (geneSpliterIndex == -1) geneSpliterIndex = geneName.length;
                     let familyName = geneName.substring(0, geneSpliterIndex);
                     /*
                     if (true){
