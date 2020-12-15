@@ -28,7 +28,7 @@ class StatsParserConstants{
         TOTAL : "total",
         DATA : "data",
         KEY : "key",
-        VALUE : "value",
+        VALUE : "count",
         POSTFIX_FAMILY : '_subgroup',
         POSTFIX_GENE : '_gene',
         POSTFIX_CALL : '_call',
