@@ -51,7 +51,7 @@ class Parser {
      * @description preparse() method holds all the actions required to be executed before the parsing of the data starts. Parser subclasses need to overwrite this method.
      * @param {JSON} sourceData An Airr Data Commons JSON file
      * @abstract
-     * @memberf Result
+     * @memberof Result
      */
     preparse(sourceData){
         this.#_logger.fatal("this preparse() method should never execute, specializations of Result need to overload it.");

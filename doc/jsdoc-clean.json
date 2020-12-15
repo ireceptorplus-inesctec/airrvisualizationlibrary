@@ -1,0 +1,46 @@
+{
+    "tags": {
+        "allowUnknownTags": false
+    },
+    "source": {
+        "include": [
+            "package.json",
+            "README.md"
+        ],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "comment": "See more examples at https://ankdev.me/clean-jsdoc-theme/dark/index.html",
+    "opts": {
+        "encoding": "utf8",
+        "readme": "./README.md",
+        "recurse": true,
+        "verbose": true,
+        "template": "./node_modules/clean-jsdoc-theme",
+        "theme_opts": {
+            "filter": false,
+            "search": true,
+            "theme": "light",
+            "title": "AIRR Visualization Library",
+            "meta": [
+                {
+                    "name": "author",
+                    "content": "Marco Amaro Oliveira"
+                },
+                {
+                    "name": "description",
+                    "content": "Build Charts for AIIR Data Commons"
+                },
+                {
+                    "name": "title",
+                    "content": "AIRR VisLib"
+                }
+            ],
+            "create_style": "nav > h2 > a {font-size: 80%}",
+            "footer": "<hr />"
+        }
+    }
+}

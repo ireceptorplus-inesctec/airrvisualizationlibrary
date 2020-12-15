@@ -209,7 +209,7 @@ class Result {
      * @abstract
      * @param {JSON} sourceData An Airr Data Commons JSON file
      * @throws Error if this method is called directly on the Result
-     * @memberf Result
+     * @memberof Result
      */
     preparse(sourceData){
         this.#_logger.fatal("this preparse() method should never execute, specializations of Result need to overload it.");

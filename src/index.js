@@ -3,8 +3,6 @@
 
  Author: Marco Amaro Oliveira, 2020.
          INESCTEC (https://www.inesctec.pt/). All rights reserved.
-
- License: AGPL
 */
 
 // Import and export other modules from AIIR Visualization Library
@@ -19,12 +17,10 @@ import {HighchartsChart} from "./charts.js";
 /*
  * Several dependencies may be required for testing if they are not imported.
  * iR+ partners required that Highcharts is not imported and bundled with AIRR Visualization Library.
- * 
  */
+
 /**
- * @description A AIRR Data Visualization Library.
- * @author Marco Amaro Oliveira
- * @class VisualizationLibrary
+ * Class representing the AIRR Data Visualization Library.
  */
 class VisualizationLibrary {
     #_charts;
@@ -32,6 +28,9 @@ class VisualizationLibrary {
     #_version;
     #_product;
     
+    /**
+     * @description Creates an instance of {@link VisualizationLibrary}.
+     */
     constructor(){
         this.#_logger = new Logger('VisualizationLibrary');
         this.#_logger.debug("Constructor.");
@@ -39,15 +38,27 @@ class VisualizationLibrary {
         this.#_product = "AIRR Visualization Library";
         this.#_charts = {};
     }
-    
+
+    /**
+     * @description A dictionary with all open charts. Allows access to previously created charts.
+     * @readonly
+     */
     get charts(){
         return this.#_charts;
     }
     
+    /**
+     * @description Prooduct name.
+     * @readonly
+     */
     get product(){
         return this.#_product;
     }
     
+    /**
+     * @description Product version.
+     * @readonly
+     */
     get version(){
         return this.#_version;
     }
@@ -56,7 +67,6 @@ class VisualizationLibrary {
      * @description Create a Chart provided a Properties Object. At the moment only Highcharts Library is supported to plot the Graphs.
      * @param {Properties} [properties=undefined]
      * @returns {Chart} 
-     * @memberof VisualizationLibrary
      */
     createChart(properties=undefined){
         properties = Properties.validOrNew(properties);
@@ -75,7 +85,6 @@ class VisualizationLibrary {
      * @description Creates a GeneUsage Stats Result. The gene parameter defines the specific type of Result that is returned.
      * @param {GeneType} gene
      * @returns {StatsResult} 
-     * @memberof VisualizationLibrary
      */
     createGeneUsageStatsResult(gene){
         let statsResult = undefined;
@@ -101,7 +110,6 @@ class VisualizationLibrary {
     /**
      * @description Creates a new V Gene Usage StatsResult
      * @returns {VGeneUsageStatsResult} 
-     * @memberof VisualizationLibrary
      */
     createVGeneUsageStatsResult(){
         return new VGeneUsageStatsResult();
@@ -110,7 +118,6 @@ class VisualizationLibrary {
     /**
      * @description Creates a new D Gene Usage StatsResult
      * @returns {DGeneUsageStatsResult} 
-     * @memberof VisualizationLibrary
      */
     createDGeneUsageStatsResult(){
         return new DGeneUsageStatsResult();
@@ -119,7 +126,6 @@ class VisualizationLibrary {
     /**
      * @description Creates a new J Gene Usage StatsResult
      * @returns {JGeneUsageStatsResult} 
-     * @memberof VisualizationLibrary
      */
     createJGeneUsageStatsResult(){
         return new JGeneUsageStatsResult();
@@ -128,7 +134,6 @@ class VisualizationLibrary {
     /**
      * @description Creates a new C Gene Usage StatsResult
      * @returns {CGeneUsageStatsResult} 
-     * @memberof VisualizationLibrary
      */
     createCGeneUsageStatsResult(){
         return new CGeneUsageStatsResult();
@@ -137,7 +142,6 @@ class VisualizationLibrary {
     /**
      * @description Creates a new ImmuneDb Clone Count Result
      * @returns {ImmuneDbCloneCountResult} 
-     * @memberof VisualizationLibrary
      */
     createImmuneDbCloneCountResult(){
         return new ImmuneDbCloneCountResult();
@@ -146,7 +150,6 @@ class VisualizationLibrary {
     /**
      * @description Creates a new Junction Length StatsResult
      * @returns {JunctionLengthStatsResult} 
-     * @memberof VisualizationLibrary
      */
     createJunctionLengthStatsResult(){
         return new JunctionLengthStatsResult();
@@ -155,7 +158,6 @@ class VisualizationLibrary {
     /**
      * @description Creates a new Count StatsResult
      * @returns {CountStatsResult} 
-     * @memberof VisualizationLibrary
      */
     createCountStatsResult(){
         return new CountStatsResult();
@@ -164,7 +166,6 @@ class VisualizationLibrary {
     /**
      * @description Creates a new Properties Object
      * @returns {Properties} 
-     * @memberof VisualizationLibrary
      */
     createProperties(){
         return new Properties();
@@ -174,7 +175,6 @@ class VisualizationLibrary {
      * @description Returns the chart whose identifier is passed as parameter, or null if not exists.
      * @param {string} identifier
      * @returns {Chart} 
-     * @memberof VisualizationLibrary
      */
     get(identifier) {
         return this.#_charts[identifier];
@@ -183,7 +183,6 @@ class VisualizationLibrary {
     /**
      * @description Sets the logging level globally for the library. See Logger.level for details and values.
      * @param {Number} level
-     * @memberof VisualizationLibrary
      */
     setDebugLevel(level){
         //FIXME: Setting degub level at class level should be avoided. It will set debug level systemwise.

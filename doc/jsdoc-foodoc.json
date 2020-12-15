@@ -1,0 +1,51 @@
+{
+    "tags": {
+        "allowUnknownTags": false
+    },
+    "source": {
+        "include": [
+            "package.json",
+            "README.md"
+        ],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "comment": "See more examples at https://www.npmjs.com/package/foodoc",
+    "templates": {
+        "systemName"            : "AIRR Visualization Library",
+        "systemSummary"         : "Build Charts for AIIR Data Commons",
+        "footer"                : "<hr />",
+        "copyright"             : "© Marco Amaro Oliveira (INESC TEC)",
+        "includeDate"           : "true",
+        "navMembers"            : [    
+            {"kind": "class", "title": "Classes", "summary": "All documented classes."},
+            {"kind": "external", "title": "Externals", "summary": "All documented external members."},
+            {"kind": "global", "title": "Globals", "summary": "All documented globals."},
+            {"kind": "mixin", "title": "Mixins", "summary": "All documented mixins."},
+            {"kind": "interface", "title": "Interfaces", "summary": "All documented interfaces."},
+            {"kind": "module", "title": "Modules", "summary": "All documented modules."},
+            {"kind": "namespace", "title": "Namespaces", "summary": "All documented namespaces."},
+            {"kind": "tutorial", "title": "Tutorials", "summary": "All available tutorials."}],
+        "linenums"              : "true",
+        "showTableOfContents"   : "true",
+        "showAccessFilter"      : "true",
+        "collapseSymbols"       : "false",
+        "methodHeadingReturns"  : "true",
+        "outputSourceFiles"     : "false",
+        "outputSourcePath"      : "false",
+        "sort"                  : "longname, version, since, linenum",
+        "search"                : "true",
+        "stylesheets"           : [],
+        "scripts"               : []
+    },
+    "opts": {
+        "encoding": "utf8",
+        "readme": "./README.md",
+        "recurse": true,
+        "verbose": true,
+        "template": "./node_modules/foodoc/template"
+    }
+}

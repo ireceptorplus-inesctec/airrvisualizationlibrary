@@ -1,0 +1,39 @@
+{
+    "tags": {
+        "allowUnknownTags": false
+    },
+    "source": {
+        "include": [
+            "package.json",
+            "README.md"
+        ],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "comment": "See more examples at https://nhn.github.io/tui.jsdoc-template/latest/",
+    "templates": {
+        "logo": {
+            "url": "",
+            "width": "0px",
+            "height": "0px",
+            "link": ""
+        },
+        "name": "AIRR Visualization Library",
+        "footerText": "© Marco Amaro Oliveira (INESC TEC)",
+        "useCollapsibles": true,
+        "tabNames": {
+            "api": "API",
+            "tutorials": "Examples"
+        }
+    },
+    "opts": {
+        "encoding": "utf8",
+        "readme": "./README.md",
+        "recurse": true,
+        "verbose": true,
+        "template": "./node_modules/tui-jsdoc-template"
+    }
+}
