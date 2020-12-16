@@ -1,26 +1,13 @@
 // Import and export other modules from AIIR Visualization Library
-import {Logger, DebugTimer} from './common.js';
-import {Properties} from './properties.js';
-import {Result} from "./result.js";
+import { Logger, DebugTimer } from './common.js';
+import { Properties } from './properties.js';
+import { Result } from "./result.js";
 
-// Import Hicharts into module
-/*
-import Highcharts from 'highcharts/highcharts';
-import highcharts3d from 'highcharts/highcharts/highcharts-3d';
-highcharts3d(Highcharts);
-import Exporting from 'highcharts/modules/exporting';
-Exporting(Highcharts);
-import Data from 'highcharts/modules/data';
-Data(Highcharts);
-import Drilldown from 'highcharts/modules/drilldown';
-Drilldown(Highcharts);
-*/
+//TODO: Implement Abstract validations on abstract classes. See test/es6-abstract-class-example.js
 
 /**
- * @description Abstract Class for the Chart type.
+ * Abstract Class for the Chart type.
  * @abstract
- * @author Marco Amaro Oliveira
- * @class Chart
  */
 class Chart {
     #_logger;
@@ -28,96 +15,112 @@ class Chart {
     #_properties;
     #_result;
 
-    constructor(properties){
+    /**
+     * @description Creates an instance of {@link Chart}.
+     * @param {Properties} properties The properties of the chart.
+     */
+    constructor(properties) {
         this.#_logger = new Logger('Chart');
         this.#_logger.debug("Constructor.");
         this.#_result = undefined;
         this.#_properties = undefined;
-        if (properties instanceof Properties){
+        if (properties instanceof Properties) {
             this.#_properties = properties;
-        }else{
+        } else {
             //this.#_properties = new Properties();
             throw 'Invalid Properties. properties parameter must be an instance of Properties class.';
         }
         this.#_id = this.#_properties.id;
     }
-    
-    set result(result){
+
+    /**
+     * @description the Chart ID
+     * @readonly
+     * @type {String}
+     */
+    get id() {
+        return this.getId();
+    }
+
+    /**
+     * @description The {@link Result} to be plotted.
+     * @type {Result}
+     */
+    get result() {
+        return this.getResult();
+    }
+
+    set result(result) {
         setResult(result);
     }
-    
-    //setter
-    setResult(result){
+
+    /**
+     * @description The {@link Properties} of the chart
+     * @type {Properties}
+     */
+    get properties() {
+        return this.getProperties();
+    }
+
+    set properties(properties) {
+        this.setProperties(properties);
+    }
+
+    /**
+     * @description returns the Result of this Chart.
+     * @returns {Result} the Result object.
+     */
+    getResult() {
+        return this.#_result;
+    }
+
+    /**
+     * @description Chainable method to set the {@link Result} to be plotted.
+     * @param {Result} result the {@link Result} to be plotted.
+     * @returns {Chart} the same instance on which the method was called.
+     */
+    setResult(result) {
         this.#_logger.debug("setResult");
-        if (result instanceof Result){
+        if (result instanceof Result) {
             this.#_result = result;
             this.#_logger.trace(JSON.stringify(this.#_properties));
             this.#_logger.trace(JSON.stringify(this.#_result.properties));
             this.#_properties.updateWith(this.#_result.properties);
             this.#_logger.trace(JSON.stringify(this.#_properties));
-        }else{
+        } else {
             this.#_logger.error("Received result is not compatible. Result must be an instance of Result.");
         }
         this.#_logger.trace(JSON.stringify(this));
         return this;
     }
-    
-    set properties(properties){
-        this.setProperties(properties);
-    }
-    
+
     /**
-     * @description Sets the Properties for this chart
-     * @param {Properties} properties
-     * @returns {Chart} 
-     * @memberof Chart
+     * @description Chainable method to set the {@link Properties} for the chart
+     * @param {Properties} properties the {@link Properties} for the chart
+     * @returns {Chart} the same instance on which the method was called.
      */
-    setProperties(properties){
-        if (properties instanceof Properties){
+    setProperties(properties) {
+        if (properties instanceof Properties) {
             this.#_properties = properties;
-        }else{
+        } else {
             throw 'properies type must be Properties';
         }
         return this;
     }
-    
-    get properties(){
-        return this.getProperties();
-    }
-    
+
     /**
-     * @description Returns the Properties of this chart
-     * @returns {Properties} 
-     * @memberof Chart
+     * @description Returns the {@link Properties} of this chart
+     * @returns {Properties} the Properties object.
      */
-    getProperties(){
+    getProperties() {
         return this.#_properties;
-    }
-    
-    //getter
-    get result(){
-        return this.getResult();
-    }
-
-    /**
-     * @description returns the Result of this Chart.
-     * @returns {Result} 
-     * @memberof Chart
-     */
-    getResult(){
-        return this.#_result;
-    }
-
-    get id(){
-        return this.getId();
     }
 
     /**
      * @description Returns the ID of this Chart
-     * @returns {String} 
-     * @memberof Chart
+     * @returns {String} The identification of the Chart instance.
      */
-    getId(){
+    getId() {
         return this.#_id;
     }
 
@@ -125,25 +128,27 @@ class Chart {
      * @description Abstract method. All subclasses must implement this method.
      * @abstract
      * @throws Throws Error if directly called.
-     * @memberof Chart
      */
-    plot(){
+    plot() {
         this.#_logger.fatal("this plot() method should never execute, specializations of Chart need to overload it.");
-        throw 'This method should not be called, implementations need to overload it.';        
+        throw 'This method should not be called, implementations need to overload it.';
     }
 }
 
 /**
- * @description Chart that uses the Highcharts Libary to plot graphs
- * @class HighchartsChart
+ * A {@link Chart} that uses the Highcharts Libary to plot graphs
  * @extends {Chart}
  */
-class HighchartsChart extends Chart{
+class HighchartsChart extends Chart {
     #_chart;
     #_logger;
     #_highcharts;
-    
-    constructor(properties){
+
+    /**
+     * Creates an instance of {@link HighchartsChart}.
+     * @param {Properties} properties The properties of the chart.
+     */
+    constructor(properties) {
         super(properties);
         this.#_logger = new Logger('HichartsChart');
         this.#_logger.debug("Constructor.");
@@ -153,25 +158,28 @@ class HighchartsChart extends Chart{
         this.#_logger.trace(JSON.stringify(this));
     }
 
-    get chart(){
+    /**
+     * @description After calling plot(), will hold the created {@link Highcharts.chart} instance.
+     * @readonly
+     */
+    get chart() {
         return this.getChart();
     }
 
     /**
      * @description Returns a pointer to the Highcharts.chart created in this class.
-     * @returns {Highcharts.chart} 
-     * @memberof HighchartsChart
+     * @returns {Highcharts.chart} the created {@link Highcharts.chart} instance
      */
-    getChart(){
+    getChart() {
         return this.#_chart;
     }
 
     /**
      * @description Verifies if Highcharts Library and all required Highcharts modules are loaded before creating instances of this module.
+     * @private
      * @throws Error if Highcharts Library or any of the required modules are missing.
-     * @memberof HighchartsChart
      */
-    checkHighcharts(){
+    checkHighcharts() {
         this.#_logger.debug("Checking if highcharts resources are available.");
         let Highcharts = window.Highcharts;
         if (!Highcharts) {
@@ -197,23 +205,22 @@ class HighchartsChart extends Chart{
     }
 
     /**
-     * @description Creates an Highcharts.chart and displays it on the HTML container as defined in the Properties object.
-     * @memberof HighchartsChart
+     * @description Creates an Highcharts.chart and displays it on the HTML container as defined in the {@link Properties} object.
      */
-    plot(){
+    plot() {
         let timer = new DebugTimer();
         this.#_logger.debug("Ploting chart");
         timer.start("build_Highcharts_structure");
         //Plotting must have into consideration the type of data and the visualization implementation required.
         // This is where we map  properties and data to specific Visualization library.
         let p = {
-            chart: { 
+            chart: {
                 type: this.properties.chartType,
                 // animation
                 animation: this.properties.animation
             },
             credits: {
-               enabled: false
+                enabled: false
             },
             xAxis: {
                 type: 'category'
@@ -229,7 +236,7 @@ class HighchartsChart extends Chart{
         timer.end(".asHighchartSeries");
 
         if (this.properties.title) { p.title = { text: this.properties.title } };
-        if (this.properties.subtitle) { p.subtitle = { text : this.properties.subtitle } };
+        if (this.properties.subtitle) { p.subtitle = { text: this.properties.subtitle } };
         if (this.properties.yLabel) {
             p.yAxis = (p.yAxis || {});
             p.yAxis.title = { text: this.properties.yLabel };
@@ -245,13 +252,13 @@ class HighchartsChart extends Chart{
             };
         }
         */
-        if (this.result.drilldown){
+        if (this.result.drilldown) {
             this.#_logger.debug("YAY... this is a drilldown chart");
             // In an Highcharts chart, the drilldown value is an object that allows for inspect increasingly high resolution data,
             // This object contains a series property that is an array of objects, each one representing a data series (as the series in the chart).
             // Each data series can have its own plot options, existence of the id property is mandatory to reference which series to plot.
             // Later I may need to change this.#_result.drilldownSeries; for a .map like in the series property.
-            p.drilldown = this.result.drilldownSeries; 
+            p.drilldown = this.result.drilldownSeries;
             //We need to get the drilldown and drillup events to change at least the title and subtitle of the chart.
             p.chart.events = {
                 drillup: this.result.drillupSeriesEvent,
@@ -259,7 +266,7 @@ class HighchartsChart extends Chart{
             }
         }
         this.#_logger.trace("Is 3D (multiple series)? -" + this.result.isMultipleSeries());
-        if (this.result.isMultipleSeries()){
+        if (this.result.isMultipleSeries()) {
             // Setup chart 3Doptions properties (in the future using #_properties and #_dataseries data).
             p.chart.options3d = {
                 enabled: true,
@@ -300,16 +307,16 @@ class HighchartsChart extends Chart{
             };*/
         }
         // If is a stacking chart
-        if (this.properties.stackingType){
+        if (this.properties.stackingType) {
             p.plotOptions.series = (p.plotOptions.series || {});
             p.plotOptions.series.stacking = this.properties.stackingType;
         }
-        
+
         timer.end("build_Highcharts_structure");
         console.log(p);
         // If Hicharts is imported as a module than we don't need jquery to plot the chart into the DOM.
         //this.#_chart  = Highcharts.chart(this.#_properties.id, p);
-        this.#_chart  = this.#_highcharts.chart(this.properties.id, p);
+        this.#_chart = this.#_highcharts.chart(this.properties.id, p);
         //$('#'+this.#_properties.id).highcharts(p);
         this.#_logger.trace(JSON.stringify(p));
         this.#_logger.debug("Plotting into " + this.properties.id);
@@ -321,22 +328,22 @@ class HighchartsChart extends Chart{
 
     /**
      * @description MouseDownEvent specific for Highcharts.chart
+     * @private
      * @param {Highchart.chart} targetChart
      * @param {boolean} is3D
      * @returns {function} the MousedownEvent function 
-     * @memberof HighchartsChart
      */
-    getMousedownEvent(targetChart, is3D){
+    getMousedownEvent(targetChart, is3D) {
         this.#_logger.debug("getMousedownEvent");
         let logger = this.#_logger;
-        if (!is3D){
+        if (!is3D) {
             this.#_logger.debug("retrieving default mousedown event on charts.");
-            return function(e) {
+            return function (e) {
                 logger.trace("Default mouse down event on chart.");
-            };    
+            };
         }
         let highcharts = this.#_highcharts;
-        return function(eStart) {
+        return function (eStart) {
             let chart = targetChart;
             console.log("Mousedown in multiple series");
             eStart = chart.pointer.normalize(eStart);
@@ -347,7 +354,7 @@ class HighchartsChart extends Chart{
                 beta = chart.options.chart.options3d.beta,
                 sensitivity = 5,  // lower is more sensitive
                 handlers = [];
-    
+
             function drag(e) {
                 // Get e.chartX and e.chartY
                 e = chart.pointer.normalize(e);
@@ -361,9 +368,9 @@ class HighchartsChart extends Chart{
                         }
                     }
                 }, undefined, undefined, false);
-                console.log("alpha:" + newAlpha + ", beta:"+newBeta);
+                console.log("alpha:" + newAlpha + ", beta:" + newBeta);
             }
-    
+
             function unbindAll() {
                 handlers.forEach(function (unbind) {
                     if (unbind) {
@@ -383,14 +390,8 @@ class HighchartsChart extends Chart{
             handlers.push(highcharts.addEvent(document, 'mouseup', unbindAll));
             handlers.push(highcharts.addEvent(document, 'touchend', unbindAll));
             logger.trace(eStart.toString());
-        };  
+        };
     }
 }
 
-/*
-module.exports = { 
-    Chart: Chart,
-    HighchartsChart: HighchartsChart
-};
-*/
-export { Chart, HighchartsChart};
+export { Chart, HighchartsChart };

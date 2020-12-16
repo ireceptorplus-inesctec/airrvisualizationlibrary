@@ -104,6 +104,7 @@ class StatsParserConstants{
         return StatsParserConstants.VOCABULARY.SPLITER_CALL;
     }
 }
+
 class CountStatsParser extends Parser {
     #_logger;
 
@@ -397,7 +398,6 @@ class JunctionLenghtStatsParser extends Parser {
         timer.print();
     }
 }
-
 
 /**
  * GeneUsageDrilldownStatsParser assumes that when parsing a drilldown Gene Stats it will receive an 
@@ -1485,15 +1485,5 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         timer.print();
     }
 }
-
-/*
-module.exports = {
-    JunctionLenghtStatsParser: JunctionLenghtStatsParser,
-    CountStatsParser: CountStatsParser,
-    GeneUsageStatsParser: GeneUsageStatsParser,
-    GeneUsageDrilldownStatsParser: GeneUsageDrilldownStatsParser,
-    JGeneUsageDrilldownStatsParser: JGeneUsageDrilldownStatsParser
-};
-*/
 
 export { JunctionLenghtStatsParser, CountStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser };

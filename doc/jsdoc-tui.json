@@ -1,6 +1,7 @@
 {
     "tags": {
-        "allowUnknownTags": false
+        "allowUnknownTags": false,
+        "dictionaries": ["jsdoc","closure"]
     },
     "source": {
         "include": [
@@ -15,6 +16,7 @@
     ],
     "comment": "See more examples at https://nhn.github.io/tui.jsdoc-template/latest/",
     "templates": {
+        "cleverLinks": false,
         "logo": {
             "url": "",
             "width": "0px",
@@ -33,7 +35,7 @@
         "encoding": "utf8",
         "readme": "./README.md",
         "recurse": true,
-        "verbose": true,
+        "verbose": false,
         "template": "./node_modules/tui-jsdoc-template"
     }
 }

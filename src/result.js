@@ -2,10 +2,9 @@ import {Logger} from './common.js';
 import {Parser} from "./parser.js";
 
 /**
- * @description Class that represents a Result. This is an Abstract Class and should not be instanciated.
+ * Abstract class that represents a Result.  
+ * A Result stores the original data source, the specific {@link Parser} object and the logic for returning a representation of the data to be plotted.
  * @abstract
- * @author Marco Amaro Oliveira
- * @class Result
  */
 class Result {
     #_logger;
@@ -14,9 +13,8 @@ class Result {
     #_parser;
     
     /**
-     * Creates an instance of Result.
+     * @description Creates an instance of Result.
      * @param {JSON} [sourceData=undefined] AN AIRR Data JSON file
-     * @memberof Result
      */
     constructor(sourceData = undefined) {
         this.#_logger = new Logger('Result');
@@ -30,9 +28,8 @@ class Result {
     }
 
     /**
-     * @description read only property that returns the same as this.isMultipleSeries.
+     * @description read only property that returns the same as this.isMultipleSeries().
      * @readonly
-     * @memberof Result
      */
     get multipleSeries(){
         return this.isMultipleSeries();
@@ -41,7 +38,6 @@ class Result {
     /**
      * @description Abstract method that returns true if this result contains multiple data series. Subclasses should overload this.
      * @abstract
-     * @memberof Result
      */
     isMultipleSeries(){
         this.#_logger.fatal("isMultipleSeries() method should never execute, specializations of Result need to overload it.");
@@ -49,35 +45,29 @@ class Result {
     }
     
     /**
-     * @description  Returns the AIRR Data JSON file associated with this Result.
-     * @memberof Result
+     * @description  the AIRR Data JSON file associated with this Result.
+     * @type {JSON}
      */
     get data(){
         return this.getData();
     }
     
+    set data(sourceData){
+        this.setData(sourceData);
+    }
+    
     /**
      * @description Returns the AIRR Data JSON file associated with this Result.
      * @returns {JSON} 
-     * @memberof Result
      */
     getData(){
         return this.#_rawResult;
     }
     
     /**
-     * @description set the AIRR Data JSON file.
-     * @memberof Result
-     */
-    set data(sourceData){
-        this.setData(sourceData);
-    }
-    
-    /**
-     * @description Sets the AIRR Data JSON file and return this Result object.
+     * @description Chainable method that sets the AIRR Data JSON file and return this Result object.
      * @param {JSON} sourceData AN AIRR Data JSON file.
-     * @returns {Result} returns this Result object 
-     * @memberof Result
+     * @returns {Result} the same instance on which the method was called.
      */
     setData(sourceData) {
         this.#_rawResult = sourceData;  
@@ -88,10 +78,13 @@ class Result {
     }
     
     /**
-     * @description set the Parser used for the interpretation of the AIRR Data JSON file.
-     * @param {Parser} parser a Parser subclass
-     * @memberof Result
+     * @description the {@link Parser} used for the interpretation of the AIRR Data JSON file.
+     * @type {Parser}
      */
+    get parser(){
+        return this.getParser();
+    }
+
     set parser(parser){
         this.setParser(parser);
     }
@@ -100,10 +93,9 @@ class Result {
      * Setting the parser after setting the source data will result in a new parsing execution.
      * This method is called internally by Classes that extend Result
      * 
-     * @description Sets the specific Parser subclass to be used to parse the source airr data in this Result and returns this Result object.
-     * @param {Parser} parser a Parser subclass
-     * @returns {Result} return this Result object 
-     * @memberof Result
+     * @description Chainable method that sets the specific {@link Parser} to be used on the interpretation of the source airr data in this Result.
+     * @param {Parser} parser a Parser subclass instance
+     * @returns {Result} the same instance on which the method was called.
      */
     setParser(parser) {
         this.#_logger.debug("setParser.");
@@ -115,29 +107,24 @@ class Result {
         this.parse();
         return this;
     }
-        
-    /**
-     * @description gets the parser for this Result.
-     * @memberof Result
-     */
-    get parser(){
-        return this.getParser();
-    }
     
     /**
      * @description returns the Parser for the Result
      * @returns {Parser} 
-     * @memberof Result
      */
     getParser(){
         return this.#_parser;
     }
-    
+        
     /**
-     * @description set the value for drilldown.
-     * @param {boolean} value If true, set the series to have drilldown feature.
-     * @memberof Result
+     * @description is to implement drilldown feature on the original data?
+     * @type {boolean}
      */
+    get drilldown(){
+        this.#_logger.debug("getting drilldown.");
+        return this.#_drilldown;
+    }
+    
     set drilldown(value){
         this.setDrilldown(value);
     }
@@ -153,9 +140,8 @@ class Result {
      * and return super.setDrilldown(value) at the end
      * 
      * @param {boolean} value If true, set the series to have drilldown feature.
-     * @return Result      Returns this object.
+     * @returns {Result} the same instance on which the method was called.
      * @throws Error if value is not a boolean.
-     * @memberof Result
      */
     setDrilldown(value){
         this.#_logger.debug("setting drilldown to " + value);
@@ -166,20 +152,10 @@ class Result {
         this.#_drilldown = value;
         return this;
     }
-        
-    /**
-     * @description returns the value of this.getDrilldown().
-     * @memberof Result
-     */
-    get drilldown(){
-        this.#_logger.debug("getting drilldown.");
-        return this.#_drilldown;
-    }
     
     /**
      * @description returns the true if this Result has drilldown enabled.
      * @returns {boolean} 
-     * @memberof Result
      */
     getDrilldown(){
         this.#_logger.debug("getting drilldown.");
@@ -188,7 +164,6 @@ class Result {
 
     /**
      * @description Execute required validations and starts the parsing of the data. Result subclasses may overload this method only if required.
-     * @memberof Result
      */
     parse(){
         if (!this.#_rawResult){     
@@ -209,7 +184,6 @@ class Result {
      * @abstract
      * @param {JSON} sourceData An Airr Data Commons JSON file
      * @throws Error if this method is called directly on the Result
-     * @memberof Result
      */
     preparse(sourceData){
         this.#_logger.fatal("this preparse() method should never execute, specializations of Result need to overload it.");
@@ -221,7 +195,6 @@ class Result {
      * @abstract
      * @param {JSON} sourceData An Airr Data Commons JSON file
      * @throws Error if this method is called directly on the Result
-     * @memberof Result
      */
     onparse(sourceData){
         this.#_logger.fatal("this parse() method should never execute, specializations of Result need to overload it.");
@@ -233,7 +206,6 @@ class Result {
      * @abstract
      * @param {JSON} sourceData An Airr Data Commons JSON file
      * @throws Error if this method is called directly on the Result
-     * @memberof Result
      */
     postparse(sourceData){
         this.#_logger.fatal("this preparse() method should never execute, specializations of Result need to overload it.");
@@ -241,11 +213,5 @@ class Result {
     }
 
 }
-
-/*
-module.exports = {
-    Result: Result
-};
-*/
 
 export {Result};

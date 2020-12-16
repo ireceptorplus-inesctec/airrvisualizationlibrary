@@ -5,7 +5,7 @@
          INESCTEC (https://www.inesctec.pt/). All rights reserved.
 */
 
-// Import and export other modules from AIIR Visualization Library
+// Import modules from AIIR Visualization Library
 import {Logger, ResultSeriesType, GeneType} from './common.js';
 import {Properties} from './properties.js';
 import {ResultSeriesDataItem, ResultSeries} from "./series.js";
@@ -190,26 +190,6 @@ class VisualizationLibrary {
     }
 }
 
-/*
-module.exports = { 
-        VisualizationLibrary: VisualizationLibrary,
-        HighchartsChart: HighchartsChart, 
-        Result: Result, 
-        VGeneUsageStatsResult: VGeneUsageStatsResult, 
-        DGeneUsageStatsResult: DGeneUsageStatsResult, 
-        JGeneUsageStatsResult: JGeneUsageStatsResult, 
-        CGeneUsageStatsResult: CGeneUsageStatsResult,
-        JunctionLengthStatsResult: JunctionLengthStatsResult,
-        CountStatsResult: CountStatsResult,
-        ResultSeries: ResultSeries, 
-        ResultSeriesDataItem: ResultSeriesDataItem, 
-        Properties: Properties, 
-        GeneType: GeneType, 
-        ResultSeriesType: ResultSeriesType, 
-        Logger: Logger
-    };
-*/
-
 export { VisualizationLibrary, HighchartsChart, Result, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult,
     CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
     ResultSeriesType, Logger};
@@ -217,7 +197,7 @@ export { VisualizationLibrary, HighchartsChart, Result, VGeneUsageStatsResult, D
 
 
 (function (windows) {
-    // We need that our library is globally accesible, then we save in the window
+    // We need that our library is globally accesible. Add it to the window variable.
     if(typeof(window.airrvisualization) === 'undefined'){
         window.airrvisualization = new VisualizationLibrary();
     }

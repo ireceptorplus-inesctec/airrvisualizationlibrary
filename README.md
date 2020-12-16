@@ -12,6 +12,8 @@ The iReceptor Stats API definition can be found at the [Github repository](https
 
 The library is meant to be used either through the global variable `window.airrvisualization` or by instanciating the individual Classes.
 
+With `window.airrvisualization` you get an instance of the Class `VisualizationLibrary`.
+
 Working examples can be found in the files [iRplusVis_APP.html](https://github.com/ireceptorplus-inesctec/airrvisualizationlibrary/blob/master/iRplusVis_APP.html), [iRplusVis_APP-module.html](https://github.com/ireceptorplus-inesctec/airrvisualizationlibrary/blob/master/iRplusVis_APP-module.html) and [ImmuneDb_APP.html](https://github.com/ireceptorplus-inesctec/airrvisualizationlibrary/blob/master/ImmuneDb_APP.html).
 
 ## Build

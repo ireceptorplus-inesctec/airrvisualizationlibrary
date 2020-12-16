@@ -291,16 +291,4 @@ class CGeneUsageStatsResult extends GeneUsageStatsResult {
 
 }
 
-/*
-module.exports = {
-    JunctionLengthStatsResult: JunctionLengthStatsResult,
-    CountStatsResult: CountStatsResult,
-    GeneUsageStatsResult: GeneUsageStatsResult,
-    VGeneUsageStatsResult: VGeneUsageStatsResult,
-    DGeneUsageStatsResult: DGeneUsageStatsResult,
-    JGeneUsageStatsResult: JGeneUsageStatsResult,
-    CGeneUsageStatsResult: CGeneUsageStatsResult
-};
-*/
-
 export {JunctionLengthStatsResult, CountStatsResult, GeneUsageStatsResult, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult};
