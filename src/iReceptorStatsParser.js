@@ -7,9 +7,7 @@ import { ResultSeriesDataItem, ResultSeries } from "./series.js";
 Allele will always have a *
 Gene might not have a - it means gene and subgroup are the same. An 'n'nmight be used instead of '-'
 
-
-
-IMGT has the germeline genes (nomenclator for human genes)
+IMGT has the germeline genes (nomenclature for human genes)
 
 resolver o sorting dos elementos no gráfico.
 
@@ -888,6 +886,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     let dataObject  = cellSeries[StatsParserConstants.DATA][i]; 
                     let cellName = (dataObject[StatsParserConstants.KEY] || '');
                     let cellSpliterIndex = cellName.indexOf(cellSpliter);
+                    //Answering situation where cellname is equal to genename.
+                    if (cellSpliterIndex == -1) cellSpliterIndex = cellName.length;
                     let geneName = cellName.substring(0, cellSpliterIndex);
                     let dataItem = new ResultSeriesDataItem().setName(cellName).setY(dataObject[StatsParserConstants.VALUE]);
                     seriesData.push(dataItem);
@@ -1450,6 +1450,8 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                     let cellName = (dataObject[StatsParserConstants.KEY] || '');
                     //Note that on J Gene we only have 2 levels Gene > Cell, but the splitter remains cellSpliter.
                     let cellSpliterIndex = cellName.indexOf(cellSpliter);
+                    //Answering situation where cellname is equal to genename.
+                    if (cellSpliterIndex == -1) cellSpliterIndex = cellName.length;
                     let geneName = cellName.substring(0, cellSpliterIndex);
                     let dataItem = new ResultSeriesDataItem().setName(cellName).setY(dataObject[StatsParserConstants.VALUE]);
                     seriesData.push(dataItem);
