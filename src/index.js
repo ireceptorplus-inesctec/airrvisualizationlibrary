@@ -6,7 +6,7 @@
 */
 
 // Import modules from AIIR Visualization Library
-import {Logger, ResultSeriesType, GeneType} from './common.js';
+import {Logger, ResultSeriesType, GeneType, DataType} from './common.js';
 import {Properties} from './properties.js';
 import {ResultSeriesDataItem, ResultSeries} from "./series.js";
 import {Result} from "./result.js";
@@ -23,53 +23,66 @@ import {HighchartsChart} from "./charts.js";
  * Class representing the AIRR Data Visualization Library.
  */
 class VisualizationLibrary {
-    #_charts;
-    #_logger;
-    #_version;
-    #_product;
-    
-    /**
-     * @description Creates an instance of {@link VisualizationLibrary}.
-     */
-    constructor(){
-        this.#_logger = new Logger('VisualizationLibrary');
-        this.#_logger.debug("Constructor.");
-        this.#_version = "__VERSION__";
-        this.#_product = "AIRR Visualization Library";
-        this.#_charts = {};
-    }
 
+    constructor(){
+        throw new Error("This class is not instantiable .");
+    }
+    
+    static charts = {};
+    
     /**
      * @description A dictionary with all open charts. Allows access to previously created charts.
+     * @type {Dictionary}
+     * @static
      * @readonly
      */
-    get charts(){
-        return this.#_charts;
+    static get charts(){
+        return charts;
     }
     
     /**
-     * @description Prooduct name.
-     * @readonly
+     * @description Product name.
+     * @type {string}
+     * @static
+     * @const
      */
-    get product(){
-        return this.#_product;
+    static get PRODUCT(){
+        return "AIRR Visualization Library";
     }
     
     /**
      * @description Product version.
-     * @readonly
+     * @type {string}
+     * @static
+     * @const
      */
-    get version(){
-        return this.#_version;
+    static get VERSION(){
+        return "__VERSION__";
     }
     
+
     /**
-     * @description Create a Chart provided a Properties Object. At the moment only Highcharts Library is supported to plot the Graphs.
-     * @param {Properties} [properties=undefined]
+     * @description Create a Chart provided a Properties Object. If a chart already exists with the same id, it will be destroyed and a new one constructed. At the moment only Highcharts Library is supported to plot the Graphs.
+     * @static
+     * @param {Properties} properties
      * @returns {Chart} 
      */
+    static createChart(properties){
+        if (properties === undefined) throw new TypeError("properties parameter is mandatory.");
+        
+        //TODO:Create and setup the Result based on the properties
+        let result = ResultFactory.build(properties.dataType, properties.dataDrilldown, properties.data);
+
+        //TODO: Once we support more graph libraries, decision on which library to use will depend com a properties value and will be done here.
+        let _chart = new HighchartsChart(properties);
+        _chart.setResult(result);
+        VisualizationLibrary.charts[_chart.id] = _chart;
+        return _chart;
+    }
+
+    /*
     createChart(properties=undefined){
-        properties = Properties.validOrNew(properties);
+        properties = Properties.create(properties);
         let _chart = this.get(properties.id);
         if (_chart == undefined) {
             _chart = new HighchartsChart(properties);
@@ -80,118 +93,93 @@ class VisualizationLibrary {
         }
         return _chart;
     }
-
-    /**
-     * @description Creates a GeneUsage Stats Result. The gene parameter defines the specific type of Result that is returned.
-     * @param {GeneType} gene
-     * @returns {StatsResult} 
-     */
-    createGeneUsageStatsResult(gene){
-        let statsResult = undefined;
-        switch (gene) {
-            case GeneType.V_GENE:
-                statsResult = this.createVGeneUsageStatsResult();
-                break;
-            case GeneType.D_GENE:
-                statsResult = this.createDGeneUsageStatsResult();
-                break;
-            case GeneType.J_GENE:
-                statsResult = this.createJGeneUsageStatsResult();
-                break;
-            case GeneType.C_GENE:
-                statsResult = this.createCGeneUsageStatsResult();
-                break;
-            default:
-                break;
-        }
-        return statsResult;
-    }
-    
-    /**
-     * @description Creates a new V Gene Usage StatsResult
-     * @returns {VGeneUsageStatsResult} 
-     */
-    createVGeneUsageStatsResult(){
-        return new VGeneUsageStatsResult();
-    }
-    
-    /**
-     * @description Creates a new D Gene Usage StatsResult
-     * @returns {DGeneUsageStatsResult} 
-     */
-    createDGeneUsageStatsResult(){
-        return new DGeneUsageStatsResult();
-    }
-    
-    /**
-     * @description Creates a new J Gene Usage StatsResult
-     * @returns {JGeneUsageStatsResult} 
-     */
-    createJGeneUsageStatsResult(){
-        return new JGeneUsageStatsResult();
-    }
-    
-    /**
-     * @description Creates a new C Gene Usage StatsResult
-     * @returns {CGeneUsageStatsResult} 
-     */
-    createCGeneUsageStatsResult(){
-        return new CGeneUsageStatsResult();
-    }
-    
-    /**
-     * @description Creates a new ImmuneDb Clone Count Result
-     * @returns {ImmuneDbCloneCountResult} 
-     */
-    createImmuneDbCloneCountResult(){
-        return new ImmuneDbCloneCountResult();
-    }
-    
-    /**
-     * @description Creates a new Junction Length StatsResult
-     * @returns {JunctionLengthStatsResult} 
-     */
-    createJunctionLengthStatsResult(){
-        return new JunctionLengthStatsResult();
-    }
-
-    /**
-     * @description Creates a new Count StatsResult
-     * @returns {CountStatsResult} 
-     */
-    createCountStatsResult(){
-        return new CountStatsResult();
-    }
+    */
 
     /**
      * @description Creates a new Properties Object
+     * @static
+     * @param {(Properties|JSON|string|undefined)} [properties] a {@link Properties}, or a {@link JSON} or String representation of a Properties, or undefined.
      * @returns {Properties} 
      */
-    createProperties(){
-        return new Properties();
+    static createProperties(properties){
+        return Properties.create(properties);
     }
+    
     
     /**
      * @description Returns the chart whose identifier is passed as parameter, or null if not exists.
-     * @param {string} identifier
+     * @static
+     * @param {string} identifier the identifier of the Chart
      * @returns {Chart} 
      */
-    get(identifier) {
-        return this.#_charts[identifier];
+    static get(identifier) {
+        return VisualizationLibrary.charts[identifier];
     }
     
     /**
      * @description Sets the logging level globally for the library. See Logger.level for details and values.
-     * @param {Number} level
+     * @static
+     * @param {Number} level the level for the debug (see levels in {@link Logger})
      */
-    setDebugLevel(level){
-        //FIXME: Setting degub level at class level should be avoided. It will set debug level systemwise.
+    static setDebugLevel(level){
+        //FIXME: It is setting debug level systemwise for all instances of Debug in current browser. Need to change the debug level to a instance level.
         Logger.setDebugLevel(level);
     }
+
 }
 
-export { VisualizationLibrary, HighchartsChart, Result, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult,
-    CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, 
+/**
+ * Factory Class for concrete {@link Result} classes
+ */
+class ResultFactory{
+
+    /**
+     * @description Builds and configures concrete instance of {@link Result} based on the data type 
+     * @static
+     * @param {string} dataType a code from {@link DataType}
+     * @param {boolean} [dataDrilldown] is data drilldown capable
+     * @param {JSON} [data] the source data
+     * @returns {Result} a concrete instance of {@link Result} 
+     */
+    static build(dataType, dataDrilldown, data){
+        if (!(DataType.contains(dataType))){
+            throw new TypeError('Unknown datatype: '+ dataType);
+        }
+        var result = undefined;
+        switch (dataType) {
+            case DataType.V_GENE_USAGE:
+                result = new VGeneUsageStatsResult();
+                break;
+            case DataType.D_GENE_USAGE:
+                result = new DGeneUsageStatsResult();
+                break;
+            case DataType.J_GENE_USAGE:
+                result = new JGeneUsageStatsResult();
+                break;
+            case DataType.C_GENE_USAGE:
+                result = new CGeneUsageStatsResult();
+                break;
+            case DataType.JUNCTION_LENGTH:
+                result = new JunctionLengthStatsResult();
+                break;
+                case DataType.CLONE_COUNT:
+                result = new CountStatsResult();
+                break;
+            case DataType.CLONE_COUNT_IMMUNEDB:
+                result = new ImmuneDbCloneCountResult();
+                break;
+        }
+        if (result){
+            if (dataDrilldown) result.setDrilldown(dataDrilldown);
+            if (data) result.setData(data);
+        }
+        return result;
+    }
+
+}
+
+export { VisualizationLibrary, ResultFactory, HighchartsChart, Result, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult,
+    CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, DataType,
     ResultSeriesType, Logger};
 
 
@@ -199,7 +187,8 @@ export { VisualizationLibrary, HighchartsChart, Result, VGeneUsageStatsResult, D
 (function (windows) {
     // We need that our library is globally accesible. Add it to the window variable.
     if(typeof(window.airrvisualization) === 'undefined'){
-        window.airrvisualization = new VisualizationLibrary();
+        window.airrvisualization = VisualizationLibrary;
+        //window.airrvisualization = new VisualizationLibrary();
     }
     
 }(window));

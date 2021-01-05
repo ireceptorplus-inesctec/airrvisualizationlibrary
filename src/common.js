@@ -14,30 +14,79 @@ class Logger {
         OFF: 100
     };
 
+    /**
+     * @description Logger level OFF
+     * @type {number}
+     * @static
+     * @const
+     * @default 100
+     */
     static get LEVEL_OFF() {
         return Logger.level.OFF;
     }
 
+    /**
+     * @description Logger level TRACE
+     * @type {number}
+     * @static
+     * @const
+     * @default 20
+     */
     static get LEVEL_TRACE() {
         return Logger.level.TRACE;
     }
 
+    /**
+     * @description Logger level DEBUG
+     * @type {number}
+     * @static
+     * @const
+     * @default 30
+     */
     static get LEVEL_DEBUG() {
         return Logger.level.DEBUG;
     }
 
+    /**
+     * @description Logger level INFO
+     * @type {number}
+     * @static
+     * @const
+     * @default 40
+     */
     static get LEVEL_INFO() {
         return Logger.level.INFO;
     }
 
+    /**
+     * @description Logger level WARN
+     * @type {number}
+     * @static
+     * @const
+     * @default 50
+     */
     static get LEVEL_WARN() {
         return Logger.level.WARN;
     }
 
+    /**
+     * @description Logger level ERROR
+     * @type {number}
+     * @static
+     * @const
+     * @default 70
+     */
     static get LEVEL_ERROR() {
         return Logger.level.ERROR;
     }
 
+    /**
+     * @description Logger level FATAL
+     * @type {number}
+     * @static
+     * @const
+     * @default 90
+     */
     static get LEVEL_FATAL() {
         return Logger.level.FATAL;
     }
@@ -78,7 +127,7 @@ class Logger {
     }
 
     _log(type, text) {
-        //TODO: Allow logging to the chart window. For example when error that chart plot.
+        //TODO: Allow logging to the chart window. For example when error on chart plot.
         console.log(this._datetime().concat(' ').concat(this.#_source).concat(' ').concat(type).concat(': \r\n').concat(text));
     }
 
@@ -106,6 +155,12 @@ class Logger {
         }
     }
 
+    static error(sourceName, text){
+        if (Logger.DEBUG_LEVEL <= Logger.LEVEL_ERROR) {
+            new Logger(sourceName)._log('ERROR', text);
+        }
+    }
+
     error(text) {
         if (Logger.DEBUG_LEVEL <= Logger.LEVEL_ERROR) {
             this._log('ERROR', text);
@@ -121,8 +176,7 @@ class Logger {
 
 
 /**
- * @description ResultSeries types
- * @class ResultSeriesType
+ * ResultSeries types
  */
 class ResultSeriesType {
 
@@ -196,30 +250,79 @@ class ResultSeriesType {
         "duplicate_count_productive" : ResultSeriesType.typeCode.GENE_COUNT,
     };
 
+    /**
+     * @description Family or subgroup code
+     * @type {string}
+     * @static
+     * @const
+     * @default 'f'
+     */
     static get FAMILY() {
         return ResultSeriesType.typeCode.FAMILY.code;
     }
 
+    /**
+     * @description Gene code
+     * @type {string}
+     * @static
+     * @const
+     * @default 'g'
+     */
     static get GENE() {
         return ResultSeriesType.typeCode.GENE.code;
     }
 
+    /**
+     * @description Call or Allele code
+     * @type {string}
+     * @static
+     * @const
+     * @default 'c'
+     */
     static get CALL() {
         return ResultSeriesType.typeCode.CALL.code;
     }
 
+    /**
+     * @description Gene Count code
+     * @type {string}
+     * @static
+     * @const
+     * @default 'gc'
+     */
     static get GENE_COUNT() {
         return ResultSeriesType.typeCode.GENE_COUNT.code;
     }
 
+    /**
+     * @description Top Clones code
+     * @type {string}
+     * @static
+     * @const
+     * @default 'tc'
+     */
     static get TOP_CLONES() {
         return ResultSeriesType.typeCode.TOP_CLONES.code;
     }
 
+    /**
+     * @description Junction Length code
+     * @type {string}
+     * @static
+     * @const
+     * @default 'gl'
+     */
     static get JUNCTION_LENGTH() {
         return ResultSeriesType.typeCode.JUNCTION_LENGTH.code;
     }
 
+    /**
+     * @description Junction AA Length code
+     * @type {string}
+     * @static
+     * @const
+     * @default 'jal'
+     */
     static get JUNCTION_AA_LENGTH() {
         return ResultSeriesType.typeCode.JUNCTION_AA_LENGTH.code;
     }
@@ -229,16 +332,22 @@ class ResultSeriesType {
      * @static
      * @param {String} code
      * @returns {boolean} 
-     * @memberof ResultSeriesType
      */
     static contains(code) {
         return Object.values(ResultSeriesType.typeCode).map( a => a.code).includes(code);
     }
-
+    
+    /**
+     * @description return a ResultSeriesType by its code.
+     * @static
+     * @param {String} name
+     * @returns {ResultSeriesType} 
+     * @throws TypeError if code is undefined or inexistent.
+     */
     static getByName(name){
         //TODO: Verify if name is not undefined.
-        if (!name){
-            throw 'undefined name value. Name parameter is required.';
+        if (!name || !(ResultSeriesType.contains(name))){
+            throw new TypeError('undefined name value. Name parameter is required.');
         }
 
         let unique = name.includes('unique');
@@ -247,8 +356,7 @@ class ResultSeriesType {
         let rearrangement = name.includes('rearrangement');
         let duplicate = name.includes('duplicate');
         let type = ResultSeriesType.names[name];
-        //TODO: throw error if result is undefined.
-        return new ResultSeriesType(type.code, type.name, unique, exists, productive);
+        return new ResultSeriesType(type.code, type.name, unique, exists, productive, rearrangement, duplicate);
 
     }
 
@@ -260,6 +368,16 @@ class ResultSeriesType {
     #_rearrangement;
     #_duplicate;
 
+    /**
+     * @description Creates an instance of ResultSeriesType.
+     * @param {string} typeCode
+     * @param {string} typeName
+     * @param {boolean} unique
+     * @param {boolean} exists
+     * @param {boolean} productive
+     * @param {boolean} rearrangement
+     * @param {boolean} duplicate
+     */
     constructor(typeCode, typeName, unique, exists, productive, rearrangement, duplicate){
         this.#_typeCode = typeCode;
         this.#_typeName = typeName;
@@ -273,7 +391,7 @@ class ResultSeriesType {
     /**
      * @description the code for this type
      * @readonly
-     * @memberof ResultSeriesType
+     * @type {string}
      */
     get typeCode(){
         return this.#_typeCode;
@@ -282,52 +400,52 @@ class ResultSeriesType {
     /**
      * @description the name of the type
      * @readonly
-     * @memberof ResultSeriesType
+     * @type {string}
      */
     get typeName(){
         return this.#_typeName;
     }
-
+    
     /**
      * @description returns true if unique flag is set, returns false otherwise.
      * @readonly
-     * @memberof ResultSeriesType
+     * @type {boolean}
      */
     get unique(){
         return this.#_unique;
     }
-
+    
     /**
      * @description returns true if exists flag is set, returns false otherwise.
      * @readonly
-     * @memberof ResultSeriesType
+     * @type {boolean}
      */
     get exists(){
         return this.#_exists;
     }
-
+    
     /**
      * @description returns true if productive flag is set, returns false otherwise.
      * @readonly
-     * @memberof ResultSeriesType
+     * @type {boolean}
      */
     get productive(){
         return this.#_productive;
     }
-
+    
     /**
      * @description returns true if rearrangement flag is set, returns false otherwise.
      * @readonly
-     * @memberof ResultSeriesType
+     * @type {boolean}
      */
     get rearrangement(){
         return this.#_rearrangement;
     }
-
+    
     /**
      * @description returns true if duplicate flag is set, returns false otherwise.
      * @readonly
-     * @memberof ResultSeriesType
+     * @type {boolean}
      */
     get duplicate(){
         return this.#_duplicate;
@@ -336,7 +454,6 @@ class ResultSeriesType {
     /**
      * @description Build a String representation of the ResultSeriesType
      * @returns {string} 
-     * @memberof ResultSeriesType
      */
     toString(){
         let result = this.#_typeName;
@@ -381,6 +498,9 @@ class ResultSeriesType {
     }
 }
 
+/**
+ * A static class for Codes of Gene Types
+ */
 class GeneType {
 
     static genes = {
@@ -390,10 +510,24 @@ class GeneType {
         C_GENE: 'c'
     };
 
+    /**
+     * @description The code for V Gene
+     * @const
+     * @static
+     * @type {string}
+     * @default 'v'
+     */
     static get V_GENE() {
         return GeneType.genes.V_GENE;
     }
 
+    /**
+     * @description The code for D Gene
+     * @const
+     * @static
+     * @type {string}
+     * @default 'd'
+     */
     static get D_GENE() {
         return GeneType.genes.D_GENE;
     }
@@ -402,14 +536,124 @@ class GeneType {
         return GeneType.genes.J_GENE;
     }
 
+    /**
+     * @description The code for D Gene
+     * @const
+     * @static
+     * @type {string}
+     * @default 'd'
+     */
     static get C_GENE() {
         return GeneType.genes.C_GENE;
     }
 
+     /**
+     * @description return true if the code is a valid code (i.e. exists in the list of possible codes).
+     * @static
+     * @param {String} value
+     * @returns {boolean} 
+     */
     static contains(value) {
         return Object.values(GeneType.genes).includes(value);
     }
 }
+
+/**
+ * DataType class for setting types at the Properties and help decide the proper {@link Result} Structure at the Abstract Result Factory
+ */
+class DataType {
+
+    static types = {
+        V_GENE_USAGE: 'VGeneUsage',
+        D_GENE_USAGE: 'DGeneUsage',
+        J_GENE_USAGE: 'JGeneUsage',
+        C_GENE_USAGE: 'CGeneUsage',
+        JUNCTION_LENGTH: 'JunctionLength',
+        CLONE_COUNT: 'CloneCount',
+        CLONE_COUNT_IMMUNEDB: 'CloneCountImmuneDB'
+    };
+
+    /**
+     * @description V Gene Usage data type
+     * @constant
+     * @static
+     * @default 'VGeneUsage'
+     */
+    static get V_GENE_USAGE() {
+        return DataType.types.V_GENE_USAGE;
+    }
+    
+    /**
+     * @description D Gene Usage data type
+     * @constant
+     * @static
+     * @default 'DGeneUsage'
+     */
+    static get D_GENE_USAGE() {
+        return DataType.types.D_GENE_USAGE;
+    }
+    
+    /**
+     * @description J Gene Usage data type
+     * @constant
+     * @static
+     * @default 'JGeneUsage'
+     */
+    static get J_GENE_USAGE() {
+        return DataType.types.J_GENE_USAGE;
+    }
+    
+    /**
+     * @description C Gene Usage data type
+     * @constant
+     * @static
+     * @default 'CGeneUsage'
+     */
+    static get C_GENE_USAGE() {
+        return DataType.types.C_GENE_USAGE;
+    }
+    
+    /**
+     * @description Junction Length data type
+     * @constant
+     * @static
+     * @default 'JunctionLength'
+     */
+    static get JUNCTION_LENGTH() {
+        return DataType.types.JUNCTION_LENGTH;
+    }
+    
+    /**
+     * @description Clone Count data type
+     * @constant
+     * @static
+     * @default 'ConeCount'
+     */
+    static get CLONE_COUNT() {
+        return DataType.types.CLONE_COUNT;
+    }
+    
+    /**
+     * @description Clone Count (ImmuneDB) data type
+     * @constant
+     * @static
+     * @default 'CloneCountImmuneDB'
+     */
+    static get CLONE_COUNT_IMMUNEDB() {
+        return DataType.types.CLONE_COUNT_IMMUNEDB;
+    }
+
+    /**
+     * @description Validates if the value is a valid code for a known data type.
+     * @static
+     * @param {string} value the data type code to check if exists in known types
+     * @returns {boolean} true if value is and existing valid code, false otherwise
+     */
+    static contains(value) {
+        return Object.values(DataType.types).includes(value);
+    }
+}
+
 
 class Common {
 
@@ -447,13 +691,16 @@ class DebugTimer {
     #_logger;
     #_data;
 
+    /**
+     * @description Creates an instance of DebugTimer.
+     */
     constructor() {
         this.#_data = {};
         this.#_logger = new Logger("DebugTimer");
     }
 
     /**
-     * Begin the timer.
+     * @description Begin the timer.
      * @param {string} what - Label, e.g. "loading file".
      */
     start(what) {
@@ -463,7 +710,7 @@ class DebugTimer {
     }
 
     /**
-     * End the timer.
+     * @description End the timer.
      * @param {string} what - Label, e.g. "loading file".
      */
     end(what) {
@@ -472,7 +719,7 @@ class DebugTimer {
     }
 
     /**
-     * Print the results to the console.
+     * @description Print the results to the console.
      * @returns {str} - The formatted result, same as those printed to console.
      */
     print() {
@@ -484,20 +731,15 @@ class DebugTimer {
         this.#_logger.info(str);
         return str;
     }
+
+    /**
+     * @description cleans the Timer
+     */
     clean() {
         let cleaned = {};
         this.#_data = cleaned;
     }
 }
 
-/*
-module.exports = {
-    Logger: Logger,
-    ResultSeriesType: ResultSeriesType,
-    GeneType: GeneType,
-    Common: Common,
-    DebugTimer: DebugTimer
-};
-*/
 
-export { Logger, ResultSeriesType, GeneType, Common, DebugTimer };
+export { Logger, ResultSeriesType, GeneType, DataType, Common, DebugTimer };

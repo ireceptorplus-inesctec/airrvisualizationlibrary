@@ -54,7 +54,7 @@ class CountStatsResult extends StatsResult {
         // return false;
         return this.parser.isMultipleSeries();
     }
-
+    /*
     preparse(sourceData){
         this.#_logger.debug("preparse.");
         this.parser.preparse(sourceData);
@@ -69,6 +69,7 @@ class CountStatsResult extends StatsResult {
         this.#_logger.debug("postparse.");  
         //TODO:Get Properties from parser and update this.#_defaultProperties
     }
+    */
 }
 
 class JunctionLengthStatsResult extends StatsResult {
@@ -114,7 +115,7 @@ class JunctionLengthStatsResult extends StatsResult {
         return false;
         //return this.parser.isMultipleSeries();
     }
-
+    /*
     preparse(sourceData){
         this.#_logger.debug("preparse.");
         this.parser.preparse(sourceData);
@@ -129,6 +130,7 @@ class JunctionLengthStatsResult extends StatsResult {
         this.#_logger.debug("postparse.");  
         //TODO:Get Properties from parser and update this.#_defaultProperties
     }
+    */
 }
 
 class GeneUsageStatsResult extends StatsResult {
@@ -190,7 +192,7 @@ class GeneUsageStatsResult extends StatsResult {
     isMultipleSeries(){
         return this.parser.multipleSeries;
     }
-
+    /*
     preparse(sourceData){
         this.#_logger.debug("preparse.");
         this.parser.preparse(sourceData);
@@ -205,6 +207,7 @@ class GeneUsageStatsResult extends StatsResult {
         this.#_logger.debug("postparse.");  
         //TODO:Get Properties from parser and update this.#_defaultProperties
     }
+    */
 }
 
 class VGeneUsageStatsResult extends GeneUsageStatsResult {

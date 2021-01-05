@@ -20,17 +20,20 @@ class Chart {
      * @param {Properties} properties The properties of the chart.
      */
     constructor(properties) {
+        if (this.constructor === Chart) {
+            // Abstract class can not be constructed.
+            throw new TypeError("Can not construct abstract class.");
+        }//else (called from child)
+        // Check if all instance methods are implemented.
+        if (this.plot === Chart.prototype.plot) {
+            // Child has not implemented this abstract method.
+            throw new TypeError("Please implement abstract method plot.");
+        }
         this.#_logger = new Logger('Chart');
         this.#_logger.debug("Constructor.");
         this.#_result = undefined;
-        this.#_properties = undefined;
-        if (properties instanceof Properties) {
-            this.#_properties = properties;
-        } else {
-            //this.#_properties = new Properties();
-            throw 'Invalid Properties. properties parameter must be an instance of Properties class.';
-        }
-        this.#_id = this.#_properties.id;
+        this.setProperties(properties);
+        this.#_id = this.getProperties().id;
     }
 
     /**
@@ -40,6 +43,14 @@ class Chart {
      */
     get id() {
         return this.getId();
+    }
+
+    /**
+     * @description Returns the ID of this Chart
+     * @returns {String} The identification of the Chart instance.
+     */
+    getId() {
+        return this.#_id;
     }
 
     /**
@@ -53,19 +64,7 @@ class Chart {
     set result(result) {
         setResult(result);
     }
-
-    /**
-     * @description The {@link Properties} of the chart
-     * @type {Properties}
-     */
-    get properties() {
-        return this.getProperties();
-    }
-
-    set properties(properties) {
-        this.setProperties(properties);
-    }
-
+    
     /**
      * @description returns the Result of this Chart.
      * @returns {Result} the Result object.
@@ -95,6 +94,18 @@ class Chart {
     }
 
     /**
+     * @description The {@link Properties} of the chart
+     * @type {Properties}
+     */
+    get properties() {
+        return this.getProperties();
+    }
+
+    set properties(properties) {
+        this.setProperties(properties);
+    }
+
+    /**
      * @description Chainable method to set the {@link Properties} for the chart
      * @param {Properties} properties the {@link Properties} for the chart
      * @returns {Chart} the same instance on which the method was called.
@@ -103,7 +114,7 @@ class Chart {
         if (properties instanceof Properties) {
             this.#_properties = properties;
         } else {
-            throw 'properies type must be Properties';
+            throw new TypeError('Invalid Properties received. Parameter must be an instance of Properties class.');
         }
         return this;
     }
@@ -117,21 +128,13 @@ class Chart {
     }
 
     /**
-     * @description Returns the ID of this Chart
-     * @returns {String} The identification of the Chart instance.
-     */
-    getId() {
-        return this.#_id;
-    }
-
-    /**
      * @description Abstract method. All subclasses must implement this method.
      * @abstract
      * @throws Throws Error if directly called.
      */
     plot() {
         this.#_logger.fatal("this plot() method should never execute, specializations of Chart need to overload it.");
-        throw 'This method should not be called, implementations need to overload it.';
+        throw new TypeError('This method should not be called, implementations need to overload it.');
     }
 }
 
@@ -313,7 +316,7 @@ class HighchartsChart extends Chart {
         }
 
         timer.end("build_Highcharts_structure");
-        console.log(p);
+        //console.log(p);
         // If Hicharts is imported as a module than we don't need jquery to plot the chart into the DOM.
         //this.#_chart  = Highcharts.chart(this.#_properties.id, p);
         this.#_chart = this.#_highcharts.chart(this.properties.id, p);
@@ -345,7 +348,7 @@ class HighchartsChart extends Chart {
         let highcharts = this.#_highcharts;
         return function (eStart) {
             let chart = targetChart;
-            console.log("Mousedown in multiple series");
+            //console.log("Mousedown in multiple series");
             eStart = chart.pointer.normalize(eStart);
 
             let posX = eStart.chartX,
@@ -368,7 +371,7 @@ class HighchartsChart extends Chart {
                         }
                     }
                 }, undefined, undefined, false);
-                console.log("alpha:" + newAlpha + ", beta:" + newBeta);
+                //console.log("alpha:" + newAlpha + ", beta:" + newBeta);
             }
 
             function unbindAll() {

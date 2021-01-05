@@ -14,6 +14,23 @@ class Parser {
      * @description Creates an instance of Parser.
      */
     constructor(){
+        if (this.constructor === Parser) {
+            // Abstract class can not be constructed.
+            throw new TypeError("Can not construct abstract class.");
+        }//else (called from child)
+        // Check if all instance methods are implemented.
+        if (this.preparse === Parser.prototype.preparse) {
+            // Child has not implemented this abstract method.
+            throw new TypeError("Please implement abstract method preparse.");
+        }
+        if (this.onparse === Parser.prototype.onparse) {
+            // Child has not implemented this abstract method.
+            throw new TypeError("Please implement abstract method onparse.");
+        }
+        if (this.postparse === Parser.prototype.postparse) {
+            // Child has not implemented this abstract method.
+            throw new TypeError("Please implement abstract method postparse.");
+        }
         this.#_logger = new Logger('Parser');
         this.#_series = [];
     }
@@ -84,6 +101,10 @@ class DrilldownParser extends Parser {
      */
     constructor(){
         super();
+        if (this.constructor === DrilldownParser) {
+            // Abstract class can not be constructed.
+            throw new TypeError("Can not construct abstract class.");
+        }//else (called from child)
         this.#_logger = new Logger('DrilldownParser');
         this.#_drilldownSeries = [];
     }

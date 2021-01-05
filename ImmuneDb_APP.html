@@ -27,10 +27,8 @@
         <script>
             function redrawChart(url, identifier){
                 $.get(url, function(data){
-                    let d = window.airrvisualization.createImmuneDbCloneCountResult();
-                    d.setData(data);
                     window.airrvisualization.setDebugLevel(40);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category")).setResult(d).plot();
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setDataType("CloneCountImmuneDB")).plot();
                 });
             }
             $(function () {

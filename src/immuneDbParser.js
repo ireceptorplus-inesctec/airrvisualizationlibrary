@@ -32,6 +32,11 @@ class ImmuneDbCloneCountParser extends Parser {
         this.#_logger.trace("preparse.");
         
     }   
+
+    postparse(sourceData){
+        this.#_logger.trace("postparse.");
+        
+    }   
            
     onparse (sourceData){
         this.#_logger.trace("parse");
@@ -53,7 +58,7 @@ class ImmuneDbCloneCountParser extends Parser {
 
         let studies = Object.keys(sourceData);
         
-        console.log(studies);
+        //console.log(studies);
         if (studies.length > 1){
             //Why is this important? If we have a multiple studies we need a color per study.
             this.#_logger.debug("Representing " + studies + " studies.");
@@ -99,7 +104,7 @@ class ImmuneDbCloneCountParser extends Parser {
         }
         timer.end("prepare");
         //console.log(studiesDict);
-        console.log("Read " + studies.length + " studies, in a total of " + stats + " statistic values.")
+        //console.log("Read " + studies.length + " studies, in a total of " + stats + " statistic values.")
         const colorTopByStudy = [];
         for (let i = 0; i < studies.length; i++) {
             const element = studies[i];

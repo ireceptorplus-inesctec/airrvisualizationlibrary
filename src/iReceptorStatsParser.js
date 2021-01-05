@@ -143,6 +143,10 @@ class CountStatsParser extends Parser {
 
     }
 
+    postparse(sourceData) {
+        this.#_logger.trace("postparse.");
+    }
+
     onparse(data) {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
@@ -290,6 +294,10 @@ class JunctionLenghtStatsParser extends Parser {
 
     }
 
+    postparse(sourceData) {
+        this.#_logger.trace("postparse.");
+    }
+
     onparse(data) {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
@@ -398,14 +406,13 @@ class JunctionLenghtStatsParser extends Parser {
 }
 
 /**
+ * GeneUsageDrilldownStatsParser is a default {@link DrilldownParser} for {@link GeneStatsResult}
+ * 
  * GeneUsageDrilldownStatsParser assumes that when parsing a drilldown Gene Stats it will receive an 
  * subgroup (family) > gene > call (allele) structure.
  * If other structure is passed to the parser, then errors may arrise.
  * 
- * @description GeneUsageDrilldownStatsParser is a {Parser} for {GeneStatsResult} with drilldown capabilities
- * @author Marco Amaro Oliveira
- * @class GeneUsageDrilldownStatsParser
- * @extends {Parser}
+ * @extends {DrilldownParser}
  */
 class GeneUsageDrilldownStatsParser extends DrilldownParser {
     #_logger;
@@ -444,9 +451,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
     #_cellSeriesByRepertoire;
 
     /**
-     * Creates an instance of GeneUsageDrilldownStatsParser.
+     * @description Creates an instance of GeneUsageDrilldownStatsParser.
      * @param {GeneType} type
-     * @memberof GeneUsageDrilldownStatsParser
      */
     constructor(type) {
         super();
@@ -549,11 +555,11 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
         return function(e) {
             let random = Common.makeid(12);
             let chart = this
-            console.log(chart);
+            //console.log(chart);
             logger.trace(random + ", " + e.toString());
             if (!e.seriesOptions) {
-                console.log(chart.series);
-                console.log(e.point);
+                //console.log(chart.series);
+                //console.log(e.point);
 
                 //chart.series[0].remove();
                 //for (var i = 0; i < chart.series.length; i++) {
@@ -571,11 +577,11 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //chart.addSingleSeriesAsDrilldown(e.point, series[0]);
                 //chart.addSingleSeriesAsDrilldown(e.point, series[1]);
                 //logger.trace(JSON.stringify(chart));
-                console.log(chart.series);
-                console.log(e.point);
+                //console.log(chart.series);
+                //console.log(e.point);
                 chart.applyDrilldown();
-                console.log(chart.series);
-                console.log(e.point);
+                //console.log(chart.series);
+                //console.log(e.point);
             }else{
                 chart.setTitle(null, {text: e.seriesOptions.name});
             }
@@ -647,6 +653,10 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
     preparse(sourceData) {
         this.#_logger.trace("preparse.");
 
+    }
+
+    postparse(sourceData) {
+        this.#_logger.trace("postparse.");
     }
 
     onparse(data) {
@@ -918,9 +928,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
 
 /**
  *  
- * @description GeneUsageStatsParser is a {Parser} for {GeneStatsResult} without drilldown capabilities
- * @author Marco Amaro Oliveira
- * @class GeneUsageStatsParser
+ * GeneUsageStatsParser is a {@Link Parser} for {@Link GeneStatsResult} without drilldown capabilities
+ * 
  * @extends {Parser}
  */
 class GeneUsageStatsParser extends Parser {
@@ -932,8 +941,7 @@ class GeneUsageStatsParser extends Parser {
     #_seriesByRepertoire;
 
     /**
-     * Creates an instance of GeneUsageStatsParser.
-     * @memberof GeneUsageStatsParser
+     * @description Creates an instance of GeneUsageStatsParser.
      */
     constructor() {
         super();
@@ -1000,6 +1008,10 @@ class GeneUsageStatsParser extends Parser {
     preparse(sourceData) {
         this.#_logger.trace("preparse.");
 
+    }
+
+    postparse(sourceData) {
+        this.#_logger.trace("postparse.");
     }
 
     onparse(data) {
@@ -1090,14 +1102,13 @@ class GeneUsageStatsParser extends Parser {
 }
 
 /**
+ * JGeneUsageDrilldownStatsParser is a {@link DrilldownParser} for a Type J {@link GeneStatsResult} with drilldown capabilities
+ * 
  * JGeneUsageDrilldownStatsParser assumes that when parsing a drilldown Gene Stats it will receive an 
  * gene > call (allele) structure. If a statics for subgroup (family) is received, it will be ignored.
  * If other structure is passed to the parser, then errors may arrise.
  * 
- * @description JGeneUsageDrilldownStatsParser is a {Parser} for a Type J {GeneStatsResult} with drilldown capabilities
- * @author Marco Amaro Oliveira
- * @class JGeneUsageDrilldownStatsParser
- * @extends {Parser}
+ * @extends {DrilldownParser}
  */
 class JGeneUsageDrilldownStatsParser extends DrilldownParser {
     #_logger;
@@ -1128,9 +1139,8 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
     #_cellSeriesByRepertoire;
 
     /**
-     * Creates an instance of GeneUsageDrilldownStatsParser.
+     * @description Creates an instance of GeneUsageDrilldownStatsParser.
      * @param {GeneType} type
-     * @memberof GeneUsageDrilldownStatsParser
      */
     constructor(type) {
         //TODO: remove genetype parameter from the constructor.
@@ -1224,11 +1234,11 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         return function(e) {
             let random = Common.makeid(12);
             let chart = this
-            console.log(chart);
+            //console.log(chart);
             logger.trace(random + ", " + e.toString());
             if (!e.seriesOptions) {
-                console.log(chart.series);
-                console.log(e.point);
+                //console.log(chart.series);
+                //console.log(e.point);
 
                 //chart.series[0].remove();
                 //for (var i = 0; i < chart.series.length; i++) {
@@ -1246,11 +1256,11 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 //chart.addSingleSeriesAsDrilldown(e.point, series[0]);
                 //chart.addSingleSeriesAsDrilldown(e.point, series[1]);
                 //logger.trace(JSON.stringify(chart));
-                console.log(chart.series);
-                console.log(e.point);
+                //console.log(chart.series);
+                //console.log(e.point);
                 chart.applyDrilldown();
-                console.log(chart.series);
-                console.log(e.point);
+                //console.log(chart.series);
+                //console.log(e.point);
             }else{
                 chart.setTitle(null, {text: e.seriesOptions.name});
             }
@@ -1303,6 +1313,10 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
     preparse(sourceData) {
         this.#_logger.trace("preparse.");
 
+    }
+
+    postparse(sourceData) {
+        this.#_logger.trace("postparse.");
     }
 
     onparse(data) {

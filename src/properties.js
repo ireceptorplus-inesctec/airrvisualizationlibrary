@@ -1,9 +1,16 @@
-import { Logger, Common } from './common.js';
+import { Logger, Common, DataType } from './common.js';
 
 /**
  * Properties class for setting visualization properties and costumizations.
  */
 class Properties {
+    /**
+     * @description default value for data drilldown
+     * @type {boolean}
+     * @constant
+     * @static
+     */
+    static DATA_DRILLDOWN = false;
     /**
      * @description default value for chart type
      * @type {String}
@@ -60,6 +67,9 @@ class Properties {
     #_xLabel;
     #_yLabel;
     #_stackingType;
+    #_data
+    #_dataType
+    #_dataDrilldown
     #_id;
     #_sort;
     #_chartType;
@@ -68,6 +78,7 @@ class Properties {
     #_alpha3D;
     #_beta3D;
     #_depth3D;
+    #_dataDrilldown_userDefined;
     #_sort_userDefined;
     #_percentage_userDefined;
     #_chartType_userDefined;
@@ -87,6 +98,9 @@ class Properties {
         this.#_xLabel = undefined;
         this.#_yLabel = undefined;
         this.#_stackingType = undefined;
+        this.#_data = undefined;
+        this.#_dataType = undefined;
+        this.#_dataDrilldown = Properties.DATA_DRILLDOWN; //defaults to false
         this.#_id = Common.makeid(12);
         this.#_sort = Properties.SORT;
         this.#_percentage = Properties.PERCENTAGE;
@@ -103,6 +117,7 @@ class Properties {
         this.#_alpha3D_userDefined = false;
         this.#_beta3D_userDefined = false;
         this.#_depth3D_userDefined = false;
+        this.#_dataDrilldown_userDefined = false;
     }
 
     /**
@@ -241,8 +256,8 @@ class Properties {
         return this.getId();
     }
 
-    set id(elementId) {
-        this.setId(elementId);
+    set id(value) {
+        this.setId(value);
     }
 
     /**
@@ -255,14 +270,16 @@ class Properties {
 
     /**
      * @description Sets the id of the HTML element where the chart is to be plotted.
-     * @param {String} elementId the id of the HTML element where the chart is to be plotted.
+     * @param {String} value the id of the HTML element where the chart is to be plotted.
      * @returns {Properties} the same instance on which the method was called.
      */
-    setId(elementId) {
-        this.#_id = elementId;
-        this.#_logger.debug("setId.");
+    setId(value) {
+        if (!(value === undefined)){
+            this.#_id = value;
+            this.#_logger.debug("setId.");
+        }
         this.#_logger.trace(JSON.stringify(this));
-        console.log(JSON.stringify(this));
+        //console.log(JSON.stringify(this));
         return this;
     }
 
@@ -299,6 +316,122 @@ class Properties {
     }
 
     /**
+     * @description the source data.
+     * @type {JSON}
+     */
+    get data() {
+        return this.getData();
+    }
+
+    set data(value) {
+        this.setData(value);
+    }
+
+    /**
+     * @description returns the source data.
+     * @returns {JSON} the source data.
+     */
+    getData() {
+        return this.#_data;
+    }
+
+    /*
+     * @description Sets the data data.
+     * @param {JSON} value the source data.
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    /*setData(value) {
+        this.#_data = value;
+        this.#_logger.debug("setData.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }*/
+
+    /**
+     * @description Sets the source data.
+     * @param {JSON} data the source data.
+     * @param {string} [dataType] the source data.
+     * @param {boolean} [dataDrilldown] the source data.
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    setData(data, dataType, dataDrilldown) {
+        this.#_data = data;
+        if (dataType != undefined) this.setDataType(dataType);
+        if (dataDrilldown != undefined) this.setDataDrilldown(dataDrilldown);
+        this.#_logger.debug("setData.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+    /**
+     * @description the data type of the source data.
+     * @type {String}
+     */
+    get dataType() {
+        return this.getDataType();
+    }
+
+    set dataType(value) {
+        this.setDataType(value);
+    }
+
+    /**
+     * @description returns the data type of the source data.
+     * @returns {String} the data type of the source data.
+     */
+    getDataType() {
+        return this.#_dataType;
+    }
+
+    /**
+     * @description Sets the data type of the source data.
+     * @param {String} value the data type of the source data.
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    setDataType(value) {
+        if (DataType.contains(value)) this.#_dataType = value;
+        else throw new TypeError('An unknown Data Type was set in the properties file: ' + value);
+        this.#_logger.debug("setDataType.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+    /**
+     * @description the data drilldown of the source data.
+     * @type {String}
+     */
+    get dataDrilldown() {
+        return this.getDataDrilldown();
+    }
+
+    set dataDrilldown(value) {
+        this.setDataDrilldown(value);
+    }
+
+    /**
+     * @description returns true if the source data has drilldown structure.
+     * @returns {String} the data drilldown value of the source data.
+     */
+    getDataDrilldown() {
+        return this.#_dataDrilldown;
+    }
+
+    /**
+     * @description Sets the data Drilldown of the source data. If true it is expected that the source data has a specific structure according to the data type.
+     * @param {String} value the data drilldown value of the source data.
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    setDataDrilldown(value) {
+        if (!(value === undefined) && typeof value == "boolean"){
+            this.#_dataDrilldown = value;
+            this.#_dataDrilldown_userDefined = true;
+        }
+        this.#_logger.debug("setDataDrilldown.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+    /**
      * @description the value of the sorting property to be used by the {@link resultseries}.
      * @type {Boolean}
      */
@@ -324,8 +457,10 @@ class Properties {
      * @returns {Properties} the same instance on which the method was called.
      */
     setSort(value) {
-        this.#_sort = value;
-        this.#_sort_userDefined = true;
+        if (!(value === undefined)){
+            this.#_sort = value;
+            this.#_sort_userDefined = true;
+        }
         this.#_logger.debug("setSort.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
@@ -357,8 +492,10 @@ class Properties {
      * @returns {Properties} the same instance on which the method was called.
      */
     setChartType(value) {
-        this.#_chartType = value;
-        this.#_chartType_userDefined = true;
+        if (!(value === undefined)){
+            this.#_chartType = value;
+            this.#_chartType_userDefined = true;
+        }
         this.#_logger.debug("setChartType.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
@@ -390,8 +527,10 @@ class Properties {
      * @returns {Properties} the same instance on which the method was called.
      */
     setAnimation(value) {
-        this.#_animation = value;
-        this.#_animation_userDefined = true;
+        if (!(value === undefined)){
+            this.#_animation = value;
+            this.#_animation_userDefined = true;
+        }
         this.#_logger.debug("setAnimation.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
@@ -423,8 +562,10 @@ class Properties {
      * @returns {Properties} the same instance on which the method was called.
      */
     setAlpha3D(value) {
-        this.#_alpha3D = value;
-        this.#_alpha3D_userDefined = true;
+        if (!(value === undefined)){
+            this.#_alpha3D = value;
+            this.#_alpha3D_userDefined = true;
+        }
         this.#_logger.debug("setAlpha3D.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
@@ -456,8 +597,10 @@ class Properties {
      * @returns {Properties} the same instance on which the method was called.
      */
     setBeta3D(value) {
-        this.#_beta3D = value;
-        this.#_beta3D_userDefined = true;
+        if (!(value === undefined)){
+            this.#_beta3D = value;
+            this.#_beta3D_userDefined = true;
+        }
         this.#_logger.debug("setBeta3D.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
@@ -489,8 +632,10 @@ class Properties {
      * @returns {Properties} the same instance on which the method was called.
      */
     setDepth3D(value) {
-        this.#_depth3D = value;
-        this.#_depth3D_userDefined = true;
+        if (!(value === undefined)){
+            this.#_depth3D = value;
+            this.#_depth3D_userDefined = true;
+        }
         this.#_logger.debug("setDepth3D.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
@@ -522,8 +667,10 @@ class Properties {
      * @returns {Properties} the same instance on which the method was called.
      */
     setPercentage(value) {
-        this.#_percentage = value;
-        this.#_percentage_userDefined = true;
+        if (!(value === undefined)){
+            this.#_percentage = value;
+            this.#_percentage_userDefined = true;
+        }
         this.#_logger.debug("setPercentage.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
@@ -532,37 +679,40 @@ class Properties {
     /**
      * @description Updates a Properties with another properties contents. Own contents will only be updated if not yet set.
      * @param {Properties} anotherProperties
+     * @returns {Properties} the same instance on which the method was called.
      */
     updateWith(anotherProperties) {
-        if (!this.#_chartType_userDefined) this.setChartType(anotherProperties.chartType);
-        if (!this.title) this.setTitle(anotherProperties.title);
-        if (!this.subtitle) this.setSubtitle(anotherProperties.subtitle);
-        if (!this.xLabel) this.setXLabel(anotherProperties.xLabel);
-        if (!this.yLabel) this.setYLabel(anotherProperties.yLabel);
-        if (!this.stackingType) this.setStackingType(anotherProperties.stackingType);
-        if (!this.#_sort_userDefined) this.setSort(anotherProperties.sort);
-        if (!this.#_animation_userDefined) this.setAnimation(anotherProperties.animation);
-        if (!this.#_percentage_userDefined) this.setPercentage(anotherProperties.percentage);
-        if (!this.#_alpha3D_userDefined) this.setAlpha3D(anotherProperties.alpha3D);
-        if (!this.#_beta3D_userDefined) this.setBeta3D(anotherProperties.beta3D);
-        if (!this.#_depth3D_userDefined) this.setDepth3D(anotherProperties.depth3D);
-        if (!this.id) this.setId(anotherProperties.id);
+        if (!this.#_chartType_userDefined && anotherProperties.chartType) this.setChartType(anotherProperties.chartType);
+        if (!this.title && anotherProperties.title) this.setTitle(anotherProperties.title);
+        if (!this.subtitle && anotherProperties.subtitle) this.setSubtitle(anotherProperties.subtitle);
+        if (!this.xLabel && anotherProperties.xLabel) this.setXLabel(anotherProperties.xLabel);
+        if (!this.yLabel && anotherProperties.yLabel) this.setYLabel(anotherProperties.yLabel);
+        if (!this.stackingType && anotherProperties.stackingType) this.setStackingType(anotherProperties.stackingType);
+        if (!this.data && anotherProperties.data) this.setData(anotherProperties.data);
+        if (!this.dataType && anotherProperties.dataType) this.setDataType(anotherProperties.dataType);
+        if (!this.#_dataDrilldown_userDefined && anotherProperties.dataDrilldown) this.setDataType(anotherProperties.dataDrilldown);
+        if (!this.#_sort_userDefined && anotherProperties.sort) this.setSort(anotherProperties.sort);
+        if (!this.#_animation_userDefined && anotherProperties.animation) this.setAnimation(anotherProperties.animation);
+        if (!this.#_percentage_userDefined && anotherProperties.percentage) this.setPercentage(anotherProperties.percentage);
+        if (!this.#_alpha3D_userDefined && anotherProperties.alpha3D) this.setAlpha3D(anotherProperties.alpha3D);
+        if (!this.#_beta3D_userDefined && anotherProperties.beta3D) this.setBeta3D(anotherProperties.beta3D);
+        if (!this.#_depth3D_userDefined && anotherProperties.depth3D) this.setDepth3D(anotherProperties.depth3D);
+        if (!this.id && anotherProperties.id) this.setId(anotherProperties.id);
+        return this;
     }
 
     /**
-     * @description Returns a valid Properties instance. Will create a new Properties if the parameter is invalid, or will return the Properties instance otherwise.
+     * @description Always returns a valid Properties instance. Will create a new Properties, with default values, if the parameter is not valid (for example wrong JSON structure or inexistant properties), or will return the Properties instance otherwise.
      * @static
-     * @param {Properties} properties A Properties instance or a JSON representation of a properties instance
+     * @param {(Properties|JSON|string|undefined)} properties a {@link Properties}, or a {@link JSON} or String representation of a Properties, or undefined.
      * @returns {Properties} 
      */
-    static validOrNew(properties) {
+    static create(properties) {
         let p = undefined;
         if (properties == null) {
-            console.log("properties is null");
             p = new Properties();
         } else if (properties instanceof Properties) {
-            console.log("properties is instance of Properties");
-            p = properties;
+            p = new Properties().updateWith(properties).setId(properties.id);
         } else if (typeof properties === "string") {
             properties = JSON.parse(properties);
         }
@@ -573,8 +723,8 @@ class Properties {
                 Object.seal(p);
                 Object.assign(p, properties);
             } catch (e) {
-                console.log(e);
-                this.#_logger.error("Properties: tried to build a Object with the wrong structure. Returning an empty Properties instance.");
+                //console.log(e);
+                Logger.error("Properties", "Properties: tried to build an Object with the wrong structure. Returning a default Properties instance.");
                 p = new Properties();
             }
         }

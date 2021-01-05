@@ -13,19 +13,19 @@
     <body>
         <article class="repertoire" >
             <h1>Stats API data</h1>
-            <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown-single_repertoire.json" x-gene="v">Load Rearrangement v_usage (1 repo, drilldown)</button>
-            <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-gene="v">Load Rearrangement v_usage (2 repo, drilldown)</button>
-            <button class="loader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-gene="v">Load Rearrangement v_usage (2 repo, no drilldown)</button>
+            <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown-single_repertoire.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (1 repo, drilldown)</button>
+            <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, drilldown)</button>
+            <button class="loader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, no drilldown)</button>
 
             <div id="v_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show D gene sample data from 2020/11/11</div>
 
-            <button class="drilldownDloader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-gene="d">Load Rearrangement d_usage (2 repo, drilldown)</button>
-            <button class="loader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-gene="d">Load Rearrangement d_usage (2 repo, no drilldown)</button>
+            <button class="drilldownDloader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, drilldown)</button>
+            <button class="loader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, no drilldown)</button>
 
             <div id="d_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show D gene sample data from 2020/11/11</div>
 
-            <button class="drilldownJloader" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-gene="j">Load Rearrangement j_usage (2 repo, drilldown)</button>
-            <button class="loader" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-gene="j">Load Rearrangement j_usage (2 repo, no drilldown)</button>
+            <button class="drilldownJloader" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-datatype="JGeneUsage">Load Rearrangement j_usage (2 repo, drilldown)</button>
+            <button class="loader" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-datatype="JGeneUsage">Load Rearrangement j_usage (2 repo, no drilldown)</button>
 
             <div id="j_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show J gene sample data from 2020/11/11</div>
 <!--
@@ -67,26 +67,25 @@
             /*
              * Example using the Library as a module.
              */
-            import {VisualizationLibrary, HighchartsChart, Result, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult, CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, ResultSeriesType, Logger} from './src/index.js';
+            import {VisualizationLibrary, ResultFactory, HighchartsChart, Result, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult, CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, ResultSeriesType, Logger} from './src/index.js';
             
 
             function redrawDrilldownJChart(url, identifier){
                 $.get(url, function(data){
-                    let d = new JGeneUsageStatsResult().setDrilldown(true).setData(data);
+                    let d = ResultFactory.build("JGeneUsage", true, data);
                     let prop = new Properties().setId(identifier).setSort(true).setXLabel("Category");
                     let chart = new HighchartsChart(prop).setResult(d).plot();
                 });
             }
 
-            function redrawChart(gene, url, identifier){
+            function redrawChart(datatype, url, identifier){
                 /*
                  * window.airrvisualization is still available
                  */
                 $.get(url, function(data){
-                    let result = window.airrvisualization.createGeneUsageStatsResult(gene).setData(data);
                     let properties = window.airrvisualization.createProperties();
-                    properties.setId(identifier).setXLabel("Category").setSort(true).setTitle("My title");
-                    let chart = window.airrvisualization.createChart(properties).setResult(result);
+                    properties.setId(identifier).setXLabel("Category").setSort(true).setTitle("My title").setDataType(datatype).setData(data);
+                    let chart = window.airrvisualization.createChart(properties);
                     chart.plot();
                 });
             }
@@ -95,14 +94,14 @@
                     let result = new VGeneUsageStatsResult();
                     result.setDrilldown(true).setData(data);
                     let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"Category\", \"yLabel\":\"Count\"}";
-                    let chart = new HighchartsChart(Properties.validOrNew(stringProperties)).setResult(result).plot();
+                    let chart = new HighchartsChart(Properties.create(stringProperties)).setResult(result).plot();
                 });
             }
             function redrawDrilldownDChart(url, identifier){
                 $.get(url, function(data){
                     let result = new DGeneUsageStatsResult().setDrilldown(true).setData(data);
                     let jsonProperties = {"id": identifier, "xLabel":"Category", "yLabel":"Example"};
-                    let chart = new HighchartsChart(Properties.validOrNew(jsonProperties)).setResult(result).plot();
+                    let chart = new HighchartsChart(Properties.create(jsonProperties)).setResult(result).plot();
                 });
             }
 
@@ -128,11 +127,11 @@
             }
             function redrawFailandsuccessChart(url, identifier){
                 $.get(url, function(data){
-                    //let d = new StatsResult(gene);
+                    //let d = new StatsResult(datatype);
                     try {
-                        let d = window.airrvisualization.createVGeneUsageStatsResult().setDrilldown(true).setData(data);
-                        window.airrvisualization.setDebugLevel(70);
-                        let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier)).setResult(d).plot();
+                        let d = {"dataType":"VGeneUsage", "dataDrilldown":true, "id": identifier, "data": data}
+                        //window.airrvisualization.setDebugLevel(70);
+                        let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties(d)).plot();
                     } catch (error) {
                         $('#'+identifier).empty().addClass("error").append('<p>' + error + '</p>');
                         console.error(error);
@@ -141,7 +140,7 @@
             }
             $(function () {
                 $('.loader').click(function(){
-                    redrawChart($(this).attr('x-gene'), $(this).attr('x-data'), $(this).attr('x-target'));
+                    redrawChart($(this).attr('x-datatype'), $(this).attr('x-data'), $(this).attr('x-target'));
                 });
                 $('.drilldownVloader').click(function(){
                     redrawDrilldownVChart($(this).attr('x-data'), $(this).attr('x-target'));
