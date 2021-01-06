@@ -346,10 +346,12 @@ class ResultSeriesType {
      */
     static getByName(name){
         //TODO: Verify if name is not undefined.
-        if (!name || !(ResultSeriesType.contains(name))){
+        if (!name ){
             throw new TypeError('undefined name value. Name parameter is required.');
         }
-
+        if (ResultSeriesType.names[name] == undefined){
+            throw new TypeError('inexistent name in list.');
+        }
         let unique = name.includes('unique');
         let exists = name.includes('exists');
         let productive = name.includes('productive');
