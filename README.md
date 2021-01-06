@@ -16,6 +16,11 @@ With `window.airrvisualization` you get an instance of the Class `VisualizationL
 
 Working examples can be found in the files [iRplusVis_APP.html](https://github.com/ireceptorplus-inesctec/airrvisualizationlibrary/blob/master/iRplusVis_APP.html), [iRplusVis_APP-module.html](https://github.com/ireceptorplus-inesctec/airrvisualizationlibrary/blob/master/iRplusVis_APP-module.html) and [ImmuneDb_APP.html](https://github.com/ireceptorplus-inesctec/airrvisualizationlibrary/blob/master/ImmuneDb_APP.html).
 
+## Library Diagram
+
+(UML (under maintenance) Class Diagram)
+[![UML (under maintenance) Class Diagram](https://raw.githubusercontent.com/ireceptorplus-inesctec/airrvisualizationlibrary/master/doc/umlet.com/airr-visualization-library.uml.png)](https://github.com/ireceptorplus-inesctec/airrvisualizationlibrary/raw/master/doc/umlet.com/airr-visualization-library.uml.png)
+
 ## Build
 
 Note you must have `npm`installed on your machine.
@@ -51,4 +56,24 @@ To build the library documentation run:
 
 ```bash
 npm run build:docs
+```
+
+After running the above command, JsDoc documentation will be available on [/jsdoc/index.html](./jsdoc/index.html)
+
+## Tests
+
+### Run tests
+
+To tests on the library, run:
+
+```bash
+npm run test
+```
+
+### Run tests coverage
+
+To see tests code coverage run:
+
+```bash
+npm run cover
 ```
