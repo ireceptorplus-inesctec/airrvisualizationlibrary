@@ -459,7 +459,7 @@ class ResultSeriesType {
      */
     toString(){
         let result = this.#_typeName;
-        if (this.#_exists || this.#_productive || this.#_unique){
+        if (this.#_exists || this.#_productive || this.#_unique || this.#_rearrangement || this.#_duplicate){
             let first = true;
             result += '[';
             if (this.#_exists){

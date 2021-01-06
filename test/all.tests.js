@@ -4,7 +4,7 @@ function importTest(name, path) {
     });
 }
 
-import {options, assert, expect, should} from './common';
+import {options, assert, expect, should} from './common.js';
 
 
 describe("All Tests", function () {
@@ -14,7 +14,7 @@ describe("All Tests", function () {
     });
 */
     before(function() {
-        //console.log("Making it think it has HIghcharts installed");
+        //console.log("Making it think it has HIGHCHARTS installed");
         window.Highcharts = {"_modules":{"Extensions/Exporting.js": true, "Extensions/Drilldown.js": true, "Extensions/Data.js": true, "Extensions/Math3D.js": true}};
     });
     importTest("Index", './index.test.js');
@@ -23,6 +23,6 @@ describe("All Tests", function () {
     importTest("Result", './result.test.js');
 
     after(function () {
-        console.log("after all tests");
+        console.log("All tests concluded.");
     });
 });

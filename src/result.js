@@ -178,6 +178,10 @@ class Result {
      * @description Execute required validations and starts the parsing of the data. Result subclasses may overload this method only if required.
      */
     parse(){
+        //TODO: 
+        //TODO: pass a callback to be called when the parse has ended.
+        //TODO: the parse() should be called by the chart not internally
+        //TODO: this way we can way for the parse process ensure that the properties are all updated and then automate the plot procedure.
         if (!this.#_data){     
             this.#_logger.trace("Can't parse, please set the Airr Data Commons data first.")
             return;

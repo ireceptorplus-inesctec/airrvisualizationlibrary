@@ -3,20 +3,21 @@ import { Properties } from '../src/properties.js'
 import { Chart } from '../src/charts.js';
 import { expect } from './common.js';
 
+/*
 describe('first test', function() {
     it('Should work', function(){
         expect(true).to.be.true;
     });
 
 });
-
+*/
 describe('VisualizationLibrary basic structure', function() {
     let vis = undefined;
     let winvis = undefined;
     let testChartId = "testChartId123";
     let testProperties = undefined;
     before(function() {
-        console.log("Running before");
+        //console.log("Running before");
         vis = VisualizationLibrary;
         winvis = window.airrvisualization;
     });
