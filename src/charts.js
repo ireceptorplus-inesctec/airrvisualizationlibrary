@@ -244,6 +244,10 @@ class HighchartsChart extends Chart {
             p.yAxis = (p.yAxis || {});
             p.yAxis.title = { text: this.properties.yLabel };
         }
+        if (this.properties.xLabel) {
+            p.xAxis = (p.xAxis || {});
+            p.xAxis.title = { text: this.properties.xLabel };
+        }
         //Sort has a huge problem with drilldown.
         //We cannot rely on Highcharts Sort. To apply sort we need to sort DataItems within the Result.
         /*
@@ -256,7 +260,7 @@ class HighchartsChart extends Chart {
         }
         */
         if (this.result.drilldown) {
-            this.#_logger.debug("YAY... this is a drilldown chart");
+            this.#_logger.debug("This is a drilldown chart");
             // In an Highcharts chart, the drilldown value is an object that allows for inspect increasingly high resolution data,
             // This object contains a series property that is an array of objects, each one representing a data series (as the series in the chart).
             // Each data series can have its own plot options, existence of the id property is mandatory to reference which series to plot.
