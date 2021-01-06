@@ -58,7 +58,7 @@ To build the library documentation run:
 npm run build:docs
 ```
 
-After running the above command, JsDoc documentation will be available on [/jsdoc/index.html](./jsdoc/index.html)
+After running the above command, JsDoc documentation will be available on _/jsdoc/index.html_
 
 ## Tests
 
