@@ -6,60 +6,68 @@ import { Logger, Common, DataType } from './common.js';
 class Properties {
     /**
      * @description default value for data drilldown
-     * @type {boolean}
-     * @constant
      * @static
+     * @constant
+     * @default false
+     * @type {boolean}
      */
-    static DATA_DRILLDOWN = false;
+    static get DEFAULT_DATA_DRILLDOWN(){ return false};
     /**
      * @description default value for chart type
-     * @type {String}
-     * @constant
      * @static
+     * @constant
+     * @default 'column'
+     * @type {string}
      */
-    static CHART_TYPE = 'column';
+    static get DEFAULT_CHART_TYPE(){return 'column'};
     /**
      * @description default value for sort
-     * @type {Boolean}
-     * @constant
      * @static
+     * @constant
+     * @default false
+     * @type {boolean}
      */
-    static SORT = false;
+    static get DEFAULT_SORT(){return false};
     /**
      * @description default value for animation
-     * @type {Boolean}
-     * @constant
      * @static
+     * @constant
+     * @default false
+     * @type {boolean}
      */
-    static ANIMATION = false;
+    static get DEFAULT_ANIMATION(){return false};
     /**
      * @description default value for percentage (chart plots as percentages or as values)
-     * @type {Boolean}
-     * @constant
+     * @type {boolean}
      * @static
+     * @default false
+     * @constant
      */
-    static PERCENTAGE = false;
+    static get DEFAULT_PERCENTAGE(){return false};
     /**
      * @description default value for alpha distance on 3D charts
-     * @type {Number}
      * @constant
      * @static
+     * @default 20
+     * @type {number}
      */
-    static ALPHA_3D = 20;
+    static get DEFAULT_ALPHA_3D(){return 20};
     /**
      * @description default value for beta distance on 3D charts
-     * @type {Number}
+     * @type {number}
      * @constant
      * @static
+     * @default 0
      */
-    static BETA_3D = 0;
+    static get DEFAULT_BETA_3D(){return 0};
     /**
      * @description default value for depth distance on 3D charts
      * @type {Number}
      * @constant
      * @static
+     * @default 100
      */
-    static DEPTH_3D = 100;
+    static get DEFAULT_DEPTH_3D(){return 100};
 
     #_logger;
     #_title;
@@ -100,15 +108,15 @@ class Properties {
         this.#_stackingType = undefined;
         this.#_data = undefined;
         this.#_dataType = undefined;
-        this.#_dataDrilldown = Properties.DATA_DRILLDOWN; //defaults to false
+        this.#_dataDrilldown = Properties.DEFAULT_DATA_DRILLDOWN; //defaults to false
         this.#_id = Common.makeid(12);
-        this.#_sort = Properties.SORT;
-        this.#_percentage = Properties.PERCENTAGE;
-        this.#_chartType = Properties.CHART_TYPE; //defaults to column chart.
-        this.#_animation = Properties.ANIMATION; //defaults to false.
-        this.#_alpha3D = Properties.ALPHA_3D; //defaults to 20;
-        this.#_beta3D = Properties.BETA_3D; //defaults to 0;
-        this.#_depth3D = Properties.DEPTH_3D; //defaults to 100;
+        this.#_sort = Properties.DEFAULT_SORT;
+        this.#_percentage = Properties.DEFAULT_PERCENTAGE;
+        this.#_chartType = Properties.DEFAULT_CHART_TYPE; //defaults to column chart.
+        this.#_animation = Properties.DEFAULT_ANIMATION; //defaults to false.
+        this.#_alpha3D = Properties.DEFAULT_ALPHA_3D; //defaults to 20;
+        this.#_beta3D = Properties.DEFAULT_BETA_3D; //defaults to 0;
+        this.#_depth3D = Properties.DEFAULT_DEPTH_3D; //defaults to 100;
         this.#_logger.trace(JSON.stringify(this));
         this.#_sort_userDefined = false;
         this.#_percentage_userDefined = false;
@@ -467,7 +475,7 @@ class Properties {
     }
 
     /**
-     * @description the type of chart to be plotted. Default to {@link Properties}.CHART_TYPE.
+     * @description the type of chart to be plotted. Default to {@link Properties.DEFAULT_CHART_TYPE}.
      * @type {String}
      */
     get chartType() {
@@ -682,6 +690,9 @@ class Properties {
      * @returns {Properties} the same instance on which the method was called.
      */
     updateWith(anotherProperties) {
+        if (!anotherProperties || !(anotherProperties instanceof Properties)){
+            return this;
+        }
         if (!this.#_chartType_userDefined && anotherProperties.chartType) this.setChartType(anotherProperties.chartType);
         if (!this.title && anotherProperties.title) this.setTitle(anotherProperties.title);
         if (!this.subtitle && anotherProperties.subtitle) this.setSubtitle(anotherProperties.subtitle);
@@ -690,7 +701,7 @@ class Properties {
         if (!this.stackingType && anotherProperties.stackingType) this.setStackingType(anotherProperties.stackingType);
         if (!this.data && anotherProperties.data) this.setData(anotherProperties.data);
         if (!this.dataType && anotherProperties.dataType) this.setDataType(anotherProperties.dataType);
-        if (!this.#_dataDrilldown_userDefined && anotherProperties.dataDrilldown) this.setDataType(anotherProperties.dataDrilldown);
+        if (!this.#_dataDrilldown_userDefined && anotherProperties.dataDrilldown) this.setDataDrilldown(anotherProperties.dataDrilldown);
         if (!this.#_sort_userDefined && anotherProperties.sort) this.setSort(anotherProperties.sort);
         if (!this.#_animation_userDefined && anotherProperties.animation) this.setAnimation(anotherProperties.animation);
         if (!this.#_percentage_userDefined && anotherProperties.percentage) this.setPercentage(anotherProperties.percentage);

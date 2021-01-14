@@ -345,7 +345,6 @@ class ResultSeriesType {
      * @throws TypeError if code is undefined or inexistent.
      */
     static getByName(name){
-        //TODO: Verify if name is not undefined.
         if (!name ){
             throw new TypeError('undefined name value. Name parameter is required.');
         }
@@ -580,6 +579,7 @@ class DataType {
      * @constant
      * @static
      * @default 'VGeneUsage'
+     * @type {'string'}
      */
     static get V_GENE_USAGE() {
         return DataType.types.V_GENE_USAGE;

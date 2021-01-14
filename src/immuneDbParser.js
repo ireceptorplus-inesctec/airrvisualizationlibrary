@@ -19,7 +19,7 @@ class ImmuneDbCloneCountParser extends Parser {
         this.#_series = [];
     }
 
-    get series(){
+    getSeries(){
         this.#_logger.debug("getting series.");
         return this.#_series;
     }
@@ -28,17 +28,18 @@ class ImmuneDbCloneCountParser extends Parser {
         return this.#_multipleSeries;
     }
 
-    preparse(sourceData){
+    preparse(properties){
         this.#_logger.trace("preparse.");
         
     }   
 
-    postparse(sourceData){
+    postparse(properties){
         this.#_logger.trace("postparse.");
         
     }   
            
-    onparse (sourceData){
+    onparse (properties){
+        let sourceData = properties.data;
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");

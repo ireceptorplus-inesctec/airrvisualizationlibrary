@@ -111,6 +111,7 @@ class CountStatsParser extends Parser {
     #_seriesByRepertoire;
 
     #_multipleSeries;
+    #_parserProperties
 
     constructor() {
         super();
@@ -120,9 +121,10 @@ class CountStatsParser extends Parser {
         this.#_multipleSeries = false;
         this.#_series = [];
         this.#_seriesByRepertoire = [];
+        this.#_parserProperties = undefined;
     }
 
-    get series() {
+    getSeries() {
         this.#_logger.debug("getting series.");
         return this.#_series;
     }
@@ -138,16 +140,18 @@ class CountStatsParser extends Parser {
         }
     }
 
-    preparse(data) {
+    preparse(properties) {
         this.#_logger.trace("preparse.");
 
     }
 
-    postparse(sourceData) {
+    postparse(properties) {
         this.#_logger.trace("postparse.");
+        properties.updateWith(this.#_parserProperties);
     }
 
-    onparse(data) {
+    onparse(properties) {
+        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
@@ -163,7 +167,7 @@ class CountStatsParser extends Parser {
         }
         //Will do a first attempt with a Properties in the parser.
         //The idea is that the parser add to this properties and then the Result will join the parser properties with the default Result properties.
-        let properties = new Properties();
+        let parsedProperties = new Properties();
         
         let messageArray = data[StatsParserConstants.MESSAGE];
         let messageArrayLength = messageArray.length;
@@ -208,7 +212,7 @@ class CountStatsParser extends Parser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName);
                 //Use type to build the chart subtitle
-                properties.subtitle = type.toString();
+                parsedProperties.subtitle = type.toString();
                 //Build ResultSeriesName
                 //let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
                 // We use the type for subtitle, no need to use it in series name.
@@ -248,6 +252,7 @@ class CountStatsParser extends Parser {
                 //Probably we have an error in the result. Should abort and return?
             }
         }
+        this.#_parserProperties = parsedProperties;
         this.#_series = mainSeries;
         timer.end("parse");
         timer.print();
@@ -273,7 +278,7 @@ class JunctionLenghtStatsParser extends Parser {
         this.#_seriesByRepertoire = [];
     }
 
-    get series() {
+    getSeries() {
         this.#_logger.debug("getting series.");
         return this.#_series;
     }
@@ -289,16 +294,17 @@ class JunctionLenghtStatsParser extends Parser {
         }
     }
 
-    preparse(data) {
+    preparse(properties) {
         this.#_logger.trace("preparse.");
 
     }
 
-    postparse(sourceData) {
+    postparse(properties) {
         this.#_logger.trace("postparse.");
     }
 
-    onparse(data) {
+    onparse(properties) {
+        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
@@ -314,7 +320,7 @@ class JunctionLenghtStatsParser extends Parser {
         }
         //Will do a first attempt with a Properties in the parser.
         //The idea is that the parser add to this properties and then the Result will join the parser properties with the default Result properties.
-        let properties = new Properties();
+        let parsedProperties = new Properties();
         
         let messageArray = data[StatsParserConstants.MESSAGE];
         let messageArrayLength = messageArray.length;
@@ -358,7 +364,7 @@ class JunctionLenghtStatsParser extends Parser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName);
                 //Use type to build the chart subtitle
-                properties.subtitle = type.toString();
+                parsedProperties.subtitle = type.toString();
                 //Build ResultSeriesName
                 //let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
                 // We use the type for subtitle, no need to use it in series name.
@@ -485,7 +491,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
         return this.#_geneType;
     }
 
-    get series(){
+    getSeries(){
         this.#_logger.debug("getting series.");
         return this.#_series;
     }
@@ -650,16 +656,17 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
         this.#_seriesByRepertoire[repertoire_id].push(series);
     }
 
-    preparse(sourceData) {
+    preparse(properties) {
         this.#_logger.trace("preparse.");
 
     }
 
-    postparse(sourceData) {
+    postparse(properties) {
         this.#_logger.trace("postparse.");
     }
 
-    onparse(data) {
+    onparse(properties) {
+        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
@@ -969,7 +976,7 @@ class GeneUsageStatsParser extends Parser {
     }
     */
 
-    get series(){
+    getSeries(){
         this.#_logger.debug("getting series.");
         return this.#_series;
     }
@@ -1005,16 +1012,17 @@ class GeneUsageStatsParser extends Parser {
         }
     }
 
-    preparse(sourceData) {
+    preparse(properties) {
         this.#_logger.trace("preparse.");
 
     }
 
-    postparse(sourceData) {
+    postparse(properties) {
         this.#_logger.trace("postparse.");
     }
 
-    onparse(data) {
+    onparse(properties) {
+        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
@@ -1172,7 +1180,7 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         return this.#_geneType;
     }
 
-    get series(){
+    getSeries(){
         this.#_logger.debug("getting series.");
         return this.#_series;
     }
@@ -1310,16 +1318,17 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         this.#_seriesByRepertoire[repertoire_id].push(series);
     }
 
-    preparse(sourceData) {
+    preparse(properties) {
         this.#_logger.trace("preparse.");
 
     }
 
-    postparse(sourceData) {
+    postparse(properties) {
         this.#_logger.trace("postparse.");
     }
 
-    onparse(data) {
+    onparse(properties) {
+        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
@@ -1502,4 +1511,4 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
     }
 }
 
-export { JunctionLenghtStatsParser, CountStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser };
+export { StatsParserConstants, JunctionLenghtStatsParser, CountStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser };

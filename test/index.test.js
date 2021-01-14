@@ -1,7 +1,7 @@
 import { VisualizationLibrary, ResultFactory, Result, DataType } from '../src/index.js';
 import { Properties } from '../src/properties.js'
 import { Chart } from '../src/charts.js';
-import { expect } from './common.js';
+import { expect, fs } from './common.js';
 
 /*
 describe('first test', function() {
@@ -17,7 +17,6 @@ describe('VisualizationLibrary basic structure', function() {
     let testChartId = "testChartId123";
     let testProperties = undefined;
     before(function() {
-        //console.log("Running before");
         vis = VisualizationLibrary;
         winvis = window.airrvisualization;
     });
@@ -138,13 +137,39 @@ describe('VisualizationLibrary basic structure', function() {
 });
 
 describe('ResultFactory basic structure', function() {
-    it('Should throw TypeError if dataType is unknown', function(){
+    let inputs = undefined;
+    before(function() {
+        fs.readFile('test/data/ighv2_multiple-repertoire_drilldown.json', 'utf8', (err, data) => {
+            if (err){
+                console.log(err.message);
+                throw err;
+            } 
+            inputs = data;
+            //inputs = new Map(eval(data));
+            //done();
+        });
+    });
+    
+    xit('Should throw TypeError if dataType is unknown', function(){
+        //Can't test anymore because Properties is dealing with this issue now.
         let datatypeCode = 'inexistentDataType'
-        //expect(undefined).to.be.undefined;
-        expect(() => new ResultFactory.build(datatypeCode)).to.throw(TypeError, 'Unknown datatype: '+ datatypeCode);
+        let p = new Properties().setDataType(datatypeCode);
+        expect(() => new ResultFactory.build(p)).to.throw(TypeError, 'Unknown datatype: '+ datatypeCode);
     });
     it('Should return instance of Result if datatype in known', function(){
-        expect(ResultFactory.build(DataType.V_GENE_USAGE)).to.be.instanceOf(Result);
+        if (inputs == undefined) expect.fail;
+        let r = ResultFactory.build(new Properties().setDataType(DataType.V_GENE_USAGE).setDataDrilldown(true));
+        expect(r).to.be.instanceOf(Result);
+        expect(r.drilldown).to.be.true;
+        r = ResultFactory.build(new Properties().setDataType(DataType.D_GENE_USAGE).setDataDrilldown(true).setData(inputs));
+        expect(r).to.be.instanceOf(Result);
+        expect(r.drilldown).to.be.true;
+        expect(r.data).to.equal(inputs);
+        expect(ResultFactory.build(new Properties().setDataType(DataType.J_GENE_USAGE))).to.be.instanceOf(Result);
+        expect(ResultFactory.build(new Properties().setDataType(DataType.C_GENE_USAGE))).to.be.instanceOf(Result);
+        expect(ResultFactory.build(new Properties().setDataType(DataType.JUNCTION_LENGTH))).to.be.instanceOf(Result);
+        expect(ResultFactory.build(new Properties().setDataType(DataType.CLONE_COUNT))).to.be.instanceOf(Result);
+        expect(ResultFactory.build(new Properties().setDataType(DataType.CLONE_COUNT_IMMUNEDB))).to.be.instanceOf(Result);
     });
 
 

@@ -1,15 +1,26 @@
 import { Result } from '../src/result.js';
-import { Parser } from '../src/parser.js';
+import { DummyParserClass } from './parser.test.js';
+
 import { expect } from './common.js';
+import { Properties } from '../src/index.js';
+
+let DummyResultClassPropertiesTitle = "My DummyResultClass Title";
 
 class DummyResultClass extends Result{
     constructor(sourceData = undefined){
         super(sourceData);
+        this.properties.setTitle(DummyResultClassPropertiesTitle);
     }
 
     isMultipleSeries(){
         return false;
     }
+
+    update(properties){
+        this.setParser(new DummyParserClass());
+        return this;
+    }
+
 }
 
 class ErrorDummyResultClass extends Result{
@@ -27,18 +38,10 @@ class AnotherErrorDummyResultClass extends Result{
         return super.isMultipleSeries();
     }
 
-}
-
-class DummyParserClass extends Parser{
-    
-    constructor(){
-        super();
-        this.run = false
+    update(properties){
+        return super.update(properties);
     }
 
-    preparse(){}
-    onparse(){}
-    postparse(){this.run = true;}
 }
 
 describe('Abstract Class Result basic structure', function() {
@@ -51,6 +54,7 @@ describe('Abstract Class Result basic structure', function() {
     it('Should throw Error when abstract method are called from subclass', function(){
         let r = new AnotherErrorDummyResultClass();
         expect(() => r.isMultipleSeries()).to.throw(TypeError);
+        expect(() => r.update(new Properties())).to.throw(TypeError);
     });
     it('Correct instances of Result subclasses Should not be null', function(){
         let r = new DummyResultClass();
@@ -62,18 +66,19 @@ describe('Abstract Class Result basic structure', function() {
         expect(r.data).to.be.undefined;
         expect(r.parser).to.be.undefined;
         expect(() => r.parser={}).to.throw(TypeError);
+        expect(r.series).to.be.undefined;
         let p = new DummyParserClass();
         expect(() => r.parser=p).to.not.throw(Error);
         expect(r.parser).to.eql(p);
-        expect(p.run).to.be.equal(false);
-        expect(() => r.data={}).to.not.throw(Error);
-        expect(p.run).to.be.equal(true);
+        expect(r.series).to.be.undefined;
+        expect(() => r.parse(new Properties())).to.not.throw(Error);
+        expect(r.series).to.be.equal(["A"]);
         expect(r.drilldown).to.be.equal(false);
         expect(() => r.drilldown={}).to.throw(TypeError);
         expect(() => r.drilldown=true).to.not.throw(TypeError);
         expect(r.drilldown).to.be.equal(true);
-
-
+        expect(r.properties.title).to.be.equal(DummyResultClassPropertiesTitle);
     });
-
 });
+
+export {DummyResultClass}

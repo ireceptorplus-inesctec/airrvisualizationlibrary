@@ -72,9 +72,8 @@
 
             function redrawDrilldownJChart(url, identifier){
                 $.get(url, function(data){
-                    let d = ResultFactory.build("JGeneUsage", true, data);
-                    let prop = new Properties().setId(identifier).setSort(true).setXLabel("Category");
-                    let chart = new HighchartsChart(prop).setResult(d).plot();
+                    let prop = new Properties().setDataType("JGeneUsage").setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setData(data);
+                    (new HighchartsChart(prop)).plot();
                 });
             }
 
@@ -91,38 +90,31 @@
             }
             function redrawDrilldownVChart(url, identifier){
                 $.get(url, function(data){
-                    let result = new VGeneUsageStatsResult();
-                    result.setDrilldown(true).setData(data);
-                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"Category\", \"yLabel\":\"Count\"}";
-                    let chart = new HighchartsChart(Properties.create(stringProperties)).setResult(result).plot();
+                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"data\":"+data+"}";
+                    let chart = new HighchartsChart(Properties.create(stringProperties)).plot();
                 });
             }
             function redrawDrilldownDChart(url, identifier){
                 $.get(url, function(data){
-                    let result = new DGeneUsageStatsResult().setDrilldown(true).setData(data);
-                    let jsonProperties = {"id": identifier, "xLabel":"Category", "yLabel":"Example"};
-                    let chart = new HighchartsChart(Properties.create(jsonProperties)).setResult(result).plot();
+                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "dataDrilldown": true});
+                    jsonProperties.setData(data);
+                    let chart = new HighchartsChart(Properties.create(jsonProperties)).plot();
                 });
             }
 
             function redrawDrilldownCountChart(url, identifier){
                 $.get(url, function(data){
-                    let result = new CountStatsResult().setDrilldown(true).setData(data);
-                    window.airrvisualization.setDebugLevel(0);
-                    let chart = new HighchartsChart(new Properties().setId(identifier).setXLabel("Gene")).setResult(result).plot();
+                    window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataDrilldown(true).setDataType("CloneCount").setData(data)).plot();
                 });
             }
             function redrawCountChart(url, identifier){
                 $.get(url, function(data){
-                    let result = new CountStatsResult().setData(data);
-                    Logger.setDebugLevel(0);
-                    let chart = new HighchartsChart(new Properties().setId(identifier).setXLabel("Gene")).setResult(result).plot();
+                    window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataType("CloneCount").setData(data)).plot();
                 });
             }
             function redrawJunctionChart(url, identifier){
                 $.get(url, function(data){
-                    let result = new JunctionLengthStatsResult().setData(data);
-                    let chart = new HighchartsChart(new Properties().setId(identifier)).setResult(result).plot();
+                    window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setDataType("JunctionLength").setData(data)).plot();
                 });
             }
             function redrawFailandsuccessChart(url, identifier){

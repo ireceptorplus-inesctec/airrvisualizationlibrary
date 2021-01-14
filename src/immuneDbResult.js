@@ -14,10 +14,12 @@ class ImmuneDbCloneCountResult extends Result {
     
     #_multipleSeries;
 
-    #_defaultProperties;
+    //#_defaultProperties;
 
-    constructor(data = undefined) {
-        super(data);
+    //constructor(data = undefined) {
+    //    super(data);
+    constructor() {
+        super();
         this.#_logger = new Logger('ImmuneDbCloneCountResult');
         this.#_logger.debug("Constructor.");
    
@@ -25,7 +27,8 @@ class ImmuneDbCloneCountResult extends Result {
         this.#_multipleSeries = false;
 
         
-        this.#_defaultProperties = new Properties().setTitle("Fraction of Top n clones").setYLabel("Fraction (copies in subject/whole repertoire)").setStackingType("normal");
+        //this.#_defaultProperties = new Properties().setTitle("Fraction of Top n clones").setYLabel("Fraction (copies in subject/whole repertoire)").setStackingType("normal");
+        this.properties.setTitle("Fraction of Top n clones").setYLabel("Fraction (copies in subject/whole repertoire)").setStackingType("normal");
 
         this.setParser(new ImmuneDbCloneCountParser());
     }
@@ -51,29 +54,18 @@ class ImmuneDbCloneCountResult extends Result {
         this.#_logger.trace(JSON.stringify(this.#_drilldownSeries));
         return this.#_drilldownSeries;
     }
-    
-    get properties(){
-        return this.#_defaultProperties;
-    }
-        
+            
     isMultipleSeries(){
         return this.#_multipleSeries;
     }
 
-    preparse(sourceData){
-        this.#_logger.debug("preparse.");
-        this.parser.preparse(sourceData);
-    }   
-           
-    onparse (sourceData){
-        this.#_logger.debug("parse.");
-        this.parser.onparse(sourceData);
-    }
-
-    postparse(sourceData){
-        this.#_logger.debug("postparse.");  
-        //TODO:Get Properties from parser and update this.#_defaultProperties
-    }
+    update(properties){
+        this.#_logger.debug("update");
+        if (this.properties.dataDrilldown == properties.dataDrilldown)
+            return this;
+        this.properties.setDataDrilldown(properties.dataDrilldown);
+        return this.setParser(new ImmuneDbCloneCountParser());
+     }
 }
 
 /*

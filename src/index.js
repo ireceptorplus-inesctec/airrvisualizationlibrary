@@ -71,11 +71,11 @@ class VisualizationLibrary {
         if (properties === undefined) throw new TypeError("properties parameter is mandatory.");
         
         //TODO:Create and setup the Result based on the properties
-        let result = ResultFactory.build(properties.dataType, properties.dataDrilldown, properties.data);
+        //let result = ResultFactory.build(properties.dataType, properties.dataDrilldown, properties.data);
 
         //TODO: Once we support more graph libraries, decision on which library to use will depend com a properties value and will be done here.
         let _chart = new HighchartsChart(properties);
-        _chart.setResult(result);
+        //_chart.setResult(result);
         VisualizationLibrary.charts[_chart.id] = _chart;
         return _chart;
     }
@@ -133,15 +133,25 @@ class VisualizationLibrary {
  */
 class ResultFactory{
 
-    /**
+    /* *
      * @description Builds and configures concrete instance of {@link Result} based on the data type 
      * @static
      * @param {string} dataType a code from {@link DataType}
      * @param {boolean} [dataDrilldown] is data drilldown capable
      * @param {JSON} [data] the source data
      * @returns {Result} a concrete instance of {@link Result} 
-     */
+     * /
     static build(dataType, dataDrilldown, data){
+        if (!(DataType.contains(dataType))){
+    */
+    /**
+     * @description Builds and configures concrete instance of {@link Result} based on the data type 
+     * @static
+     * @param {Properties} properties a {@link Properties} instance
+     * @returns {Result} a concrete instance of {@link Result} 
+     */
+    static build(properties){
+        var dataType = properties.getDataType();
         if (!(DataType.contains(dataType))){
             throw new TypeError('Unknown datatype: '+ dataType);
         }
@@ -162,17 +172,18 @@ class ResultFactory{
             case DataType.JUNCTION_LENGTH:
                 result = new JunctionLengthStatsResult();
                 break;
-                case DataType.CLONE_COUNT:
+            case DataType.CLONE_COUNT:
                 result = new CountStatsResult();
                 break;
             case DataType.CLONE_COUNT_IMMUNEDB:
                 result = new ImmuneDbCloneCountResult();
                 break;
         }
+        
         if (result){
-            if (dataDrilldown) result.setDrilldown(dataDrilldown);
-            if (data) result.setData(data);
+            result.update(properties);
         }
+        
         return result;
     }
 

@@ -16,14 +16,14 @@ function defaultValues(properties){
     if (!(properties.stackingType == undefined)) return false;
     if (!(properties.data == undefined)) return false;
     if (!(properties.dataType == undefined)) return false;
-    if (!(properties.sort == Properties.SORT)) return false;
-    if (!(properties.chartType == Properties.CHART_TYPE)) return false;
-    if (!(properties.animation == Properties.ANIMATION)) return false;
-    if (!(properties.alpha3D == Properties.ALPHA_3D)) return false;
-    if (!(properties.beta3D == Properties.BETA_3D)) return false;
-    if (!(properties.depth3D == Properties.DEPTH_3D)) return false;
-    if (!(properties.percentage == Properties.PERCENTAGE)) return false;
-    if (!(properties.dataDrilldown == Properties.DATA_DRILLDOWN)) return false;
+    if (!(properties.sort == Properties.DEFAULT_SORT)) return false;
+    if (!(properties.chartType == Properties.DEFAULT_CHART_TYPE)) return false;
+    if (!(properties.animation == Properties.DEFAULT_ANIMATION)) return false;
+    if (!(properties.alpha3D == Properties.DEFAULT_ALPHA_3D)) return false;
+    if (!(properties.beta3D == Properties.DEFAULT_BETA_3D)) return false;
+    if (!(properties.depth3D == Properties.DEFAULT_DEPTH_3D)) return false;
+    if (!(properties.percentage == Properties.DEFAULT_PERCENTAGE)) return false;
+    if (!(properties.dataDrilldown == Properties.DEFAULT_DATA_DRILLDOWN)) return false;
     return true;
 }
 function defaultTypes(properties){
@@ -146,19 +146,19 @@ describe('Construct instances', function() {
         expect(properties.xLabel).to.be.undefined;
         expect(properties.yLabel).to.be.undefined;
         expect(properties.stackingType).to.be.undefined;
-        expect(properties.sort).to.equal(Properties.SORT);
+        expect(properties.sort).to.equal(Properties.DEFAULT_SORT);
         expect(properties.sort).to.be.an("boolean");
-        expect(properties.chartType).to.equal(Properties.CHART_TYPE);
+        expect(properties.chartType).to.equal(Properties.DEFAULT_CHART_TYPE);
         expect(properties.chartType).to.be.an("string");
-        expect(properties.animation).to.equal(Properties.ANIMATION);
+        expect(properties.animation).to.equal(Properties.DEFAULT_ANIMATION);
         expect(properties.animation).to.be.an("boolean");
-        expect(properties.alpha3D).to.equal(Properties.ALPHA_3D);
+        expect(properties.alpha3D).to.equal(Properties.DEFAULT_ALPHA_3D);
         expect(properties.alpha3D).to.be.an("number");
-        expect(properties.beta3D).to.equal(Properties.BETA_3D);
+        expect(properties.beta3D).to.equal(Properties.DEFAULT_BETA_3D);
         expect(properties.beta3D).to.be.an("number");
-        expect(properties.depth3D).to.equal(Properties.DEPTH_3D);
+        expect(properties.depth3D).to.equal(Properties.DEFAULT_DEPTH_3D);
         expect(properties.depth3D).to.be.an("number");
-        expect(properties.percentage).to.equal(Properties.PERCENTAGE);
+        expect(properties.percentage).to.equal(Properties.DEFAULT_PERCENTAGE);
         expect(properties.percentage).to.be.an("boolean");
     });
     it('should create a new default instance calling the creator with undefined properties', function(){
@@ -321,7 +321,7 @@ describe('Set Properties', function() {
         
         // Set/get as property
         properties = new Properties();
-        expect(properties.sort).to.equal(Properties.SORT);
+        expect(properties.sort).to.equal(Properties.DEFAULT_SORT);
         properties.sort = propertySort;
         expect(properties.sort).to.be.an("boolean");
         expect(properties.sort).to.equal(propertySort);
@@ -334,7 +334,7 @@ describe('Set Properties', function() {
         
         // Set/get as property
         properties = new Properties();
-        expect(properties.chartType).to.equal(Properties.CHART_TYPE);
+        expect(properties.chartType).to.equal(Properties.DEFAULT_CHART_TYPE);
         properties.chartType = propertyChartType;
         expect(properties.chartType).to.be.an("string");
         expect(properties.chartType).to.equal(propertyChartType);
@@ -347,7 +347,7 @@ describe('Set Properties', function() {
         
         // Set/get as property
         properties = new Properties();
-        expect(properties.animation).to.equal(Properties.ANIMATION);
+        expect(properties.animation).to.equal(Properties.DEFAULT_ANIMATION);
         properties.animation = propertyAnimation;
         expect(properties.animation).to.be.an("boolean");
         expect(properties.animation).to.equal(propertyAnimation);
@@ -360,7 +360,7 @@ describe('Set Properties', function() {
         
         // Set/get as property
         properties = new Properties();
-        expect(properties.alpha3D).to.equal(Properties.ALPHA_3D);
+        expect(properties.alpha3D).to.equal(Properties.DEFAULT_ALPHA_3D);
         properties.alpha3D = propertyAlpha3D;
         expect(properties.alpha3D).to.be.an("number");
         expect(properties.alpha3D).to.equal(propertyAlpha3D);
@@ -373,7 +373,7 @@ describe('Set Properties', function() {
         
         // Set/get as property
         properties = new Properties();
-        expect(properties.beta3D).to.equal(Properties.BETA_3D);
+        expect(properties.beta3D).to.equal(Properties.DEFAULT_BETA_3D);
         properties.beta3D = propertyBeta3D;
         expect(properties.beta3D).to.be.an("number");
         expect(properties.beta3D).to.equal(propertyBeta3D);
@@ -386,13 +386,13 @@ describe('Set Properties', function() {
         
         // Set/get as property
         properties = new Properties();
-        expect(properties.depth3D).to.equal(Properties.DEPTH_3D);
+        expect(properties.depth3D).to.equal(Properties.DEFAULT_DEPTH_3D);
         properties.depth3D = propertyDepth3D;
         expect(properties.depth3D).to.be.an("number");
         expect(properties.depth3D).to.equal(propertyDepth3D);
     });
     it('should allow to set and get individual property: percentage', function(){
-        let obj = {"setAs":propertyPercentage, "typeof":"boolean", "default": Properties.PERCENTAGE};
+        let obj = {"setAs":propertyPercentage, "typeof":"boolean", "default": Properties.DEFAULT_PERCENTAGE};
         // Set/get as method
         let properties = new Properties().setPercentage(obj.setAs);
         expect(properties.getPercentage()).to.be.an(obj.typeof);
@@ -440,7 +440,7 @@ describe('Set Properties', function() {
         expect(properties.data).to.equal(obj.setAs);
     });
     it('should allow to set and get individual property: dataDrilldown', function(){
-        let obj = {"setAs": true, "typeof":"boolean", "default": Properties.DATA_DRILLDOWN};
+        let obj = {"setAs": true, "typeof":"boolean", "default": Properties.DEFAULT_DATA_DRILLDOWN};
         // Set/get as method
         let properties = new Properties().setDataDrilldown(obj.setAs);
         expect(properties.getDataDrilldown()).to.be.an(obj.typeof);
@@ -456,7 +456,7 @@ describe('Set Properties', function() {
     it('should allow to set properties: data, dataType, dataDrilldown', function(){
         let obj = {"setAsData": propertyData, "setAsDataType": propertyDatatype, "setAsDataDrilldown": propertyDataDrilldown, 
             "typeofData":"object", "typeofDataType":"string", "typeofDataDrilldown":"boolean",
-            "defaultData": undefined, "defaultDataType": undefined, "defaultDataDrilldown": Properties.DATA_DRILLDOWN};
+            "defaultData": undefined, "defaultDataType": undefined, "defaultDataDrilldown": Properties.DEFAULT_DATA_DRILLDOWN};
         // Set/get as method
         let properties = new Properties().setData(obj.setAsData, obj.setAsDataType, obj.setAsDataDrilldown);
         expect(properties.getData()).to.be.an(obj.typeofData);
@@ -496,7 +496,7 @@ describe('Unsuported undefined Properties', function() {
         expect(properties.id).to.not.be.undefined;
     });
     it('shouldn\'t allow to set property as undefined: dataDrilldown', function(){
-        let obj = {"setAs": undefined, "typeof":"boolean", "default": Properties.DATA_DRILLDOWN};
+        let obj = {"setAs": undefined, "typeof":"boolean", "default": Properties.DEFAULT_DATA_DRILLDOWN};
         // Set/get as method
         let properties = new Properties().setDataDrilldown(obj.setAs);
         expect(properties.getDataDrilldown()).to.be.an(obj.typeof);
@@ -510,7 +510,7 @@ describe('Unsuported undefined Properties', function() {
         expect(properties.dataDrilldown).to.equal(obj.default);
     });
     it('shouldn\'t allow to set property as undefined: sort', function(){
-        let obj = {"setAs":undefined, "typeof":"boolean", "default": Properties.SORT};
+        let obj = {"setAs":undefined, "typeof":"boolean", "default": Properties.DEFAULT_SORT};
         // Set/get as method
         let properties = new Properties().setSort(obj.setAs);
         expect(properties.getSort()).to.be.an(obj.typeof);
@@ -524,7 +524,7 @@ describe('Unsuported undefined Properties', function() {
         expect(properties.sort).to.equal(obj.default);
     });
     it('shouldn\'t allow to set property as undefined: chartType', function(){
-        let obj = {"setAs":undefined, "typeof":"string", "default": Properties.CHART_TYPE};
+        let obj = {"setAs":undefined, "typeof":"string", "default": Properties.DEFAULT_CHART_TYPE};
         // Set/get as method
         let properties = new Properties().setChartType(obj.setAs);
         expect(properties.getChartType()).to.be.an(obj.typeof);
@@ -538,7 +538,7 @@ describe('Unsuported undefined Properties', function() {
         expect(properties.chartType).to.equal(obj.default);
     });
     it('shouldn\'t allow to set property as undefined: animation', function(){
-        let obj = {"setAs":undefined, "typeof":"boolean", "default": Properties.ANIMATION};
+        let obj = {"setAs":undefined, "typeof":"boolean", "default": Properties.DEFAULT_ANIMATION};
         // Set/get as method
         let properties = new Properties().setAnimation(obj.setAs);
         expect(properties.getAnimation()).to.be.an(obj.typeof);
@@ -552,7 +552,7 @@ describe('Unsuported undefined Properties', function() {
         expect(properties.animation).to.equal(obj.default);
     });
     it('shouldn\'t allow to set property as undefined: alpha3D', function(){
-        let obj = {"setAs":undefined, "typeof":"number", "default": Properties.ALPHA_3D};
+        let obj = {"setAs":undefined, "typeof":"number", "default": Properties.DEFAULT_ALPHA_3D};
         // Set/get as method
         let properties = new Properties().setAlpha3D(obj.setAs);
         expect(properties.getAlpha3D()).to.be.an(obj.typeof);
@@ -566,7 +566,7 @@ describe('Unsuported undefined Properties', function() {
         expect(properties.alpha3D).to.equal(obj.default);
     });
     it('shouldn\'t allow to set property as undefined: beta3D', function(){
-        let obj = {"setAs":undefined, "typeof":"number", "default": Properties.BETA_3D};
+        let obj = {"setAs":undefined, "typeof":"number", "default": Properties.DEFAULT_BETA_3D};
         // Set/get as method
         let properties = new Properties().setBeta3D(obj.setAs);
         expect(properties.getBeta3D()).to.be.an(obj.typeof);
@@ -580,7 +580,7 @@ describe('Unsuported undefined Properties', function() {
         expect(properties.beta3D).to.equal(obj.default);
     });
     it('shouldn\'t allow to set property as undefined: depth3D', function(){
-        let obj = {"setAs":undefined, "typeof":"number", "default": Properties.DEPTH_3D};
+        let obj = {"setAs":undefined, "typeof":"number", "default": Properties.DEFAULT_DEPTH_3D};
         // Set/get as method
         let properties = new Properties().setDepth3D(obj.setAs);
         expect(properties.getDepth3D()).to.be.an(obj.typeof);
@@ -594,7 +594,7 @@ describe('Unsuported undefined Properties', function() {
         expect(properties.depth3D).to.equal(obj.default);
     });
     it('shouldn\'t allow to set property as undefined: percentage', function(){
-        let obj = {"setAs":undefined, "typeof":"boolean", "default": Properties.PERCENTAGE};
+        let obj = {"setAs":undefined, "typeof":"boolean", "default": Properties.DEFAULT_PERCENTAGE};
         // Set/get as method
         let properties = new Properties().setPercentage(obj.setAs);
         expect(properties.getPercentage()).to.be.an(obj.typeof);
@@ -612,6 +612,26 @@ describe('Unsuported undefined Properties', function() {
 
 describe('Update Properties instances with other Properties', function() {
 
+    it('shouldn\'t throw Error when update properties with undefined', function(){
+        let properties = new Properties();
+        expect(properties).to.not.be.undefined;
+        expect(properties).to.be.instanceOf(Properties);
+        let propertiesToUpdate = undefined;
+        expect(propertiesToUpdate).to.be.undefined;
+        properties.updateWith(propertiesToUpdate);
+        expect(defaultValues(properties)).to.be.true;
+        expect(defaultTypes(properties)).to.be.true;
+    });
+    it('shouldn\'t throw Error when update properties with not instance of Properties', function(){
+        let properties = new Properties();
+        expect(properties).to.not.be.undefined;
+        expect(properties).to.be.instanceOf(Properties);
+        let propertiesToUpdate = {};
+        expect(propertiesToUpdate).to.not.be.undefined;
+        properties.updateWith(propertiesToUpdate);
+        expect(defaultValues(properties)).to.be.true;
+        expect(defaultTypes(properties)).to.be.true;
+    });
     it('should update all unchanged properties with id set', function(){
         let properties = new Properties();
         expect(properties).to.not.be.undefined;

@@ -21,6 +21,11 @@ describe("All Tests", function () {
     importTest("Common", './common.test.js');
     importTest("Properties", './properties.test.js');
     importTest("Result", './result.test.js');
+    importTest("Chart", './chart.test.js');
+    importTest("Parser", './parser.test.js');
+    importTest("iReceptorStatsParser", './iReceptorStatsParser.test.js');
+    importTest("iReceptorStatsResult", './iReceptorStatsResult.test.js');
+
 
     after(function () {
         console.log("All tests concluded.");

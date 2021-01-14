@@ -1,9 +1,8 @@
 // Import and export other modules from AIIR Visualization Library
 import { Logger, DebugTimer } from './common.js';
+import { ResultFactory } from './index.js';
 import { Properties } from './properties.js';
 import { Result } from "./result.js";
-
-//TODO: Implement Abstract validations on abstract classes. See test/es6-abstract-class-example.js
 
 /**
  * Abstract Class for the Chart type.
@@ -22,7 +21,7 @@ class Chart {
     constructor(properties) {
         if (this.constructor === Chart) {
             // Abstract class can not be constructed.
-            throw new TypeError("Can not construct abstract class.");
+            throw new Error("Can not construct abstract class.");
         }//else (called from child)
         // Check if all instance methods are implemented.
         if (this.plot === Chart.prototype.plot) {
@@ -31,9 +30,12 @@ class Chart {
         }
         this.#_logger = new Logger('Chart');
         this.#_logger.debug("Constructor.");
-        this.#_result = undefined;
-        this.setProperties(properties);
-        this.#_id = this.getProperties().id;
+        //this.#_result = undefined;
+        //this.setProperties(properties);
+        this.#_properties = properties;
+        this.#_id = this.properties.id;
+        this.#_result = ResultFactory.build(this.getProperties());
+        this.#_result.parse(this.getProperties());
     }
 
     /**
@@ -61,10 +63,12 @@ class Chart {
         return this.getResult();
     }
 
+    /*
     set result(result) {
-        setResult(result);
+        this.setResult(result);
     }
-    
+    */
+
     /**
      * @description returns the Result of this Chart.
      * @returns {Result} the Result object.
@@ -73,25 +77,36 @@ class Chart {
         return this.#_result;
     }
 
-    /**
+    /* *
      * @description Chainable method to set the {@link Result} to be plotted.
      * @param {Result} result the {@link Result} to be plotted.
      * @returns {Chart} the same instance on which the method was called.
-     */
+     * @throws {TypeError} if result is not an instance of {@link Result}
+     * /
     setResult(result) {
         this.#_logger.debug("setResult");
         if (result instanceof Result) {
             this.#_result = result;
+            //TODO: Add Observer on Result for when PARSED AND READY.
+            //TODO: Plot needs to WAIT FOR READY STATE.
+            //TODO: result.parse must be trigered by Chart instance.
             this.#_logger.trace(JSON.stringify(this.#_properties));
             this.#_logger.trace(JSON.stringify(this.#_result.properties));
+            //Update chart properties with default result properties.
             this.#_properties.updateWith(this.#_result.properties);
             this.#_logger.trace(JSON.stringify(this.#_properties));
+            //Ensure Result is set according to chart properties
+            this.#_result.setDrilldown(this.#_properties.dataDrilldown);
+            this.#_result.parse(this.#_properties);
+
         } else {
             this.#_logger.error("Received result is not compatible. Result must be an instance of Result.");
+            throw new TypeError("Parameter result must be an instance of Result.");
         }
         this.#_logger.trace(JSON.stringify(this));
         return this;
     }
+    */
 
     /**
      * @description The {@link Properties} of the chart
@@ -101,15 +116,16 @@ class Chart {
         return this.getProperties();
     }
 
+    /*
     set properties(properties) {
         this.setProperties(properties);
     }
 
-    /**
+    /* *
      * @description Chainable method to set the {@link Properties} for the chart
      * @param {Properties} properties the {@link Properties} for the chart
      * @returns {Chart} the same instance on which the method was called.
-     */
+     * /
     setProperties(properties) {
         if (properties instanceof Properties) {
             this.#_properties = properties;
@@ -118,6 +134,7 @@ class Chart {
         }
         return this;
     }
+    */
 
     /**
      * @description Returns the {@link Properties} of this chart

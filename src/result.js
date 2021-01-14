@@ -1,5 +1,6 @@
 import {Logger} from './common.js';
 import {Parser} from "./parser.js";
+import {Properties} from "./properties.js";
 
 /**
  * Abstract class that represents a Result.  
@@ -8,15 +9,17 @@ import {Parser} from "./parser.js";
  */
 class Result {
     #_logger;
-    #_data;
-    #_drilldown;
+    //#_data;
+    //#_drilldown;
     #_parser;
+    #_defaultProperties
     
     /**
      * @description Creates an instance of Result.
      * @param {JSON} [sourceData=undefined] AN AIRR Data JSON file
      */
-    constructor(sourceData = undefined) {
+    //constructor(sourceData = undefined) {
+    constructor() {
         if (this.constructor === Result) {
             // Abstract class can not be constructed.
             throw new Error("Can not construct abstract class.");
@@ -26,15 +29,40 @@ class Result {
             // Child has not implemented this abstract method.
             throw new TypeError("Please implement abstract method isMultipleSeries.");
         }
+        if (this.update === Result.prototype.update) {
+            // Child has not implemented this abstract method.
+            throw new TypeError("Please implement abstract method update.");
+        }
 
         this.#_logger = new Logger('Result');
         this.#_logger.debug("Constructor.");
-        this.#_data = undefined;
-        this.#_drilldown = false;
+        //this.#_data = undefined;
+        //this.#_drilldown = false;
         this.#_parser = undefined;
+        this.#_defaultProperties = new Properties();
         if (typeof sourceData !== "undefined" ){
             setData(sourceData);            
         }
+    }
+
+    /**
+     * @description Returns the default {@link Properties} for a concrete Result. Concrete classes should update Properties on the constructor to return their default values for the {@link Properties}. 
+     * @readonly
+     * @type {Properties}
+     */
+    get properties(){
+        return this.#_defaultProperties;
+    }
+    
+    /**
+     * @description Returns the Series after beeing parsed or undefined otherwise. 
+     * @readonly
+     * @type {Array}
+     */
+    get series(){
+        this.#_logger.debug("getting series.");
+        if (!this.parser) return undefined;
+        return this.parser.series;
     }
 
     /**
@@ -56,10 +84,10 @@ class Result {
         throw new TypeError('Result.isMultipleSeries() method should not be called, implementations need to overload it.');        
     }
     
-    /**
+    /* *
      * @description  the AIRR Data JSON file associated with this Result.
      * @type {JSON}
-     */
+     * /
     get data(){
         return this.getData();
     }
@@ -71,7 +99,7 @@ class Result {
     /**
      * @description Returns the AIRR Data JSON file associated with this Result.
      * @returns {JSON} The source data associated with this result
-     */
+     * /
     getData(){
         return this.#_data;
     }
@@ -80,7 +108,7 @@ class Result {
      * @description Chainable method that sets the AIRR Data JSON file and return this Result object.
      * @param {JSON} sourceData An AIRR Data JSON file.
      * @returns {Result} the same instance on which the method was called.
-     */
+     * /
     setData(sourceData) {
         this.#_data = sourceData;  
         this.#_logger.debug("setData.");
@@ -88,7 +116,8 @@ class Result {
         //this.parseSingleRepertoireStatsData(sourceData);
         return this;
     }
-    
+    */
+
     /**
      * @description the {@link Parser} used for the interpretation of the AIRR Data JSON file.
      * @type {Parser}
@@ -116,7 +145,7 @@ class Result {
             throw new TypeError('parser value must be an instance of Parser.');
         }
         this.#_parser = parser;
-        this.parse();
+        //this.parse();
         return this;
     }
     
@@ -134,9 +163,10 @@ class Result {
      */
     get drilldown(){
         this.#_logger.debug("getting drilldown.");
-        return this.getDrilldown();
+        return this.isDrilldown();
     }
     
+    /*
     set drilldown(value){
         this.setDrilldown(value);
     }
@@ -149,12 +179,12 @@ class Result {
      * 
      * Classes that extend Resource must overload this method,
      * if required set the parser with setParser(parser), which will force parsing the data
-     * and return super.setDrilldown(value) at the end
+     * and return super.setDrilldown(value) at the end of this method.
      * 
      * @param {boolean} value If true, set the series to have drilldown feature.
      * @returns {Result} the same instance on which the method was called.
      * @throws Error if value is not a boolean.
-     */
+     * /
     setDrilldown(value){
         this.#_logger.debug("setting drilldown to " + value);
         if (typeof value !== "boolean"){
@@ -164,25 +194,41 @@ class Result {
         this.#_drilldown = value;
         return this;
     }
-    
+    */
+
     /**
      * @description returns the true if this Result has drilldown enabled.
      * @returns {boolean} 
      */
-    getDrilldown(){
+    isDrilldown(){
         this.#_logger.debug("getting drilldown.");
-        return this.#_drilldown;
+        //return this.#_drilldown;
+        return this.properties.getDataDrilldown();
+    }
+
+    /**
+     * @description Abstract method that forces update of a this result based on a Properties instance. Subclasses should overload this.
+     * @param {Properties} properties
+     * @abstract
+     * @returns true if data has multiple series
+     */
+    update(properties){
+        this.#_logger.fatal("update() method should never execute, specializations of Result need to overload it.");
+        throw new TypeError('Result.update() method should not be called, implementations need to overload it.');  
     }
 
     /**
      * @description Execute required validations and starts the parsing of the data. Result subclasses may overload this method only if required.
      */
-    parse(){
+    parse(properties){
         //TODO: 
         //TODO: pass a callback to be called when the parse has ended.
         //TODO: the parse() should be called by the chart not internally
         //TODO: this way we can way for the parse process ensure that the properties are all updated and then automate the plot procedure.
-        if (!this.#_data){     
+        //TODO: We also need to receive data from the properties such as parse as "percentage" or "values", is "drilldown", "colors", etc...
+        this.update(properties);
+        //if (!this.#_data){     
+        if (!properties.getData()){     
             this.#_logger.trace("Can't parse, please set the Airr Data Commons data first.")
             return;
         }
@@ -190,9 +236,16 @@ class Result {
             this.#_logger.trace("Can't parse, please set the parser first. Parser should be set on a Result subclass.")
             return;
         }
+        /*
         this.#_parser.preparse(this.#_data);
         this.#_parser.onparse(this.#_data);
         this.#_parser.postparse(this.#_data);
+        */
+        this.#_parser.preparse(properties);
+        this.#_parser.onparse(properties);
+        this.#_parser.postparse(properties);
+        //TODO: Get Properties from the parser
+        //TODO: trigger observer.
     }
 }
 

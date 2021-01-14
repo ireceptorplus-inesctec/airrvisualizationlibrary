@@ -6,9 +6,10 @@ import {Logger, ResultSeriesType, GeneType} from './common.js';
  * @abstract
  */
 class Parser {
-    //TODO: Parser should have a properties object that is updated acording to data parsing. This properties will be sync with Result's default properties to build the visualization.
     #_logger;
-    #_series;
+    //#_series;
+    //Parser should have a properties object that is updated acording to data parsing. This properties will be sync with Result's default properties to build the visualization.
+    #_properties
 
     /**
      * @description Creates an instance of Parser.
@@ -31,12 +32,37 @@ class Parser {
             // Child has not implemented this abstract method.
             throw new TypeError("Please implement abstract method postparse.");
         }
+        if (this.getSeries === Parser.prototype.getSeries) {
+            // Child has not implemented this abstract method.
+            throw new TypeError("Please implement abstract method getSeries.");
+        }
         this.#_logger = new Logger('Parser');
-        this.#_series = [];
+        //this.#_series = undefined;
+        this.#_properties = undefined;
+    }
+
+    /**
+     * @description the parser properties. Undefined if no parsed data.
+     * @readonly
+     * @type Properties
+     */
+    get properties(){
+        return this.getProperties();
+    }
+
+    /**
+     * 
+     * @description returns a {@link Properties} with metadata retrieved from the parsed data. It is undefined if no data parsed.
+     * @returns {Properties}
+     */
+    getProperties(){
+        this.#_logger.debug("getting properties.");
+        return this.#_properties;
     }
 
     /**
      * @description returns this.getSeries()
+     * @readonly
      * @type ResultSeries[]
      */
     get series(){
@@ -49,41 +75,41 @@ class Parser {
      * @returns {ResultSeries[]}
      */
     getSeries(){
-        this.#_logger.debug("getting series.");
-        return this.#_series;
+        this.#_logger.fatal("this getSeries() method should never execute, specializations of Result need to overload it.");
+        throw new TypeError('This method should not be called, implementations need to overload it.'); 
     }
 
     /**
      * @description preparse() method holds all the actions required to be executed before the parsing of the data starts. Parser subclasses need to overwrite this method.
-     * @param {JSON} sourceData An Airr Data Commons JSON file
+     * @param {Properties} properties The properties file that contains an Airr Data Commons JSON file
      * @throws Error is called directly on Parser class.
      * @abstract
      */
-    preparse(sourceData){
+    preparse(properties){
         this.#_logger.fatal("this preparse() method should never execute, specializations of Result need to overload it.");
-        throw 'This method should not be called, implementations need to overload it.';        
+        throw new TypeError('This method should not be called, implementations need to overload it.');        
     }    
     
     /**
      * @description onparse() method executes the data parsing from the Airr Data Commons file to the internal ResultSeries. Parser subclasses need to overwrite this method.
-     * @param {JSON} sourceData An Airr Data Commons JSON file
+     * @param {Properties} properties The properties file that contains an Airr Data Commons JSON file
      * @throws Error is called directly on Parser class.
      * @abstract
      */
-    onparse(sourceData){
+    onparse(properties){
         this.#_logger.fatal("this parse() method should never execute, specializations of Result need to overload it.");
-        throw 'This method should not be called, implementations need to overload it.';
+        throw new TypeError('This method should not be called, implementations need to overload it.');
     }
-
+    
     /**
      * @description postparse() method holds all the actions required to be executed after the parsing of the data ends. Parser subclasses need to overwrite this method.
-     * @param {JSON} sourceData An Airr Data Commons JSON file
+     * @param {Properties} properties The properties file that contains an Airr Data Commons JSON file
      * @throws Error is called directly on Parser class.
      * @abstract
      */
-    postparse(sourceData){
+    postparse(properties){
         this.#_logger.fatal("this preparse() method should never execute, specializations of Result need to overload it.");
-        throw 'This method should not be called, implementations need to overload it.';        
+        throw new TypeError('This method should not be called, implementations need to overload it.');        
     }
 }
 
@@ -116,9 +142,18 @@ class DrilldownParser extends Parser {
      */
     get drilldownSeries(){
         this.#_logger.debug("getting drilldownSeries.");
-        return this.#_drilldownSeries;
+        return this.getDrilldownSeries();
     }
 
+    /**
+     * Array of {@link ResultSeries}
+     * @description the series used for drilldown
+     * @returns {ResultSeries[]}
+     */
+    getDrilldownSeries(){
+        this.#_logger.debug("getting drilldownSeries.");
+        return this.#_drilldownSeries;
+    }
 }
 
 export {Parser, DrilldownParser};
