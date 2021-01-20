@@ -343,7 +343,7 @@ class Properties {
 
     /**
      * @description the Series Name value of the data.
-     * @type {array}
+     * @type {string[]}
      */
     get seriesName() {
         return this.getSeriesName();
@@ -355,7 +355,7 @@ class Properties {
 
     /**
      * @description returns the stacking type value of the chart.
-     * @returns {array} value the array with the series name values for the data.
+     * @returns {string[]} value the array with the series name values for the data.
      */
     getSeriesName() {
         return this.#_seriesName;
@@ -363,7 +363,7 @@ class Properties {
 
     /**
      * @description Sets the Series names value of the data.
-     * @param {array} value the array with the series name values for the data.
+     * @param {string[]} value the array with the series name values for the data.
      * @returns {Properties} the same instance on which the method was called.
      */
     setSeriesName(value) {
@@ -713,7 +713,7 @@ class Properties {
 
     /**
      * @description Returns the value of the colors used in the chart.
-     * @returns {string []} the value of the color used in the chart.
+     * @returns {string[]} the value of the color used in the chart.
      */
     getSeriesColors() {
         return this.#_seriesColors;
@@ -721,7 +721,7 @@ class Properties {
 
     /**
      * @description Sets  the value of the colors used in the chart.
-     * @param {string []} value the  the value of the colors used in the chart.
+     * @param {string[]} value the  the value of the colors used in the chart.
      * @returns {Properties} the same instance on which the method was called.
      */
     setSeriesColors(value) {
