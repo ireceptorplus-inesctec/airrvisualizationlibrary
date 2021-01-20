@@ -84,40 +84,6 @@ class Result {
         throw new TypeError('Result.isMultipleSeries() method should not be called, implementations need to overload it.');        
     }
     
-    /* *
-     * @description  the AIRR Data JSON file associated with this Result.
-     * @type {JSON}
-     * /
-    get data(){
-        return this.getData();
-    }
-    
-    set data(sourceData){
-        this.setData(sourceData);
-    }
-    
-    /**
-     * @description Returns the AIRR Data JSON file associated with this Result.
-     * @returns {JSON} The source data associated with this result
-     * /
-    getData(){
-        return this.#_data;
-    }
-    
-    /**
-     * @description Chainable method that sets the AIRR Data JSON file and return this Result object.
-     * @param {JSON} sourceData An AIRR Data JSON file.
-     * @returns {Result} the same instance on which the method was called.
-     * /
-    setData(sourceData) {
-        this.#_data = sourceData;  
-        this.#_logger.debug("setData.");
-        this.parse();
-        //this.parseSingleRepertoireStatsData(sourceData);
-        return this;
-    }
-    */
-
     /**
      * @description the {@link Parser} used for the interpretation of the AIRR Data JSON file.
      * @type {Parser}
@@ -166,36 +132,6 @@ class Result {
         return this.isDrilldown();
     }
     
-    /*
-    set drilldown(value){
-        this.setDrilldown(value);
-    }
-
-    /**
-     * @description Sets the series to have drilldown or not.
-     * It is better to set the drilldown value prior to setting the data. When setting the drilldown value, 
-     * if the source data was already added to the series, will force changing the parser and thus 
-     * parsing the source data again.
-     * 
-     * Classes that extend Resource must overload this method,
-     * if required set the parser with setParser(parser), which will force parsing the data
-     * and return super.setDrilldown(value) at the end of this method.
-     * 
-     * @param {boolean} value If true, set the series to have drilldown feature.
-     * @returns {Result} the same instance on which the method was called.
-     * @throws Error if value is not a boolean.
-     * /
-    setDrilldown(value){
-        this.#_logger.debug("setting drilldown to " + value);
-        if (typeof value !== "boolean"){
-            this.#_logger.fatal("attribute value must be a boolean.");
-            throw new TypeError('drilldown value must be a boolean.');
-        }
-        this.#_drilldown = value;
-        return this;
-    }
-    */
-
     /**
      * @description returns the true if this Result has drilldown enabled.
      * @returns {boolean} 
@@ -218,7 +154,7 @@ class Result {
     }
 
     /**
-     * @description Execute required validations and starts the parsing of the data. Result subclasses may overload this method only if required.
+     * @description Execute required validations and starts the parsing of the data. Result subclasses should not overload this method.
      */
     parse(properties){
         //TODO: 
@@ -246,6 +182,7 @@ class Result {
         this.#_parser.postparse(properties);
         //TODO: Get Properties from the parser
         //TODO: trigger observer.
+        properties.updateWith(this.properties);
     }
 }
 

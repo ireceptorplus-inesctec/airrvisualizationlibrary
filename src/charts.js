@@ -255,7 +255,10 @@ class HighchartsChart extends Chart {
         p.series = this.result.series.map(series => series.asHighchartSeries());
         timer.end(".asHighchartSeries");
 
-        if (this.properties.title) { p.title = { text: this.properties.title } };
+        // If not set on properties the Title should not be set. I.e. we need it to be undefined.
+        //if (this.properties.title) { 
+            p.title = { text: this.properties.title } 
+        //};
         if (this.properties.subtitle) { p.subtitle = { text: this.properties.subtitle } };
         if (this.properties.yLabel) {
             p.yAxis = (p.yAxis || {});

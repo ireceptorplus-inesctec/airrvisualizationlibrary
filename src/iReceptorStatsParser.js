@@ -9,10 +9,12 @@ Gene might not have a - it means gene and subgroup are the same. An 'n'nmight be
 
 IMGT has the germeline genes (nomenclature for human genes)
 
-resolver o sorting dos elementos no gráfico.
-
+Solve erroneous element sorting on the chart.
 */
 
+/**
+ * Static class with constants required by the Stats Parser.
+ */
 class StatsParserConstants{
     static VOCABULARY = {
         INFO : "Info",
@@ -34,18 +36,46 @@ class StatsParserConstants{
         SPLITER_CALL : '*'
     };
 
+    /**
+     * @description INFO constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "Info"
+     */
     static get INFO(){
         return StatsParserConstants.VOCABULARY.INFO;
     }
-
+    
+    /**
+     * @description MESSAGE constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "Result"
+     */
     static get MESSAGE(){
         return StatsParserConstants.VOCABULARY.MESSAGE;
     }
-
+    
+    /**
+     * @description STATISTICS constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "statistics"
+     */
     static get STATISTICS(){
         return StatsParserConstants.VOCABULARY.STATISTICS;
     }
-
+    
+    /**
+     * @description STATISTICS_NAME constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "statistic_name"
+     */
     static get STATISTICS_NAME(){
         return StatsParserConstants.VOCABULARY.STATISTICS_NAME;
     }
@@ -156,7 +186,8 @@ class CountStatsParser extends Parser {
         let timer = new DebugTimer();
         timer.start("parse");
         //TOOD: Will need to get this from properties.
-        let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
+        //let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
+        let seriesColors = properties.seriesColors;
         let colorIndex = 0;
         let colorIndexJumper = 1;
         //let gene = this.#_geneType;
@@ -212,11 +243,13 @@ class CountStatsParser extends Parser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName);
                 //Use type to build the chart subtitle
-                parsedProperties.subtitle = type.toString();
+                parsedProperties.subtitle = "lixo";//type.toString();
                 //Build ResultSeriesName
                 //let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
                 // We use the type for subtitle, no need to use it in series name.
-                let resultSeriesName = 'Repertoire '.concat(repID);
+                //TODO: change for the Repertoire name or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID);
+                let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
                 //Junction length will be displayed as percentages, will need the total UsageCount
@@ -245,7 +278,9 @@ class CountStatsParser extends Parser {
                 }
                 //TODO: Before sorting I need to normalize data structures (for example ensure that all series have all named values, set to zero the missing ones.)
                 //Sort elements by name 
-                seriesData.sort((a, b) => a.name-b.name);
+                if(properties.sort){
+                    seriesData.sort((a, b) => a.name-b.name);
+                }
                 mainSeries.push(series);
                 //{name: (this.#_multipleSeries ? "Repertoire: " + repertoireName : familySeriesName),data: seriesData})
             } else {
@@ -368,7 +403,9 @@ class JunctionLenghtStatsParser extends Parser {
                 //Build ResultSeriesName
                 //let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
                 // We use the type for subtitle, no need to use it in series name.
-                let resultSeriesName = 'Repertoire '.concat(repID);
+                //TODO: change for the Repertoire name or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID);
+                let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
                 //Junction length will be displayed as percentages, will need the total UsageCount
@@ -396,9 +433,12 @@ class JunctionLenghtStatsParser extends Parser {
                 if (totalUsageCountValidator != totalUsageCount){
                     this.#_logger.error("Inconsistency between the statistics value for total " + statisticName + " and the sun of the individual values (" + totalUsageCount + "/" + totalUsageCountValidator + ").");
                 }
-                //TODO: Before sorting I need to normalize data structures (for example ensure that all series have all named values, set to zero the missing ones.)
+                //TODO: Before sorting I need to normalize and coalesce data structures (for example ensure that all series have all named values, set to zero the missing ones.)
                 //Sort elements by name 
-                seriesData.sort((a, b) => a.name-b.name);
+                if (properties.sort){
+                    //seriesData.sort((a, b) => a.name.localeCompare(b.name));
+                    seriesData.sort((a, b) => a.name-b.name);
+                }
                 mainSeries.push(series);
                 //{name: (this.#_multipleSeries ? "Repertoire: " + repertoireName : familySeriesName),data: seriesData})
             } else {
@@ -746,7 +786,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //TODO: change series name for the Repertoire name or the value from properties if user set it.
+                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = familySeries[StatsParserConstants.TOTAL];
                 //this is the main series for a repertoire.
@@ -769,6 +811,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     let dataItem = new ResultSeriesDataItem().setName(familyName).setY(dataObject[StatsParserConstants.VALUE]).setDrilldown(geneGroupName);
                     seriesData.push(dataItem);
                 }
+                if (properties.sort){
+                    seriesData.sort((a, b) => a.name.localeCompare(b.name));
+                }
                 mainSeries.push(series);
                 this._addToStructures(series);
             }
@@ -781,7 +826,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //TODO: change for the Repertoire name or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //this is a second series (for drilldown).
                 //We will need several ResultSeries, one that will hold all the Gene values (dataItems) in the repertoire and, one for each family of Genes in a repertoire
                 let series = new ResultSeries()
@@ -798,7 +845,10 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 let geneSeriesDict = new Object();
                 for (let i = 0; i < familyNames.length; i++) {
                     let geneGroupName = familyNames[i].concat(genePostfix);
-                    let geneSeriesName = familyNames[i].concat(' ').concat(type.toString());
+                    //TODO: change for the Repertoire name or the value from properties.
+                                    //TODO: change series name for the Repertoire name or the value from properties if user set it.
+                    let _geneSeriesName = familyNames[i].concat(' ').concat(type.toString());
+                    let geneSeriesName = (properties.seriesName?(properties.seriesName[j]||_geneSeriesName):_geneSeriesName);
                     geneSeriesDict[familyNames[i]] = new ResultSeries()
                         .setRepertoireId(repID)
                         .setSampleProcessingId(messageArrayObjectRepertoires[StatsParserConstants.SAMPLE_PROCESSING_ID])
@@ -847,6 +897,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     
                     geneSeriesDict[familyName].data.push(dataItem);
                 }
+                if (properties.sort){
+                    seriesData.sort((a, b) => a.name.localeCompare(b.name));
+                }
                 this.#_logger.trace("All Gene data series for Repertoire " + repID + ": ");
                 this.#_logger.trace(JSON.stringify(series));
                 this._addToStructures(series);
@@ -854,6 +907,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 this.#_logger.trace(JSON.stringify(geneSeriesDict));
                 for (let key in geneSeriesDict) {
                     let value = geneSeriesDict[key];
+                    if (properties.sort){
+                        value.data.sort((a, b) => a.name.localeCompare(b.name));
+                    }
                     this._addToStructures(value);
                     //TODO: Need to changed this. drilldown series is to be of type ResultSeries (remove the .asHighchartSeries()).
                     drilldownSeries.push(value.asHighchartSeries());
@@ -869,7 +925,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //TODO: change for the Repertoire name or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //this a third series for drilldown.
                 //We will need several ResultSeries, one that will hold all the Allele values (dataItems) in the repertoire and, one for each Genes group in a repertoire
                 let series = new ResultSeries()
@@ -887,7 +945,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 for (let i = 0; i < geneNames.length; i++) {
                     //cellSeriesDict[geneNames[i]] = [];
                     let cellGroupName = geneNames[i].concat(cellPostfix);
-                    let cellSeriesName = geneNames[i].concat(' ').concat(type.toString());
+                    //TODO: change for the Repertoire name or the value from properties.
+                    let _cellSeriesName = geneNames[i].concat(' ').concat(type.toString());
+                    let cellSeriesName = (properties.seriesName?(properties.seriesName[j]||_cellSeriesName):_cellSeriesName);
                     cellSeriesDict[geneNames[i]] = new ResultSeries()
                         .setRepertoireId(repID)
                         .setSampleProcessingId(messageArrayObjectRepertoires[StatsParserConstants.SAMPLE_PROCESSING_ID])
@@ -1027,7 +1087,8 @@ class GeneUsageStatsParser extends Parser {
         let timer = new DebugTimer();
         timer.start("parse");
         //TOOD: Will need to get this from properties.
-        let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
+        //let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
+        let seriesColors = properties.seriesColors;
         let colorIndex = 0;
         let colorIndexJumper = 1;
         //let gene = this.#_geneType;
@@ -1048,7 +1109,7 @@ class GeneUsageStatsParser extends Parser {
 
             if (seriesColors.length < messageArrayLength) {
                 this.#_logger.error('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
-                throw 'Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.';
+                throw new TypeError('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
             }
             colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
 
@@ -1076,7 +1137,9 @@ class GeneUsageStatsParser extends Parser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //TODO: change for the Repertoire name or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
                 //generate the series
@@ -1095,6 +1158,9 @@ class GeneUsageStatsParser extends Parser {
                     let dataObject = firstObject[StatsParserConstants.DATA][i];
                     let dataItem = new ResultSeriesDataItem().setName(dataObject[StatsParserConstants.KEY]).setY(dataObject[StatsParserConstants.VALUE]);                    
                     seriesData.push(dataItem);
+                }
+                if (properties.sort){
+                    seriesData.sort((a, b) => a.name.localeCompare(b.name));
                 }
                 mainSeries.push(series);
                 //{name: (this.#_multipleSeries ? "Repertoire: " + repertoireName : familySeriesName),data: seriesData})
@@ -1399,8 +1465,11 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 let resultSeriesId = 'rep'.concat(repID).concat(genePostfix);
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
-                //Build ResultSeriesName
-                let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //Build ResultSeriesName 
+                //TODO: change for the Repertoire name or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = geneSeries[StatsParserConstants.TOTAL];
                 //this is the main series for a repertoire.
@@ -1425,7 +1494,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 }
                 //TODO: Before sorting I need to normalize data structures (for example ensure that all series have all named values, set to zero the missing ones.)
                 //Sort elements by name 
-                seriesData.sort((a, b) => a.name.localeCompare(b.name));
+                if (properties.sort){
+                    seriesData.sort((a, b) => a.name.localeCompare(b.name));
+                }
                 mainSeries.push(series);
                 this._addToStructures(series);
             }
@@ -1438,7 +1509,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //TODO: change for the Repertoire name or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //this a third series for drilldown.
                 //We will need several ResultSeries, one that will hold all the Allele values (dataItems) in the repertoire and, one for each Genes group in a repertoire
                 let series = new ResultSeries()
@@ -1456,7 +1529,8 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 for (let i = 0; i < geneNames.length; i++) {
                     //cellSeriesDict[geneNames[i]] = [];
                     let cellGroupName = geneNames[i].concat(cellPostfix);
-                    let cellSeriesName = geneNames[i].concat(' ').concat(type.toString());
+                    let _cellSeriesName = geneNames[i].concat(' ').concat(type.toString());
+                    let cellSeriesName = (properties.seriesName?(properties.seriesName[j]||_cellSeriesName):_cellSeriesName);
                     cellSeriesDict[geneNames[i]] = new ResultSeries()
                         .setRepertoireId(repID)
                         .setSampleProcessingId(messageArrayObjectRepertoires[StatsParserConstants.SAMPLE_PROCESSING_ID])
@@ -1482,15 +1556,18 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 }
                 //TODO: Before sorting I need to normalize data structures (for example ensure that all series have all named values, set to zero the missing ones.)
                 //sort elements by name
-
-                seriesData.sort((a, b) => a.name.localeCompare(b.name));
+                if (properties.sort){
+                    seriesData.sort((a, b) => a.name.localeCompare(b.name));
+                }
                 //    this.#_logger.trace(JSON.stringify(cellSeriesDict));
                 for (let key in cellSeriesDict) {
                     let value = cellSeriesDict[key];
                     //Sort elements by name
                     //TODO: This is ineficient, sorting must be applied only once when retrieving the structure for the chart.
                     //TODO: Sorting must be dependent of the values in Properties .sort() or better .sortOn([key|value],[asc,desc]);
-                    value.data.sort((a, b) => a.name.localeCompare(b.name));
+                    if (properties.sort){
+                        value.data.sort((a, b) => a.name.localeCompare(b.name));
+                    }
                     this._addToStructures(value);
                     //TODO: Need to changed this. drilldown series is to be of type ResultSeries (remove the .asHighchartSeries()).
                     drilldownSeries.push(value.asHighchartSeries());

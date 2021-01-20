@@ -68,6 +68,14 @@ class Properties {
      * @default 100
      */
     static get DEFAULT_DEPTH_3D(){return 100};
+    /**
+     * @description default color scheme used by series
+     * @type {String[]}
+     * @constant
+     * @static
+     * @default ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
+     */
+    static get DEFAULT_SERIES_COLORS(){return ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]};
 
     #_logger;
     #_title;
@@ -75,6 +83,7 @@ class Properties {
     #_xLabel;
     #_yLabel;
     #_stackingType;
+    #_seriesName
     #_data
     #_dataType
     #_dataDrilldown
@@ -86,6 +95,7 @@ class Properties {
     #_alpha3D;
     #_beta3D;
     #_depth3D;
+    #_seriesColors;
     #_dataDrilldown_userDefined;
     #_sort_userDefined;
     #_percentage_userDefined;
@@ -94,6 +104,7 @@ class Properties {
     #_alpha3D_userDefined;
     #_beta3D_userDefined;
     #_depth3D_userDefined;
+    #_seriesColors_userDefined;
 
     /**
      * @description Creates an instance of Properties.
@@ -106,6 +117,7 @@ class Properties {
         this.#_xLabel = undefined;
         this.#_yLabel = undefined;
         this.#_stackingType = undefined;
+        this.#_seriesName = undefined;
         this.#_data = undefined;
         this.#_dataType = undefined;
         this.#_dataDrilldown = Properties.DEFAULT_DATA_DRILLDOWN; //defaults to false
@@ -117,7 +129,7 @@ class Properties {
         this.#_alpha3D = Properties.DEFAULT_ALPHA_3D; //defaults to 20;
         this.#_beta3D = Properties.DEFAULT_BETA_3D; //defaults to 0;
         this.#_depth3D = Properties.DEFAULT_DEPTH_3D; //defaults to 100;
-        this.#_logger.trace(JSON.stringify(this));
+        this.#_seriesColors = Properties.DEFAULT_SERIES_COLORS; //defaults to 100;
         this.#_sort_userDefined = false;
         this.#_percentage_userDefined = false;
         this.#_chartType_userDefined = false;
@@ -126,6 +138,9 @@ class Properties {
         this.#_beta3D_userDefined = false;
         this.#_depth3D_userDefined = false;
         this.#_dataDrilldown_userDefined = false;
+        this.#_seriesColors_userDefined = false;
+
+        this.#_logger.trace(JSON.stringify(this));
     }
 
     /**
@@ -186,6 +201,9 @@ class Properties {
      * @returns {Properties} the same instance on which the method was called.
      */
     setSubtitle(value) {
+        /*if (!(value instanceof Array)){
+            throw new TypeError('subtitle should be set as an Array to support Drilldown and Drillup features.');
+        }*/
         this.#_subtitle = value;
         this.#_logger.debug("setSubtitle");
         this.#_logger.trace(JSON.stringify(this));
@@ -319,6 +337,38 @@ class Properties {
     setStackingType(value) {
         this.#_stackingType = value;
         this.#_logger.debug("setStackingType.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+    /**
+     * @description the Series Name value of the data.
+     * @type {array}
+     */
+    get seriesName() {
+        return this.getSeriesName();
+    }
+
+    set seriesName(value) {
+        this.setSeriesName(value);
+    }
+
+    /**
+     * @description returns the stacking type value of the chart.
+     * @returns {array} value the array with the series name values for the data.
+     */
+    getSeriesName() {
+        return this.#_seriesName;
+    }
+
+    /**
+     * @description Sets the Series names value of the data.
+     * @param {array} value the array with the series name values for the data.
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    setSeriesName(value) {
+        this.#_seriesName = value;
+        this.#_logger.debug("setSeriesName.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
     }
@@ -650,6 +700,41 @@ class Properties {
     }
 
     /**
+     * @description array of strings representing the series colors to be used.
+     * @type {string[]}
+     */
+    get seriesColors() {
+        return this.getSeriesColors();
+    }
+
+    set seriesColors(value) {
+        this.setSeriesColors(value);
+    }
+
+    /**
+     * @description Returns the value of the colors used in the chart.
+     * @returns {string []} the value of the color used in the chart.
+     */
+    getSeriesColors() {
+        return this.#_seriesColors;
+    }
+
+    /**
+     * @description Sets  the value of the colors used in the chart.
+     * @param {string []} value the  the value of the colors used in the chart.
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    setSeriesColors(value) {
+        if (!(value === undefined)){
+            this.#_seriesColors = value;
+            this.#_seriesColors_userDefined = true;
+        }
+        this.#_logger.debug("setSeriesColors.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+    /**
      * @description indicates if the chart is to be plotted as percentages or as values.
      * @type {Boolean}
      */
@@ -694,8 +779,8 @@ class Properties {
             return this;
         }
         if (!this.#_chartType_userDefined && anotherProperties.chartType) this.setChartType(anotherProperties.chartType);
-        if (!this.title && anotherProperties.title) this.setTitle(anotherProperties.title);
-        if (!this.subtitle && anotherProperties.subtitle) this.setSubtitle(anotherProperties.subtitle);
+        if (this.title == undefined && anotherProperties.title) this.setTitle(anotherProperties.title);
+        if (this.subtitle == undefined && anotherProperties.subtitle) this.setSubtitle(anotherProperties.subtitle);
         if (!this.xLabel && anotherProperties.xLabel) this.setXLabel(anotherProperties.xLabel);
         if (!this.yLabel && anotherProperties.yLabel) this.setYLabel(anotherProperties.yLabel);
         if (!this.stackingType && anotherProperties.stackingType) this.setStackingType(anotherProperties.stackingType);
@@ -708,6 +793,7 @@ class Properties {
         if (!this.#_alpha3D_userDefined && anotherProperties.alpha3D) this.setAlpha3D(anotherProperties.alpha3D);
         if (!this.#_beta3D_userDefined && anotherProperties.beta3D) this.setBeta3D(anotherProperties.beta3D);
         if (!this.#_depth3D_userDefined && anotherProperties.depth3D) this.setDepth3D(anotherProperties.depth3D);
+        if (!this.#_seriesColors_userDefined && anotherProperties.seriesColors) this.setSeriesColors(anotherProperties.seriesColors);
         if (!this.id && anotherProperties.id) this.setId(anotherProperties.id);
         return this;
     }

@@ -453,6 +453,20 @@ describe('Set Properties', function() {
         expect(properties.dataDrilldown).to.be.an(obj.typeof);
         expect(properties.dataDrilldown).to.equal(obj.setAs);
     });
+    it('should allow to set and get individual property: seriesName', function(){
+        let obj = {"setAs": ["MotheA - MotherA", "MotherB - MotherB"], "typeof":"Array", "default": undefined};
+        // Set/get as method
+        let properties = new Properties().setSeriesName(obj.setAs);
+        expect(properties.getSeriesName()).to.be.an(obj.typeof);
+        expect(properties.getSeriesName()).to.equal(obj.setAs);
+        
+        // Set/get as property
+        properties = new Properties();
+        expect(properties.seriesName).to.equal(obj.default);
+        properties.seriesName = obj.setAs;
+        expect(properties.seriesName).to.be.an(obj.typeof);
+        expect(properties.seriesName).to.equal(obj.setAs);
+    });
     it('should allow to set properties: data, dataType, dataDrilldown', function(){
         let obj = {"setAsData": propertyData, "setAsDataType": propertyDatatype, "setAsDataDrilldown": propertyDataDrilldown, 
             "typeofData":"object", "typeofDataType":"string", "typeofDataDrilldown":"boolean",

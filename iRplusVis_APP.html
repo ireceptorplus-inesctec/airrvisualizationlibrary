@@ -16,7 +16,7 @@
             <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, drilldown)</button>
             <button class="loader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, no drilldown)</button>
 
-            <div id="v_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show D gene sample data from 2020/11/11</div>
+            <div id="v_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show V gene sample data from 2020/11/11</div>
 
             <button class="drilldownDloader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, drilldown)</button>
             <button class="loader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, no drilldown)</button>
@@ -62,7 +62,7 @@
                 $.get(url, function(data){
                     //Example using Properties as an instance of Properties (through Library)
                     let properties = window.airrvisualization.createProperties();
-                    properties.setId(identifier).setXLabel("X Axis Title Example").setSort(true).setTitle("My title").setDataType(datatype).setData(data);
+                    properties.setId(identifier).setXLabel("X Axis Title Example").setSeriesName(["Series 1","Series 2"]).setSort(true).setTitle("My title").setDataType(datatype).setData(data);
                     /*
                     Change the creation of the result to within the constructor of the Chart.
                     For this I need to set :
@@ -88,7 +88,7 @@
 
                     //Example using Properties as a String
                     //data can be added to the string. Don't add "" around it.
-                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"data\":"+data+"}";
+                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"data\":"+data+"}";
                     let properties = window.airrvisualization.createProperties(stringProperties);
                     let chart = window.airrvisualization.createChart(properties).plot();
                 });
@@ -96,7 +96,7 @@
             function redrawDrilldownDChart(url, identifier){
                 $.get(url, function(data){
                     //Example using Properties as a JSON Object
-                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "dataDrilldown": true});
+                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "sort":true, "dataDrilldown": true});
                     jsonProperties.setData(data);
                     let chart = window.airrvisualization.createChart(jsonProperties).plot();
                 });
@@ -106,7 +106,7 @@
                     //window.airrvisualization.setDebugLevel(0);
 
                     //Example using Properties as a instance of Properties Class
-                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setDataType("JGeneUsage").setData(data);;
+                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setDataType("JGeneUsage").setSubtitle('').setData(data);;
                     let chart = window.airrvisualization.createChart(prop).plot();
                 });
             }
@@ -119,13 +119,13 @@
             function redrawCountChart(url, identifier){
                 $.get(url, function(data){
                     //window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataType("CloneCount").setData(data)).plot();
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataType("CloneCount").setSeriesColors(["rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)"]).setData(data)).plot();
                 });
             }
             function redrawJunctionChart(url, identifier){
                 $.get(url, function(data){
                     //window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setDataType("JunctionLength").setData(data)).plot();
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setDataType("JunctionLength").setData(data)).plot();
                 });
             }
             function redrawFailandsuccessChart(url, identifier){
