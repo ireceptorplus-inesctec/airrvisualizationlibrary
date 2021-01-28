@@ -1,5 +1,6 @@
 // Import and export other modules from AIIR Visualization Library
 import {Logger, ResultSeriesType, GeneType} from './common.js';
+import { Properties } from './properties.js';
 
 /**
  * Abstract Parser class
@@ -38,7 +39,7 @@ class Parser {
         }
         this.#_logger = new Logger('Parser');
         //this.#_series = undefined;
-        this.#_properties = undefined;
+        this.#_properties = new Properties();
     }
 
     /**
@@ -110,6 +111,23 @@ class Parser {
     postparse(properties){
         this.#_logger.fatal("this preparse() method should never execute, specializations of Result need to overload it.");
         throw new TypeError('This method should not be called, implementations need to overload it.');        
+    }
+
+    guessTheNameOfTheFather(dataItem, seriesType){
+        /*if (!(dataItem instanceof ResultSeriesDataItem)){
+            throw new TypeError('dataItem parameter must be an instanceOf ResultSeriesDataItem');
+        }
+        */
+        /*
+         * TODO:
+         * - At first level, title should be locus/chain (e.g. IGHV)
+         * - At second level, title should be family (e.g. IGHV5), back to should say "Back to IGHV"
+         * - At third level, title should be gene (IGHV5-51), back to should say "Back to IGHV5"
+         */
+
+        console.log(seriesType);
+         console.log(dataItem); 
+        
     }
 }
 

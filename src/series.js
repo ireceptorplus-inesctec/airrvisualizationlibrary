@@ -12,6 +12,7 @@ class ResultSeriesDataItem{
     #_z;
     #_color;
     #_drilldown;
+    #_title;
     
     /**
      * @description Creates an instance of ResultSeriesDataItem.
@@ -25,6 +26,7 @@ class ResultSeriesDataItem{
         this.#_z = undefined;
         this.#_color = undefined;
         this.#_drilldown = undefined;
+        this.#_title = "subtitle";
     }
     
     /**
@@ -247,6 +249,7 @@ class ResultSeries{
     #_parentName;
     #_color;
     #_stack;
+    #_title
     
     constructor(){
         this.#_logger = new Logger('ResultSeries');
@@ -262,6 +265,7 @@ class ResultSeries{
         this.#_parentName = undefined;
         this.#_color = undefined;
         this.#_stack = undefined;
+        this.#_title = undefined;
     }
     
     /**
@@ -514,14 +518,36 @@ class ResultSeries{
         this.#_stack = stackName;
         return this;
     }
+
+    /**
+     * @description the title to be used by the ResultSeries when setting chart subtitles. Title is not the same as name
+     * @type {String}
+     */
+    get title(){
+        return this.#_title;
+    }
+    
+    set title(value){
+        this.setTitle(value);
+    }
+
+    /**
+     * @description Sets the title to be used by this Series when setting chart subtitles. Title is not the same as name
+     * @param {String} title
+     * @returns {ResultSeries} the same instance on which the method was called.
+     */
+    setTitle(title){
+        this.#_title = title;
+        return this;
+    }
     
     /**
      * @description Returns a JSON representation of the ResultSeries
      * @returns {JSON} 
      */
     toJSON(){
-        let {repertoireId, sampleProcessingId, dataProcessingId, name, fieldName, parentName, type, color, data} = this;
-        return {repertoireId, sampleProcessingId, dataProcessingId, name, fieldName, parentName, type, color, data};
+        let {repertoireId, sampleProcessingId, dataProcessingId, name, fieldName, parentName, type, color, data, title} = this;
+        return {repertoireId, sampleProcessingId, dataProcessingId, name, fieldName, parentName, type, color, data, title};
     }
         
     //TODO: This method (or this action) must be moved into a Highcharts 'package'. Probably into HighchartsChart class.
@@ -531,8 +557,8 @@ class ResultSeries{
      */
     asHighchartSeries(){
 
-        let {id, name, color} = this;
-        let json = {id, name, color};
+        let {id, name, color, title} = this;
+        let json = {id, name, color, title};
 
         for (const key in json) {
             if (json.hasOwnProperty(key)) {

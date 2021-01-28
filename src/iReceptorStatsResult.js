@@ -145,20 +145,6 @@ class GeneUsageStatsResult extends StatsResult {
         this.#_logger.debug("getting drilldown series.");
         return this.parser.drilldownSeries;
     }
-
-    /* 
-     * Drillup and drilldown events are specific for Highcharts.
-     * they may need to be set at Chart level.
-     * Same for MouseDownEvents (that are specific for each visualization library)
-     */
-    get drillupSeriesEvent(){
-        return this.parser.drillupSeriesEvent;
-    }
-    
-    get drilldownSeriesEvent(){
-        this.#_logger.debug("requested drilldown event");
-        return this.parser.drilldownSeriesEvent;          
-    }
        
     get multipleSeries(){
         return this.parser.multipleSeries;

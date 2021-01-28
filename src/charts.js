@@ -259,7 +259,7 @@ class HighchartsChart extends Chart {
         //if (this.properties.title) { 
             p.title = { text: this.properties.title } 
         //};
-        if (this.properties.subtitle) { p.subtitle = { text: this.properties.subtitle } };
+        if (this.properties.subtitle) { p.subtitle = { text: (this.properties.subtitle[0] || undefined) } };
         if (this.properties.yLabel) {
             p.yAxis = (p.yAxis || {});
             p.yAxis.title = { text: this.properties.yLabel };
@@ -288,11 +288,12 @@ class HighchartsChart extends Chart {
             p.drilldown = this.result.drilldownSeries;
             //We need to get the drilldown and drillup events to change at least the title and subtitle of the chart.
             p.chart.events = {
-                drillup: this.result.drillupSeriesEvent,
-                drilldown: this.result.drilldownSeriesEvent
+                drillup: this.result.getDrillupSeriesEvent(this.properties),
+                drilldown: this.result.getDrilldownSeriesEvent(this.properties)
             }
         }
         this.#_logger.trace("Is 3D (multiple series)? -" + this.result.isMultipleSeries());
+        //TODO: We need to have a distinction between Multiple series and 3D (when plotting Junction length I ignore multiple series to have side-by-side chart)
         if (this.result.isMultipleSeries()) {
             // Setup chart 3Doptions properties (in the future using #_properties and #_dataseries data).
             p.chart.options3d = {
@@ -332,6 +333,11 @@ class HighchartsChart extends Chart {
                     grouping: false,
                 }
             };*/
+        }else{
+            // Chart is single series
+            p.legend = (p.legend || {});
+            p.legend.enabled = false;
+
         }
         // If is a stacking chart
         if (this.properties.stackingType) {

@@ -141,7 +141,6 @@ class CountStatsParser extends Parser {
     #_seriesByRepertoire;
 
     #_multipleSeries;
-    #_parserProperties
 
     constructor() {
         super();
@@ -151,7 +150,6 @@ class CountStatsParser extends Parser {
         this.#_multipleSeries = false;
         this.#_series = [];
         this.#_seriesByRepertoire = [];
-        this.#_parserProperties = undefined;
     }
 
     getSeries() {
@@ -177,7 +175,6 @@ class CountStatsParser extends Parser {
 
     postparse(properties) {
         this.#_logger.trace("postparse.");
-        properties.updateWith(this.#_parserProperties);
     }
 
     onparse(properties) {
@@ -198,7 +195,7 @@ class CountStatsParser extends Parser {
         }
         //Will do a first attempt with a Properties in the parser.
         //The idea is that the parser add to this properties and then the Result will join the parser properties with the default Result properties.
-        let parsedProperties = new Properties();
+        let parsedProperties = this.properties;
         
         let messageArray = data[StatsParserConstants.MESSAGE];
         let messageArrayLength = messageArray.length;
@@ -242,12 +239,17 @@ class CountStatsParser extends Parser {
                 let resultSeriesId = 'rep'.concat(repID).concat(statisticName);
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName);
-                //Use type to build the chart subtitle
-                parsedProperties.subtitle = "lixo";//type.toString();
+                
+                /*TODO:
+                 * FIX subtitle naming:
+                 * - At first level, title should be locus/chain (e.g. IGHV)
+                 * - At second level, title should be family (e.g. IGHV5), back to should say "Back to IGHV"
+                 * - At third level, title should be gene (IGHV5-51), back to should say "Back to IGHV5"
+                 */
                 //Build ResultSeriesName
                 //let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
                 // We use the type for subtitle, no need to use it in series name.
-                //TODO: change for the Repertoire name or the value from properties.
+                //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //fetch the StatsParserConstants.TOTAL
@@ -271,6 +273,9 @@ class CountStatsParser extends Parser {
                     let value = dataObject[StatsParserConstants.VALUE];
                     totalUsageCountValidator += value;
                     let dataItem = new ResultSeriesDataItem().setName(dataObject[StatsParserConstants.KEY]).setY(value);                    
+                    if (i == 0){
+                        series.setTitle(this.guessTheNameOfTheFather(dataItem, type))
+                    }
                     seriesData.push(dataItem);
                 }
                 if (totalUsageCountValidator != totalUsageCount){
@@ -287,7 +292,6 @@ class CountStatsParser extends Parser {
                 //Probably we have an error in the result. Should abort and return?
             }
         }
-        this.#_parserProperties = parsedProperties;
         this.#_series = mainSeries;
         timer.end("parse");
         timer.print();
@@ -353,9 +357,8 @@ class JunctionLenghtStatsParser extends Parser {
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
-        //Will do a first attempt with a Properties in the parser.
-        //The idea is that the parser add to this properties and then the Result will join the parser properties with the default Result properties.
-        let parsedProperties = new Properties();
+        // parsedProperties is the instance variable properties in Parser Object
+        let parsedProperties = this.properties;
         
         let messageArray = data[StatsParserConstants.MESSAGE];
         let messageArrayLength = messageArray.length;
@@ -398,12 +401,11 @@ class JunctionLenghtStatsParser extends Parser {
                 let resultSeriesId = 'rep'.concat(repID).concat(statisticName);
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName);
-                //Use type to build the chart subtitle
-                parsedProperties.subtitle = type.toString();
+                
                 //Build ResultSeriesName
                 //let resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
                 // We use the type for subtitle, no need to use it in series name.
-                //TODO: change for the Repertoire name or the value from properties.
+                //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //fetch the StatsParserConstants.TOTAL
@@ -427,7 +429,10 @@ class JunctionLenghtStatsParser extends Parser {
                     //Remenber that it is to be set as percentage, I expect this.totalUsageCount is correct, but will do a validation count
                     let value = dataObject[StatsParserConstants.VALUE];
                     totalUsageCountValidator += value;
-                    let dataItem = new ResultSeriesDataItem().setName(dataObject[StatsParserConstants.KEY]).setY(value/totalUsageCount);                    
+                    let dataItem = new ResultSeriesDataItem().setName(dataObject[StatsParserConstants.KEY]).setY(value/totalUsageCount);     
+                    if (i == 0){
+                        series.setTitle(this.guessTheNameOfTheFather(dataItem, type))
+                    }               
                     seriesData.push(dataItem);
                 }
                 if (totalUsageCountValidator != totalUsageCount){
@@ -559,40 +564,78 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
         return this.multipleSeries;
     }
                     
-    get drillupSeriesEvent(){
+    getDrillupSeriesEvent(properties){
         if (!this.drilldown){
             return undefined;
             //return function(e){};
         }
         let logger = this.#_logger;
+        let subtitle = properties.subtitle;
         if (!this.#_multipleSeries){
             logger.debug("retrieving single series drillup event");
             return function(e) {
-                let chart = this
+                let chart = this;
+                let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
+                console.log(chart);
+                console.log(currentDrillLevelNumber);
+                console.log(e);
                 logger.trace(e.toString());
+                if (subtitle){
+                    let subIndex = currentDrillLevelNumber -1;
+                    if (subtitle[subIndex]){
+                        chart.setTitle(null, {text: subtitle[subIndex]});
+                    }else{
+                        chart.setTitle(null, {text: undefined});
+                    }
+                }
                 //logger.trace(JSON.stringify(chart));
             };    
         }
         logger.debug("retrieving multiple series drillup event");
         return function(e) {
-                let chart = this
+                let chart = this;
+                let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
+                console.log(chart);
+                console.log(currentDrillLevelNumber);
+                console.log(e);
                 logger.trace(e.toString());
+                if (subtitle){
+                    let subIndex = currentDrillLevelNumber - 1;
+                    if (subtitle[subIndex]){
+                        chart.setTitle(null, {text: subtitle[subIndex]});
+                    }else{
+                        chart.setTitle(null, {text: undefined});
+                    }
+                }
                 //logger.trace(JSON.stringify(chart));
         };    
             
     }
-    get drilldownSeriesEvent(){
+    getDrilldownSeriesEvent(properties){
         this.#_logger.debug("requested drilldown event");
         if (!this.drilldown){
             return undefined;
             //return function(e){};
         }
         let logger = this.#_logger;
+        let subtitle = properties.subtitle;
         if (!this.#_multipleSeries){
             this.#_logger.debug("retrieving single series drilldown event");
             return function(e) {
                 let chart = this;
-                chart.setTitle(null, { text: e.point.name });
+                let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
+                console.log(chart);
+                console.log(currentDrillLevelNumber);
+                console.log(e);
+                //chart.setTitle(null, { text: e.point.name });
+                if (subtitle){
+                    let subIndex = currentDrillLevelNumber + 1;
+                    if (subtitle[subIndex]){
+                        chart.setTitle(null, {text: subtitle[subIndex]});
+                    }else{
+                        chart.setTitle(null, {text: undefined});
+                    }
+                }
                 logger.trace(e.toString());
             };    
         }
@@ -600,8 +643,11 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
         let drilldownSeries = {...this.#_geneSeriesByFamily, ...this.#_cellSeriesByGene};
         return function(e) {
             let random = Common.makeid(12);
-            let chart = this
-            //console.log(chart);
+            let chart = this;
+            let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);;
+            console.log(chart);
+            console.log(currentDrillLevelNumber);
+            console.log(e);
             logger.trace(random + ", " + e.toString());
             if (!e.seriesOptions) {
                 //console.log(chart.series);
@@ -611,7 +657,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //for (var i = 0; i < chart.series.length; i++) {
                 //    chart.series[i].remove(true);
                 //}
-                chart.setTitle(null, { text: e.point.name });
+                
                 logger.debug(random + ", " + "Gathering drilldown series for " + e.point.drilldown);
                 for (let i = 0; i < drilldownSeries[e.point.drilldown].length; i++){
                     let series = drilldownSeries[e.point.drilldown][i];
@@ -631,6 +677,15 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
             }else{
                 chart.setTitle(null, {text: e.seriesOptions.name});
             }
+            if (subtitle){
+                let subIndex = currentDrillLevelNumber + 1;
+                if (subtitle[subIndex]){
+                    chart.setTitle(null, {text: subtitle[subIndex]});
+                }else{
+                    chart.setTitle(null, {text: undefined});
+                }
+            }
+
         }            
     }
 
@@ -710,6 +765,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
+        // parsedProperties is the instance variable properties in Parser Object
+        let parsedProperties = this.properties;
+        parsedProperties.subtitle = [];
         //Highcharts default
         //let seriesColors = ["rgb(124,181,236)", "rgb(67,67,72)", "rgb(144,237,125)"];
         //Colorblind safe
@@ -776,7 +834,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 }
             }
             if (!familySeries || !geneSeries || !cellSeries){
-                throw 'Incomplete structure for Drilldown. A structure of subgroup > gene > cell is required.';
+                throw new TypeError('Incomplete structure for Drilldown. A structure of subgroup > gene > cell is required.');
             }
             if (familySeries) {
                 //fetch the StatsParserConstants.STATISTICS_NAME
@@ -786,8 +844,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                //TODO: change series name for the Repertoire name or the value from properties if user set it.
-                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //DONE: change for the Repertoire {Rep_Id} or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = familySeries[StatsParserConstants.TOTAL];
@@ -809,6 +868,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     familyNames.push(familyName);
                     this._initializeGeneGroup(repID, geneGroupName);
                     let dataItem = new ResultSeriesDataItem().setName(familyName).setY(dataObject[StatsParserConstants.VALUE]).setDrilldown(geneGroupName);
+                    if (i == 0){
+                        series.setTitle(this.guessTheNameOfTheFather(dataItem, type))
+                    }
                     seriesData.push(dataItem);
                 }
                 if (properties.sort){
@@ -826,8 +888,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                //TODO: change for the Repertoire name or the value from properties.
-                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //DONE: change for the Repertoire {Rep_Id} or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //this is a second series (for drilldown).
                 //We will need several ResultSeries, one that will hold all the Gene values (dataItems) in the repertoire and, one for each family of Genes in a repertoire
@@ -845,10 +908,13 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 let geneSeriesDict = new Object();
                 for (let i = 0; i < familyNames.length; i++) {
                     let geneGroupName = familyNames[i].concat(genePostfix);
-                    //TODO: change for the Repertoire name or the value from properties.
-                                    //TODO: change series name for the Repertoire name or the value from properties if user set it.
-                    let _geneSeriesName = familyNames[i].concat(' ').concat(type.toString());
-                    let geneSeriesName = (properties.seriesName?(properties.seriesName[j]||_geneSeriesName):_geneSeriesName);
+                    console.log(geneGroupName);
+                    console.log(familyNames[i]);
+
+                    //DONE: change for the Repertoire {Rep_Id} or the value from properties if user set it.
+                    //let _geneSeriesName = familyNames[i].concat(' ').concat(type.toString());
+                    //let geneSeriesName = (properties.seriesName?(properties.seriesName[j]||_geneSeriesName):_geneSeriesName);
+                    let geneSeriesName = resultSeriesName;
                     geneSeriesDict[familyNames[i]] = new ResultSeries()
                         .setRepertoireId(repID)
                         .setSampleProcessingId(messageArrayObjectRepertoires[StatsParserConstants.SAMPLE_PROCESSING_ID])
@@ -858,7 +924,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                         .setFieldName(statisticName)
                         .setType(type)
                         .setColor(color)
-                        .setParentName(geneGroupName);
+                        .setParentName(geneGroupName)
+                        .setTitle(familyNames[i]);
                 }
                 for (let i = 0; i < geneSeries[StatsParserConstants.DATA].length; i++) {
                     let dataObject  = geneSeries[StatsParserConstants.DATA][i]; 
@@ -870,7 +937,6 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     //Required for when geneName is equal to familyName. See http://www.imgt.org/IMGTScientificChart/Nomenclature/IMGTnomenclature.html and TRBV on http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=human&group.
                     if (geneSpliterIndex == -1) geneSpliterIndex = geneName.length;
                     let familyName = geneName.substring(0, geneSpliterIndex);
-                    /*
                     if (true){
                         console.log(dataObject);
                         console.log(geneName);
@@ -881,6 +947,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                         console.log(geneSeriesDict[familyName]);
                         console.log(geneSeriesDict);
                     }
+                    /*
                     if (!geneSeriesDict[familyName]) {
                         console.log("No geneSeriesDict for family " + familyName);
                     }
@@ -888,13 +955,17 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     if (geneSpliterIndex == -1 && geneName){
                         let errorMessage = "Error in parsed document structure. Received an element of type " + type.typeName + " with incompatible name " + Common.quote(geneName);
                         this.#_logger.fatal(errorMessage);
-                        throw errorMessage; 
+                        throw new TypeError(errorMessage); 
                     }
                     let dataItem = new ResultSeriesDataItem().setName(geneName).setY(dataObject[StatsParserConstants.VALUE]).setDrilldown(cellGroupName);
+                    if (i == 0){
+                        series.setTitle(this.guessTheNameOfTheFather(dataItem, type))
+                    }
                     seriesData.push(dataItem);
                     
                     
-                    
+                    if (!geneSeriesDict[familyName])
+                        throw new TypeError('Invalid structure on AIRR data file. Can\'t nest gene ' + dataItem.name + ', please check if subgroup ' + familyName + ' exists');
                     geneSeriesDict[familyName].data.push(dataItem);
                 }
                 if (properties.sort){
@@ -925,8 +996,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                //TODO: change for the Repertoire name or the value from properties.
-                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //DONE: change for the Repertoire {Rep_Id} or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //this a third series for drilldown.
                 //We will need several ResultSeries, one that will hold all the Allele values (dataItems) in the repertoire and, one for each Genes group in a repertoire
@@ -945,9 +1017,10 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 for (let i = 0; i < geneNames.length; i++) {
                     //cellSeriesDict[geneNames[i]] = [];
                     let cellGroupName = geneNames[i].concat(cellPostfix);
-                    //TODO: change for the Repertoire name or the value from properties.
-                    let _cellSeriesName = geneNames[i].concat(' ').concat(type.toString());
-                    let cellSeriesName = (properties.seriesName?(properties.seriesName[j]||_cellSeriesName):_cellSeriesName);
+                    //DONE: change for the Repertoire {Rep_Id} or the value from properties if user set it.
+                    //let _cellSeriesName = geneNames[i].concat(' ').concat(type.toString());
+                    //let cellSeriesName = (properties.seriesName?(properties.seriesName[j]||_cellSeriesName):_cellSeriesName);
+                    let cellSeriesName = resultSeriesName;
                     cellSeriesDict[geneNames[i]] = new ResultSeries()
                         .setRepertoireId(repID)
                         .setSampleProcessingId(messageArrayObjectRepertoires[StatsParserConstants.SAMPLE_PROCESSING_ID])
@@ -1056,11 +1129,11 @@ class GeneUsageStatsParser extends Parser {
         return this.multipleSeries;
     }
                     
-    get drillupSeriesEvent(){
+    getDrillupSeriesEvent(properties){
         return undefined;
     }
 
-    get drilldownSeriesEvent(){
+    getDrilldownSeriesEvent(properties){
         this.#_logger.debug("requested drilldown event");
         return undefined;
     }
@@ -1093,6 +1166,8 @@ class GeneUsageStatsParser extends Parser {
         let colorIndexJumper = 1;
         //let gene = this.#_geneType;
         let mainSeries = [];
+        // parsedProperties is the instance variable properties in Parser Object
+        let parsedProperties = this.properties;
 
         if (typeof data === "string") {
             data = JSON.parse(data);
@@ -1137,8 +1212,9 @@ class GeneUsageStatsParser extends Parser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                //TODO: change for the Repertoire name or the value from properties.
-                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //DONE: change for the Repertoire {Rep_Id} or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
@@ -1274,32 +1350,70 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         return this.multipleSeries;
     }
                     
-    get drillupSeriesEvent(){
+    getDrillupSeriesEvent(properties){
         let logger = this.#_logger;
+        let subtitle = properties.subtitle;
         if (!this.#_multipleSeries){
             logger.debug("retrieving single series drillup event");
             return function(e) {
-                let chart = this
+                let chart = this;
+                let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
+                console.log(chart);
+                console.log(currentDrillLevelNumber);
+                console.log(e);
                 logger.trace(e.toString());
                 //logger.trace(JSON.stringify(chart));
+                if (subtitle){
+                    let subIndex = currentDrillLevelNumber - 1;
+                    if (subtitle[subIndex]){
+                        chart.setTitle(null, {text: subtitle[subIndex]});
+                    }else{
+                        chart.setTitle(null, {text: undefined});
+                    }
+                }
             };    
         }
         logger.debug("retrieving multiple series drillup event");
         return function(e) {
-                let chart = this
+                let chart = this;
+                let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
+                console.log(chart);
+                console.log(currentDrillLevelNumber);
+                console.log(e);
                 logger.trace(e.toString());
+                if (subtitle){
+                    let subIndex = currentDrillLevelNumber + 1;
+                    if (subtitle[subIndex]){
+                        chart.setTitle(null, {text: subtitle[subIndex]});
+                    }else{
+                        chart.setTitle(null, {text: undefined});
+                    }
+                }
                 //logger.trace(JSON.stringify(chart));
         };    
             
     }
-    get drilldownSeriesEvent(){
+    getDrilldownSeriesEvent(properties){
         this.#_logger.debug("requested drilldown event");
         let logger = this.#_logger;
+        let subtitle = properties.subtitle;
         if (!this.#_multipleSeries){
             this.#_logger.debug("retrieving single series drilldown event");
             return function(e) {
                 let chart = this;
-                chart.setTitle(null, { text: e.point.name });
+                let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
+                console.log(chart);
+                console.log(currentDrillLevelNumber);
+                console.log(e);
+                //chart.setTitle(null, { text: e.point.name });
+                if (subtitle){
+                    let subIndex = currentDrillLevelNumber + 1;
+                    if (subtitle[subIndex]){
+                        chart.setTitle(null, {text: subtitle[subIndex]});
+                    }else{
+                        chart.setTitle(null, {text: undefined});
+                    }
+                }
                 logger.trace(e.toString());
             };    
         }
@@ -1307,8 +1421,11 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         let drilldownSeries = { ...this.#_cellSeriesByGene};
         return function(e) {
             let random = Common.makeid(12);
-            let chart = this
-            //console.log(chart);
+            let chart = this;
+            let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
+            console.log(chart);
+            console.log(chart.series[0].options._levelNumber);
+            console.log(e);
             logger.trace(random + ", " + e.toString());
             if (!e.seriesOptions) {
                 //console.log(chart.series);
@@ -1318,7 +1435,6 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 //for (var i = 0; i < chart.series.length; i++) {
                 //    chart.series[i].remove(true);
                 //}
-                chart.setTitle(null, { text: e.point.name });
                 logger.debug(random + ", " + "Gathering drilldown series for " + e.point.drilldown);
                 for (let i = 0; i < drilldownSeries[e.point.drilldown].length; i++){
                     let series = drilldownSeries[e.point.drilldown][i];
@@ -1335,8 +1451,14 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 chart.applyDrilldown();
                 //console.log(chart.series);
                 //console.log(e.point);
-            }else{
-                chart.setTitle(null, {text: e.seriesOptions.name});
+            }
+            if (subtitle){
+                let subIndex = currentDrillLevelNumber +1;
+                if (subtitle[subIndex]){
+                    chart.setTitle(null, {text: subtitle[subIndex]});
+                }else{
+                    chart.setTitle(null, {text: undefined});
+                }
             }
         }            
     }
@@ -1411,6 +1533,8 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         let geneSpliter = StatsParserConstants.SPLITER_GENE;
         let cellPostfix = StatsParserConstants.POSTFIX_CALL;
         let cellSpliter = StatsParserConstants.SPLITER_CALL;
+        // parsedProperties is the instance variable properties in Parser Object
+        let parsedProperties = this.properties;
 
 
         if (typeof data === "string") {
@@ -1466,8 +1590,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName 
-                //TODO: change for the Repertoire name or the value from properties.
-                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //DONE: change for the Repertoire {Rep_Id} or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
 
                 //fetch the StatsParserConstants.TOTAL
@@ -1509,8 +1634,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 //calculate the resutType by its name
                 let type = ResultSeriesType.getByName(statisticName)
                 //Build ResultSeriesName
-                //TODO: change for the Repertoire name or the value from properties.
-                let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //let _resultSeriesName = 'Repertoire '.concat(repID).concat(' ').concat(type.toString());
+                //DONE: change for the Repertoire {Rep_Id} or the value from properties.
+                let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //this a third series for drilldown.
                 //We will need several ResultSeries, one that will hold all the Allele values (dataItems) in the repertoire and, one for each Genes group in a repertoire
@@ -1529,8 +1655,10 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 for (let i = 0; i < geneNames.length; i++) {
                     //cellSeriesDict[geneNames[i]] = [];
                     let cellGroupName = geneNames[i].concat(cellPostfix);
-                    let _cellSeriesName = geneNames[i].concat(' ').concat(type.toString());
-                    let cellSeriesName = (properties.seriesName?(properties.seriesName[j]||_cellSeriesName):_cellSeriesName);
+                    //DONE: change for the Repertoire {Rep_Id} or the value from properties if user set it.
+                    //let _cellSeriesName = geneNames[i].concat(' ').concat(type.toString());
+                    //let cellSeriesName = (properties.seriesName?(properties.seriesName[j]||_cellSeriesName):_cellSeriesName);
+                    let cellSeriesName = resultSeriesName;
                     cellSeriesDict[geneNames[i]] = new ResultSeries()
                         .setRepertoireId(repID)
                         .setSampleProcessingId(messageArrayObjectRepertoires[StatsParserConstants.SAMPLE_PROCESSING_ID])

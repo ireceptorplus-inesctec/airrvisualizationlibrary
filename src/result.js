@@ -141,6 +141,19 @@ class Result {
         //return this.#_drilldown;
         return this.properties.getDataDrilldown();
     }
+    
+    /* 
+     * Drillup and drilldown events are specific for Highcharts.
+     * they may need to be set at Chart level.
+     * Same for MouseDownEvents (that are specific for each visualization library)
+     */
+    getDrillupSeriesEvent(properties){
+        return this.#_parser.getDrillupSeriesEvent(properties);
+    }
+    
+    getDrilldownSeriesEvent(properties){
+        return this.#_parser.getDrilldownSeriesEvent(properties);          
+    }
 
     /**
      * @description Abstract method that forces update of a this result based on a Properties instance. Subclasses should overload this.
@@ -181,7 +194,7 @@ class Result {
         this.#_parser.onparse(properties);
         this.#_parser.postparse(properties);
         //TODO: Get Properties from the parser
-        //TODO: trigger observer.
+        //TODO: trigger observer?
         properties.updateWith(this.properties);
     }
 }

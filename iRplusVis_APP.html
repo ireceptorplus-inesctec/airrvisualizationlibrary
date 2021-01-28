@@ -46,6 +46,10 @@
 
             <div id="v_gene_usage_20201218_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failling sample data from 2020/12/18 (Example of allele name equal to gene name)</div>
 
+            <button class="failandsuccessloader" x-target="v_gene_usage_20210126_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210126_stats_api/v_call_response.json">Failed but now works (1 repo, drilldown)</button>
+
+            <div id="v_gene_usage_20210126_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failling sample data from 2021/01/26 (Example )</div>
+
         </article>
 
         <script src="lib/jquery.min.js"></script> 
@@ -62,7 +66,7 @@
                 $.get(url, function(data){
                     //Example using Properties as an instance of Properties (through Library)
                     let properties = window.airrvisualization.createProperties();
-                    properties.setId(identifier).setXLabel("X Axis Title Example").setSeriesName(["Series 1","Series 2"]).setSort(true).setTitle("My title").setDataType(datatype).setData(data);
+                    properties.setId(identifier).setXLabel("X Axis Title Example").setSeriesName(["Series 1","Series 2"]).setSort(true).setTitle("My title").setSubtitle(["A", "B"]).setDataType(datatype).setData(data);
                     /*
                     Change the creation of the result to within the constructor of the Chart.
                     For this I need to set :
@@ -88,7 +92,7 @@
 
                     //Example using Properties as a String
                     //data can be added to the string. Don't add "" around it.
-                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"data\":"+data+"}";
+                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"X\", \"Y\"], \"data\":"+data+"}";
                     let properties = window.airrvisualization.createProperties(stringProperties);
                     let chart = window.airrvisualization.createChart(properties).plot();
                 });
@@ -96,7 +100,7 @@
             function redrawDrilldownDChart(url, identifier){
                 $.get(url, function(data){
                     //Example using Properties as a JSON Object
-                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "sort":true, "dataDrilldown": true});
+                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "sort":true, "dataDrilldown": true, "subtitle":["L", "M", "N"] });
                     jsonProperties.setData(data);
                     let chart = window.airrvisualization.createChart(jsonProperties).plot();
                 });
