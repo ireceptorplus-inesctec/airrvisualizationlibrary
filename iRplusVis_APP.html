@@ -48,7 +48,7 @@
 
             <button class="failandsuccessloader" x-target="v_gene_usage_20210126_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210126_stats_api/v_call_response.json">Failed but now works (1 repo, drilldown)</button>
 
-            <div id="v_gene_usage_20210126_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failling sample data from 2021/01/26 (Example )</div>
+            <div id="v_gene_usage_20210126_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failling sample data from 2021/01/26 (Example of Orphan Genes)</div>
 
         </article>
 
@@ -136,7 +136,7 @@
                 $.get(url, function(data){
                     try {
                         //window.airrvisualization.setDebugLevel(70);
-                        let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setDataType("VGeneUsage").setDataDrilldown(true).setData(data)).plot();
+                        let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setDataType("VGeneUsage").setDataDrilldown(true).setData(data).setSubtitle(["Subgroup/Family", "Gene", "Allele"])).plot();
                     } catch (error) {
                         $('#'+identifier).empty().addClass("error").append('<p>' + error + '</p>');
                         console.error(error);
