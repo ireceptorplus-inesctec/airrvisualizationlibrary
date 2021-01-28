@@ -252,6 +252,9 @@ class CountStatsParser extends Parser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+                //FIXME: To test with SFU:
+                resultSeriesName = 'Subgroup/Family';
+
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
                 //Junction length will be displayed as percentages, will need the total UsageCount
@@ -408,6 +411,9 @@ class JunctionLenghtStatsParser extends Parser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+                //FIXME: To test with SFU:
+                resultSeriesName = 'Subgroup/Family';
+
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
                 //Junction length will be displayed as percentages, will need the total UsageCount
@@ -848,6 +854,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+                //FIXME: To test with SFU:
+                resultSeriesName = 'Subgroup/Family';
+                
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = familySeries[StatsParserConstants.TOTAL];
                 //this is the main series for a repertoire.
@@ -892,6 +901,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+                //FIXME: To test with SFU:
+                resultSeriesName = 'Gene';
+                
                 //this is a second series (for drilldown).
                 //We will need several ResultSeries, one that will hold all the Gene values (dataItems) in the repertoire and, one for each family of Genes in a repertoire
                 let series = new ResultSeries()
@@ -964,8 +976,13 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     seriesData.push(dataItem);
                     
                     
-                    if (!geneSeriesDict[familyName])
-                        throw new TypeError('Invalid structure on AIRR data file. Can\'t nest gene ' + dataItem.name + ', please check if subgroup ' + familyName + ' exists');
+                    if (!geneSeriesDict[familyName]){
+                        //throw new TypeError('Invalid structure on AIRR data file. Can\'t nest gene ' + dataItem.name + ', please check if subgroup ' + familyName + ' exists');
+                        if ((geneSpliterIndex = geneName.indexOf('/OR')) != -1){ //This is an Orphan Gene lets rectify the familyName
+                            familyName = geneName.substring(0, geneSpliterIndex);
+                        }else 
+                            throw new TypeError('Invalid structure on AIRR data file. Can\'t nest gene ' + dataItem.name + ', please check if subgroup ' + familyName + ' exists');
+                    }
                     geneSeriesDict[familyName].data.push(dataItem);
                 }
                 if (properties.sort){
@@ -1000,6 +1017,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+                //FIXME: To test with SFU:
+                resultSeriesName = 'Allele';
+                
                 //this a third series for drilldown.
                 //We will need several ResultSeries, one that will hold all the Allele values (dataItems) in the repertoire and, one for each Genes group in a repertoire
                 let series = new ResultSeries()
@@ -1216,6 +1236,9 @@ class GeneUsageStatsParser extends Parser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+                //FIXME: To test with SFU:
+                resultSeriesName = 'Subgroup/Family';
+                
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
                 //generate the series
@@ -1594,7 +1617,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
-
+                //FIXME: To test with SFU:
+                resultSeriesName = 'Gene';
+                
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = geneSeries[StatsParserConstants.TOTAL];
                 //this is the main series for a repertoire.
@@ -1638,6 +1663,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+                //FIXME: To test with SFU:
+                resultSeriesName = 'Allele';
+                
                 //this a third series for drilldown.
                 //We will need several ResultSeries, one that will hold all the Allele values (dataItems) in the repertoire and, one for each Genes group in a repertoire
                 let series = new ResultSeries()

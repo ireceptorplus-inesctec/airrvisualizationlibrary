@@ -92,7 +92,7 @@
 
                     //Example using Properties as a String
                     //data can be added to the string. Don't add "" around it.
-                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"X\", \"Y\"], \"data\":"+data+"}";
+                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"Subgroup/Family\", \"Gene\", \"Allele\"], \"data\":"+data+"}";
                     let properties = window.airrvisualization.createProperties(stringProperties);
                     let chart = window.airrvisualization.createChart(properties).plot();
                 });
@@ -100,7 +100,7 @@
             function redrawDrilldownDChart(url, identifier){
                 $.get(url, function(data){
                     //Example using Properties as a JSON Object
-                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "sort":true, "dataDrilldown": true, "subtitle":["L", "M", "N"] });
+                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "sort":true, "dataDrilldown": true, "subtitle":["Subgroup/Family", "Gene", "Allele"] });
                     jsonProperties.setData(data);
                     let chart = window.airrvisualization.createChart(jsonProperties).plot();
                 });
