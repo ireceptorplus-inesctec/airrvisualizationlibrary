@@ -182,8 +182,6 @@ class CountStatsParser extends Parser {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
-        //TOOD: Will need to get this from properties.
-        //let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
         let seriesColors = properties.seriesColors;
         let colorIndex = 0;
         let colorIndexJumper = 1;
@@ -346,22 +344,26 @@ class JunctionLenghtStatsParser extends Parser {
     }
 
     onparse(properties) {
-        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
-        //TOOD: Will need to get this from properties.
-        let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
+        // parsedProperties is the instance variable properties in Parser Object
+        let parsedProperties = this.properties;
+
+        // Get important values from properties
+        let data            = properties.getData();
+        let seriesColors    = properties.seriesColors;
+        let seriesName      = properties.seriesName;
+        let sort            = properties.sort;
+        let percentage      = properties.percentage;
+
         let colorIndex = 0;
         let colorIndexJumper = 1;
-        //let gene = this.#_geneType;
         let mainSeries = [];
         
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
-        // parsedProperties is the instance variable properties in Parser Object
-        let parsedProperties = this.properties;
         
         let messageArray = data[StatsParserConstants.MESSAGE];
         let messageArrayLength = messageArray.length;
@@ -381,6 +383,7 @@ class JunctionLenghtStatsParser extends Parser {
             colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
 
         }
+        if (percentage) parsedProperties.setYLabel("Percentage");
 
         for (let j = 0; j < messageArrayLength; j++) {
             let color = seriesColors[colorIndex];
@@ -410,7 +413,7 @@ class JunctionLenghtStatsParser extends Parser {
                 // We use the type for subtitle, no need to use it in series name.
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
-                let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+                let resultSeriesName = (seriesName?(seriesName[j]||_resultSeriesName):_resultSeriesName);
                 //FIXME: To test with SFU:
                 resultSeriesName = 'Subgroup/Family';
 
@@ -432,10 +435,10 @@ class JunctionLenghtStatsParser extends Parser {
                 let totalUsageCountValidator = 0;
                 for (let i = 0, count = 0; i < firstObject[StatsParserConstants.DATA].length; i++) {
                     let dataObject = firstObject[StatsParserConstants.DATA][i];
-                    //Remenber that it is to be set as percentage, I expect this.totalUsageCount is correct, but will do a validation count
+                    //Remenber that data item may be set as percentage. Expect this.totalUsageCount is correct, but will do a validation count.
                     let value = dataObject[StatsParserConstants.VALUE];
                     totalUsageCountValidator += value;
-                    let dataItem = new ResultSeriesDataItem().setName(dataObject[StatsParserConstants.KEY]).setY(value/totalUsageCount);     
+                    let dataItem = new ResultSeriesDataItem().setName(dataObject[StatsParserConstants.KEY]).setY(percentage?value/totalUsageCount*100:value);     
                     if (i == 0){
                         series.setTitle(this.guessTheNameOfTheFather(dataItem, type))
                     }               
@@ -443,10 +446,11 @@ class JunctionLenghtStatsParser extends Parser {
                 }
                 if (totalUsageCountValidator != totalUsageCount){
                     this.#_logger.error("Inconsistency between the statistics value for total " + statisticName + " and the sun of the individual values (" + totalUsageCount + "/" + totalUsageCountValidator + ").");
+                    throw new TypeError("Inconsistency between the statistics value for total " + statisticName + " and the sun of the individual values (" + totalUsageCount + "/" + totalUsageCountValidator + ").");
                 }
                 //TODO: Before sorting I need to normalize and coalesce data structures (for example ensure that all series have all named values, set to zero the missing ones.)
                 //Sort elements by name 
-                if (properties.sort){
+                if (sort){
                     //seriesData.sort((a, b) => a.name.localeCompare(b.name));
                     seriesData.sort((a, b) => a.name-b.name);
                 }
@@ -774,11 +778,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
         // parsedProperties is the instance variable properties in Parser Object
         let parsedProperties = this.properties;
         parsedProperties.subtitle = [];
-        //Highcharts default
-        //let seriesColors = ["rgb(124,181,236)", "rgb(67,67,72)", "rgb(144,237,125)"];
-        //Colorblind safe
-        //let seriesColors = ["rgb(49,54,149)", "rgb(69,117,180)", "rgb(116,173,209)", "rgb(171,217,233)", "rgb(224,243,248)", "rgb(255,255,191)", "rgb(254,224,144)", "rgb(253,174,97)", "rgb(244,109,67)", "rgb(215,48,39)", "rgb(165,0,38)"];
-        let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
+        let seriesColors = properties.seriesColors;
         let colorIndex = 0;
         let colorIndexJumper = 1;
         let gene = this.#_geneType;
@@ -949,6 +949,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     //Required for when geneName is equal to familyName. See http://www.imgt.org/IMGTScientificChart/Nomenclature/IMGTnomenclature.html and TRBV on http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=human&group.
                     if (geneSpliterIndex == -1) geneSpliterIndex = geneName.length;
                     let familyName = geneName.substring(0, geneSpliterIndex);
+                    /*
                     if (true){
                         console.log(dataObject);
                         console.log(geneName);
@@ -959,6 +960,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                         console.log(geneSeriesDict[familyName]);
                         console.log(geneSeriesDict);
                     }
+                    */
                     /*
                     if (!geneSeriesDict[familyName]) {
                         console.log("No geneSeriesDict for family " + familyName);
@@ -1179,8 +1181,6 @@ class GeneUsageStatsParser extends Parser {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
-        //TOOD: Will need to get this from properties.
-        //let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
         let seriesColors = properties.seriesColors;
         let colorIndex = 0;
         let colorIndexJumper = 1;
@@ -1543,8 +1543,7 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
-        //TODO: We need this colors array being passed into the parser. Allow to set colors array in the properties object?
-        let seriesColors = ["rgb(0,66,157)", "rgb(43,87,167)", "rgb(66,108,176)", "rgb(86,129,185)", "rgb(105,151,194)", "rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)", "rgb(255,226,202)", "rgb(255,196,180)", "rgb(255,165,158)", "rgb(249,134,137)", "rgb(237,105,118)", "rgb(221,76,101)", "rgb(202,47,85)", "rgb(177,19,70)", "rgb(147,0,58)"]
+        let seriesColors = properties.seriesColors;
         let colorIndex = 0;
         let colorIndexJumper = 1;
         let mainSeries = [];

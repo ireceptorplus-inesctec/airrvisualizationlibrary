@@ -17,7 +17,7 @@
             <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, drilldown)</button>
             <button class="loader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, no drilldown)</button>
 
-            <div id="v_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show D gene sample data from 2020/11/11</div>
+            <div id="v_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show V gene sample data from 2020/11/11</div>
 
             <button class="drilldownDloader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, drilldown)</button>
             <button class="loader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, no drilldown)</button>
@@ -28,12 +28,8 @@
             <button class="loader" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-datatype="JGeneUsage">Load Rearrangement j_usage (2 repo, no drilldown)</button>
 
             <div id="j_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show J gene sample data from 2020/11/11</div>
-<!--
-            <button class="drilldownCountloader" x-target="c_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_count_response.json" >Load Rearrangement count (2 repo, drilldown)</button>
-            <button class="countloader" x-target="c_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_count_response.json" >Load Rearrangement count (2 repo, no drilldown)</button>
 
-            <div id="c_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show C gene sample data from 2020/10/26</div>
--->
+            <button class="junctionloaderPercentage" x-target="junction_length_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_junction_length_response.json">Load Rearrangement junction_length - Percentage (2 repo, no drilldown)</button>
             <button class="junctionloader" x-target="junction_length_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_junction_length_response.json">Load Rearrangement junction_length (2 repo, no drilldown)</button>
 
             <div id="junction_length_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Junction Length sample data from 2020/11/11</div>
@@ -52,6 +48,10 @@
 
             <div id="v_gene_usage_20201218_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failling sample data from 2020/12/18 (Example of allele name equal to gene name)</div>
 
+            <button class="failandsuccessloader" x-target="v_gene_usage_20210126_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210126_stats_api/v_call_response.json">Failed but now works (1 repo, drilldown)</button>
+
+            <div id="v_gene_usage_20210126_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failling sample data from 2021/01/26 (Example of Orphan Genes)</div>
+
         </article>
 
         <script src="lib/jquery.min.js"></script> 
@@ -68,62 +68,82 @@
              * Example using the Library as a module.
              */
             import {VisualizationLibrary, ResultFactory, HighchartsChart, Result, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult, CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, ResultSeriesType, Logger} from './src/index.js';
-            
-
-            function redrawDrilldownJChart(url, identifier){
-                $.get(url, function(data){
-                    let prop = new Properties().setDataType("JGeneUsage").setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setData(data);
-                    (new HighchartsChart(prop)).plot();
-                });
-            }
 
             function redrawChart(datatype, url, identifier){
                 /*
-                 * window.airrvisualization is still available
-                 */
+                * window.airrvisualization is still available
+                */
                 $.get(url, function(data){
                     let properties = window.airrvisualization.createProperties();
-                    properties.setId(identifier).setXLabel("Category").setSort(true).setTitle("My title").setDataType(datatype).setData(data);
+                    properties.setId(identifier).setXLabel("X Axis Title Example").setSeriesName(["Series 1","Series 2"]).setSort(true).setTitle("My title").setSubtitle(["A", "B"]).setDataType(datatype).setData(data);
+                    /*
+                        Moved Result creation into the constructor of the Chart.
+                        Requires to set :
+                            properties.setDataType("VGeneUsage");
+                            properties.setData(data);
+                        at the Properties instance.
+                        Results : no need to create *Result thorugh the Library! Easier to pass properties instance to Result and to Parser!
+
+                        Problems:
+                            if datatype is not set? throws Error upon Chart creation.
+                            if data is not set? Will not work...
+                    */
                     let chart = window.airrvisualization.createChart(properties);
                     chart.plot();
                 });
             }
             function redrawDrilldownVChart(url, identifier){
                 $.get(url, function(data){
-                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"data\":"+data+"}";
-                    let chart = new HighchartsChart(Properties.create(stringProperties)).plot();
+                    //Example using Properties as a String
+                    //data can be added to the string. Don't add "" around it.
+                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"Subgroup/Family\", \"Gene\", \"Allele\"], \"data\":"+data+"}";
+                    let properties = window.airrvisualization.createProperties(stringProperties);
+                    let chart = window.airrvisualization.createChart(properties).plot();
                 });
             }
             function redrawDrilldownDChart(url, identifier){
                 $.get(url, function(data){
-                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "dataDrilldown": true});
+                    //Example using Properties as a JSON Object
+                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "sort":true, "dataDrilldown": true, "subtitle":["Subgroup/Family", "Gene", "Allele"] });
                     jsonProperties.setData(data);
-                    let chart = new HighchartsChart(Properties.create(jsonProperties)).plot();
+                    let chart = window.airrvisualization.createChart(jsonProperties).plot();
                 });
             }
-
+            function redrawDrilldownJChart(url, identifier){
+                $.get(url, function(data){
+                    //Example using Properties as a instance of Properties Class
+                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setDataType("JGeneUsage").setSubtitle('').setData(data);;
+                    let chart = window.airrvisualization.createChart(prop).plot();
+                });
+            }
             function redrawDrilldownCountChart(url, identifier){
                 $.get(url, function(data){
+                    //window.airrvisualization.setDebugLevel(0);
                     window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataDrilldown(true).setDataType("CloneCount").setData(data)).plot();
                 });
             }
             function redrawCountChart(url, identifier){
                 $.get(url, function(data){
-                    window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataType("CloneCount").setData(data)).plot();
+                    //window.airrvisualization.setDebugLevel(0);
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataType("CloneCount").setSeriesColors(["rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)"]).setData(data)).plot();
                 });
             }
             function redrawJunctionChart(url, identifier){
                 $.get(url, function(data){
-                    window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setDataType("JunctionLength").setData(data)).plot();
+                    window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setDataType("JunctionLength").setData(data)).plot();
+                });
+            }
+            function redrawJunctionChartPercentage(url, identifier){
+                $.get(url, function(data){
+                    //window.airrvisualization.setDebugLevel(0);
+                    window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setPercentage(true).setDataType("JunctionLength").setData(data)).plot();
                 });
             }
             function redrawFailandsuccessChart(url, identifier){
                 $.get(url, function(data){
-                    //let d = new StatsResult(datatype);
                     try {
-                        let d = {"dataType":"VGeneUsage", "dataDrilldown":true, "id": identifier, "data": data}
                         //window.airrvisualization.setDebugLevel(70);
-                        let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties(d)).plot();
+                        let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setDataType("VGeneUsage").setDataDrilldown(true).setData(data).setSubtitle(["Subgroup/Family", "Gene", "Allele"])).plot();
                     } catch (error) {
                         $('#'+identifier).empty().addClass("error").append('<p>' + error + '</p>');
                         console.error(error);
@@ -151,6 +171,9 @@
                 });
                 $('.junctionloader').click(function(){
                     redrawJunctionChart($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.junctionloaderPercentage').click(function(){
+                    redrawJunctionChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
                 });
                 $('.failandsuccessloader').click(function(){
                     redrawFailandsuccessChart($(this).attr('x-data'), $(this).attr('x-target'));

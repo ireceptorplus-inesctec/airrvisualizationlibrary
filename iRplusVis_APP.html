@@ -28,6 +28,7 @@
 
             <div id="j_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show J gene sample data from 2020/11/11</div>
 
+            <button class="junctionloaderPercentage" x-target="junction_length_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_junction_length_response.json">Load Rearrangement junction_length - Percentage (2 repo, no drilldown)</button>
             <button class="junctionloader" x-target="junction_length_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_junction_length_response.json">Load Rearrangement junction_length (2 repo, no drilldown)</button>
 
             <div id="junction_length_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Junction Length sample data from 2020/11/11</div>
@@ -132,6 +133,12 @@
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setDataType("JunctionLength").setData(data)).plot();
                 });
             }
+            function redrawJunctionChartPercentage(url, identifier){
+                $.get(url, function(data){
+                    //window.airrvisualization.setDebugLevel(0);
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setPercentage(true).setDataType("JunctionLength").setData(data)).plot();
+                });
+            }
             function redrawFailandsuccessChart(url, identifier){
                 $.get(url, function(data){
                     try {
@@ -164,6 +171,9 @@
                 });
                 $('.junctionloader').click(function(){
                     redrawJunctionChart($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.junctionloaderPercentage').click(function(){
+                    redrawJunctionChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
                 });
                 $('.failandsuccessloader').click(function(){
                     redrawFailandsuccessChart($(this).attr('x-data'), $(this).attr('x-target'));

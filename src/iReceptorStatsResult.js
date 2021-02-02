@@ -87,7 +87,7 @@ class JunctionLengthStatsResult extends StatsResult {
 
         
         //Set default properties for JunctionLengthStatsResult   
-        this.properties.setTitle("Junction Length").setYLabel("Percentage").setPercentage(true);
+        this.properties.setTitle("Junction Length");
 
         this.setParser(new JunctionLenghtStatsParser());
     }

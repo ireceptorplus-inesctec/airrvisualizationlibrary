@@ -194,6 +194,7 @@ class Result {
         this.#_parser.onparse(properties);
         this.#_parser.postparse(properties);
         //TODO: Get Properties from the parser
+        this.properties.updateWith(this.#_parser.properties);
         //TODO: trigger observer?
         properties.updateWith(this.properties);
     }
