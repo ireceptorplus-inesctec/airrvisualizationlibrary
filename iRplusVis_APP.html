@@ -45,11 +45,11 @@
 
             <button class="failandsuccessloader" x-target="v_gene_usage_20201218_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201218_stats_api/turnkey-stat-vcall.json">Failed but now works (1 repo, drilldown)</button>
 
-            <div id="v_gene_usage_20201218_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failling sample data from 2020/12/18 (Example of allele name equal to gene name)</div>
+            <div id="v_gene_usage_20201218_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failing sample data from 2020/12/18 (Example of allele name equal to gene name)</div>
 
             <button class="failandsuccessloader" x-target="v_gene_usage_20210126_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210126_stats_api/v_call_response.json">Failed but now works (1 repo, drilldown)</button>
 
-            <div id="v_gene_usage_20210126_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failling sample data from 2021/01/26 (Example of Orphan Genes)</div>
+            <div id="v_gene_usage_20210126_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failing sample data from 2021/01/26 (Example of Orphan Genes)</div>
 
         </article>
 
@@ -69,17 +69,16 @@
                     let properties = window.airrvisualization.createProperties();
                     properties.setId(identifier).setXLabel("X Axis Title Example").setSeriesName(["Series 1","Series 2"]).setSort(true).setTitle("My title").setSubtitle(["A", "B"]).setDataType(datatype).setData(data);
                     /*
-                    Change the creation of the result to within the constructor of the Chart.
-                    For this I need to set :
-                        properties.setDataType("VGeneUsage");
-                        properties.setData(data);
-                    at the properties Level.
-                    Results : don't need anymore to create...Result at the Library level! Might make it easier to pass the properties file to the Result and to the Parser!
+                        Moved Result creation into the constructor of the Chart.
+                        Requires to set :
+                            properties.setDataType("VGeneUsage");
+                            properties.setData(data);
+                        at the Properties instance.
+                        Results : no need to create *Result thorugh the Library! Easier to pass properties instance to Result and to Parser!
 
-                    Problems:
-                        if datatype is not set? thorws Error upon Chart creation.
-                        if data is not set? Will not work...
-
+                        Problems:
+                            if datatype is not set? throws Error upon Chart creation.
+                            if data is not set? Will not work...
                     */
                    // Make properties object mandatory
                    let chart = window.airrvisualization.createChart(properties);
@@ -89,8 +88,6 @@
             }
             function redrawDrilldownVChart(url, identifier){
                 $.get(url, function(data){
-                    //window.airrvisualization.setDebugLevel(0);
-
                     //Example using Properties as a String
                     //data can be added to the string. Don't add "" around it.
                     let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"Subgroup/Family\", \"Gene\", \"Allele\"], \"data\":"+data+"}";
@@ -108,8 +105,6 @@
             }
             function redrawDrilldownJChart(url, identifier){
                 $.get(url, function(data){
-                    //window.airrvisualization.setDebugLevel(0);
-
                     //Example using Properties as a instance of Properties Class
                     let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setDataType("JGeneUsage").setSubtitle('').setData(data);;
                     let chart = window.airrvisualization.createChart(prop).plot();
@@ -118,7 +113,7 @@
             function redrawDrilldownCountChart(url, identifier){
                 $.get(url, function(data){
                     //window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataDrilldown(true).setDataType("CloneCount").setData(data)).plot();
+                    window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataDrilldown(true).setDataType("CloneCount").setData(data)).plot();
                 });
             }
             function redrawCountChart(url, identifier){
@@ -129,8 +124,7 @@
             }
             function redrawJunctionChart(url, identifier){
                 $.get(url, function(data){
-                    //window.airrvisualization.setDebugLevel(0);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setDataType("JunctionLength").setData(data)).plot();
+                    window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setDataType("JunctionLength").setData(data)).plot();
                 });
             }
             function redrawJunctionChartPercentage(url, identifier){
