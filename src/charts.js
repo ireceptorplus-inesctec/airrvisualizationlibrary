@@ -254,11 +254,8 @@ class HighchartsChart extends Chart {
         timer.start(".asHighchartSeries");
         p.series = this.result.series.map(series => series.asHighchartSeries());
         timer.end(".asHighchartSeries");
-
         // If not set on properties the Title should not be set. I.e. we need it to be undefined.
-        //if (this.properties.title) { 
-            p.title = { text: this.properties.title } 
-        //};
+        p.title = { text: this.properties.title } 
         if (this.properties.subtitle) { p.subtitle = { text: (this.properties.subtitle[0] || undefined) } };
         if (this.properties.yLabel) {
             p.yAxis = (p.yAxis || {});
@@ -268,16 +265,10 @@ class HighchartsChart extends Chart {
             p.xAxis = (p.xAxis || {});
             p.xAxis.title = { text: this.properties.xLabel };
         }
-        //Sort has a huge problem with drilldown.
-        //We cannot rely on Highcharts Sort. To apply sort we need to sort DataItems within the Result.
         /*
-        if (this.#_properties.sort){
-            p.plotOptions.series = (p.plotOptions.series || {});
-            p.plotOptions.series.dataSorting = {
-                enabled: true,
-                sortKey: 'name'
-            };
-        }
+         * Sort has a huge problem with drilldown.
+         * We cannot rely on Highcharts Sort. To apply sort we need to sort DataItems within the Result.
+         * if (this.#_properties.sort){p.plotOptions.series = (p.plotOptions.series || {});p.plotOptions.series.dataSorting = {enabled: true,sortKey: 'name'};}
         */
         if (this.result.drilldown) {
             this.#_logger.debug("This is a drilldown chart");
@@ -294,7 +285,8 @@ class HighchartsChart extends Chart {
         }
         this.#_logger.trace("Is 3D (multiple series)? -" + this.result.isMultipleSeries());
         //TODO: We need to have a distinction between Multiple series and 3D (when plotting Junction length I ignore multiple series to have side-by-side chart)
-        if (this.result.isMultipleSeries()) {
+        // if (this.result.isMultipleSeries()) {
+        if (this.properties.draw3D) {
             // Setup chart 3Doptions properties (in the future using #_properties and #_dataseries data).
             p.chart.options3d = {
                 enabled: true,
@@ -333,12 +325,13 @@ class HighchartsChart extends Chart {
                     grouping: false,
                 }
             };*/
-        }else{
+        }
+        if(!this.result.isMultipleSeries()){
             // Chart is single series
             p.legend = (p.legend || {});
             p.legend.enabled = false;
-
         }
+
         // If is a stacking chart
         if (this.properties.stackingType) {
             p.plotOptions.series = (p.plotOptions.series || {});

@@ -178,42 +178,51 @@ class CountStatsParser extends Parser {
     }
 
     onparse(properties) {
-        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
-        let seriesColors = properties.seriesColors;
+        // parsedProperties is the instance variable properties in Parser Object
+        let parsedProperties = this.properties;
+
+        // Get important values from properties
+        let data            = properties.getData();
+        let seriesColors    = properties.seriesColors;
+        let seriesName      = properties.seriesName;
+        let sort            = properties.sort;
+        let percentage      = properties.percentage;
+        
         let colorIndex = 0;
         let colorIndexJumper = 1;
-        //let gene = this.#_geneType;
         let mainSeries = [];
         
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
-        //Will do a first attempt with a Properties in the parser.
-        //The idea is that the parser add to this properties and then the Result will join the parser properties with the default Result properties.
-        let parsedProperties = this.properties;
         
         let messageArray = data[StatsParserConstants.MESSAGE];
         let messageArrayLength = messageArray.length;
         this.#_logger.debug("Data Result length = " + messageArrayLength);
+        
         if (messageArrayLength > 1) {
-            //Why is this important? If we have a multiple repertoires, the name of the series will be the name of the repertoire,
-            //otherwise the name of the series will be the name of the field.
-            this.#_logger.debug("Representing " + messageArrayLength + " repertoires. Will need a 3D chart.");
-
-            //TODO: Will require both is3D() and isMultipleSeries() because we may need to plot a side by side multiple series chart instead of a 3D one.
+            // We have a multiple repertoires (Series), Specifics for multiple series need to be applied.
+            this.#_logger.debug("Representing " + messageArrayLength + " repertoires.");
             this.#_multipleSeries = true;
-
+            
             if (seriesColors.length < messageArrayLength) {
                 this.#_logger.error('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
                 throw 'Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.';
             }
             colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
-
         }
-
+        
+        if (percentage){
+            parsedProperties.setYLabel("Percentage");
+            parsedProperties.setDraw3D(false);
+        }else if (this.#_multipleSeries){
+            parsedProperties.setDraw3D(true);
+        }        
+        
+        // Specifics for this Parser
         for (let j = 0; j < messageArrayLength; j++) {
             let color = seriesColors[colorIndex];
             colorIndex += colorIndexJumper;
@@ -250,9 +259,7 @@ class CountStatsParser extends Parser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
-                //FIXME: To test with SFU:
-                resultSeriesName = 'Subgroup/Family';
-
+                
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
                 //Junction length will be displayed as percentages, will need the total UsageCount
@@ -356,7 +363,7 @@ class JunctionLenghtStatsParser extends Parser {
         let seriesName      = properties.seriesName;
         let sort            = properties.sort;
         let percentage      = properties.percentage;
-
+        
         let colorIndex = 0;
         let colorIndexJumper = 1;
         let mainSeries = [];
@@ -368,23 +375,27 @@ class JunctionLenghtStatsParser extends Parser {
         let messageArray = data[StatsParserConstants.MESSAGE];
         let messageArrayLength = messageArray.length;
         this.#_logger.debug("Data Result length = " + messageArrayLength);
+        
         if (messageArrayLength > 1) {
-            //Why is this important? If we have a multiple repertoires, the name of the series will be the name of the repertoire,
-            //otherwise the name of the series will be the name of the field.
-            this.#_logger.debug("Representing " + messageArrayLength + " repertoires. Will need a 3D chart.");
-
-            //TODO: Will require both is3D() and isMultipleSeries() because we may need to plot a side by side multiple series chart instead of a 3D one.
+            // We have a multiple repertoires (Series), Specifics for multiple series need to be applied.
+            this.#_logger.debug("Representing " + messageArrayLength + " repertoires.");
             this.#_multipleSeries = true;
-
+            
             if (seriesColors.length < messageArrayLength) {
                 this.#_logger.error('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
                 throw 'Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.';
             }
             colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
-
         }
-        if (percentage) parsedProperties.setYLabel("Percentage");
-
+        
+        if (percentage){
+            parsedProperties.setYLabel("Percentage");
+            parsedProperties.setDraw3D(false);
+        }else if (this.#_multipleSeries){
+            parsedProperties.setDraw3D(true);
+        }        
+        
+        // Specifics for this Parser
         for (let j = 0; j < messageArrayLength; j++) {
             let color = seriesColors[colorIndex];
             colorIndex += colorIndexJumper;
@@ -394,8 +405,8 @@ class JunctionLenghtStatsParser extends Parser {
             //fetch the StatsParserConstants.REPERTOIRE_ID
             let repID = messageArrayObjectRepertoires[StatsParserConstants.REPERTOIRE_ID];
  
-            //If we have at least one StatsParserConstants.STATISTIC for this repertoire
-            //we will ignore if more than one statistics is received.
+            // If we have at least one StatsParserConstants.STATISTIC for this repertoire
+            // we will ignore if more than one statistics is received.
             if(messageArrayObject[StatsParserConstants.STATISTICS].length > 0) {
                 //Initialize the repertoire
                 this._initializeRepertoire(repID);
@@ -414,9 +425,7 @@ class JunctionLenghtStatsParser extends Parser {
                 //DONE: change for the Repertoire {Rep_Id} or the value from properties.
                 let _resultSeriesName = 'Repertoire '.concat(repID);
                 let resultSeriesName = (seriesName?(seriesName[j]||_resultSeriesName):_resultSeriesName);
-                //FIXME: To test with SFU:
-                resultSeriesName = 'Subgroup/Family';
-
+               
                 //fetch the StatsParserConstants.TOTAL
                 let totalUsageCount = firstObject[StatsParserConstants.TOTAL];
                 //Junction length will be displayed as percentages, will need the total UsageCount
@@ -771,52 +780,67 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
     }
 
     onparse(properties) {
-        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
         // parsedProperties is the instance variable properties in Parser Object
         let parsedProperties = this.properties;
         parsedProperties.subtitle = [];
-        let seriesColors = properties.seriesColors;
+
+        // Get important values from properties
+        let data            = properties.getData();
+        let seriesColors    = properties.seriesColors;
+        let seriesName      = properties.seriesName;
+        let sort            = properties.sort;
+        let percentage      = properties.percentage;
+        
         let colorIndex = 0;
         let colorIndexJumper = 1;
-        let gene = this.#_geneType;
         let mainSeries = [];
+        
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+        
+        let messageArray = data[StatsParserConstants.MESSAGE];
+        let messageArrayLength = messageArray.length;
+        this.#_logger.debug("Data Result length = " + messageArrayLength);
+
+        if (messageArrayLength > 1) {
+            // We have a multiple repertoires (Series), Specifics for multiple series need to be applied.
+            this.#_logger.debug("Representing " + messageArrayLength + " repertoires.");
+            this.#_multipleSeries = true;
+            
+            if (seriesColors.length < messageArrayLength) {
+                this.#_logger.error('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
+                throw 'Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.';
+            }
+            colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
+        }
+        
+        if (percentage){
+            parsedProperties.setYLabel("Percentage");
+            parsedProperties.setDraw3D(false);
+        }else if (this.#_multipleSeries){
+            parsedProperties.setDraw3D(true);
+        }
+        
+        // Specifics for this Parser
+        let gene = this.#_geneType;
+        
         let drilldownSeries = [];
         let familySeries;
         let familyNames = [];
         let geneSeries;
         let geneNames = [];
         let cellSeries;
-        // let gene = 'd';
+
         let familyPostfix = StatsParserConstants.POSTFIX_FAMILY;
         let genePostfix = StatsParserConstants.POSTFIX_GENE;
         let geneSpliter = StatsParserConstants.SPLITER_GENE;
         let cellPostfix = StatsParserConstants.POSTFIX_CALL;
         let cellSpliter = StatsParserConstants.SPLITER_CALL;
 
-
-        if (typeof data === "string") {
-            data = JSON.parse(data);
-        }
-
-        let messageArray = data[StatsParserConstants.MESSAGE];
-        let messageArrayLength = messageArray.length;
-        this.#_logger.debug("Data Result length = " + messageArrayLength);
-        if (messageArrayLength > 1) {
-            //Why is this important? If we have a multiple repertoires, the name of the series will be the name of the repertoire,
-            //otherwise the name of the series will be the name of the field.
-            this.#_logger.debug("Representing " + messageArrayLength + " repertoires. Will need a 3D chart.");
-            this.#_multipleSeries = true;
-
-            if (seriesColors.length < messageArrayLength) {
-                this.#_logger.error('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
-                throw 'Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.';
-            }
-            colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
-
-        }
         for (let j = 0; j < messageArrayLength; j++) {
             let color = seriesColors[colorIndex];
             colorIndex += colorIndexJumper;
@@ -876,7 +900,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     let geneGroupName = familyName.concat(genePostfix);
                     familyNames.push(familyName);
                     this._initializeGeneGroup(repID, geneGroupName);
-                    let dataItem = new ResultSeriesDataItem().setName(familyName).setY(dataObject[StatsParserConstants.VALUE]).setDrilldown(geneGroupName);
+                    let value = dataObject[StatsParserConstants.VALUE];
+                    let dataItem = new ResultSeriesDataItem().setName(familyName).setY(percentage?value/totalUsageCount*100:value).setDrilldown(geneGroupName);
                     if (i == 0){
                         series.setTitle(this.guessTheNameOfTheFather(dataItem, type))
                     }
@@ -904,6 +929,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //FIXME: To test with SFU:
                 resultSeriesName = 'Gene';
                 
+                //fetch the StatsParserConstants.TOTAL
+                let totalUsageCount = geneSeries[StatsParserConstants.TOTAL];
                 //this is a second series (for drilldown).
                 //We will need several ResultSeries, one that will hold all the Gene values (dataItems) in the repertoire and, one for each family of Genes in a repertoire
                 let series = new ResultSeries()
@@ -971,7 +998,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                         this.#_logger.fatal(errorMessage);
                         throw new TypeError(errorMessage); 
                     }
-                    let dataItem = new ResultSeriesDataItem().setName(geneName).setY(dataObject[StatsParserConstants.VALUE]).setDrilldown(cellGroupName);
+                    let value = dataObject[StatsParserConstants.VALUE];
+                    let dataItem = new ResultSeriesDataItem().setName(geneName).setY(percentage?value/totalUsageCount*100:value).setDrilldown(cellGroupName);
                     if (i == 0){
                         series.setTitle(this.guessTheNameOfTheFather(dataItem, type))
                     }
@@ -1022,6 +1050,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 //FIXME: To test with SFU:
                 resultSeriesName = 'Allele';
                 
+                //fetch the StatsParserConstants.TOTAL
+                let totalUsageCount = cellSeries[StatsParserConstants.TOTAL];
                 //this a third series for drilldown.
                 //We will need several ResultSeries, one that will hold all the Allele values (dataItems) in the repertoire and, one for each Genes group in a repertoire
                 let series = new ResultSeries()
@@ -1061,7 +1091,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     //Answering situation where cellname is equal to genename.
                     if (cellSpliterIndex == -1) cellSpliterIndex = cellName.length;
                     let geneName = cellName.substring(0, cellSpliterIndex);
-                    let dataItem = new ResultSeriesDataItem().setName(cellName).setY(dataObject[StatsParserConstants.VALUE]);
+                    let value = dataObject[StatsParserConstants.VALUE];
+                    let dataItem = new ResultSeriesDataItem().setName(cellName).setY(percentage?value/totalUsageCount*100:value);
                     seriesData.push(dataItem);
                     cellSeriesDict[geneName].data.push(dataItem);
                 }
@@ -1177,39 +1208,51 @@ class GeneUsageStatsParser extends Parser {
     }
 
     onparse(properties) {
-        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
-        let seriesColors = properties.seriesColors;
-        let colorIndex = 0;
-        let colorIndexJumper = 1;
-        //let gene = this.#_geneType;
-        let mainSeries = [];
         // parsedProperties is the instance variable properties in Parser Object
         let parsedProperties = this.properties;
 
+        // Get important values from properties
+        let data            = properties.getData();
+        let seriesColors    = properties.seriesColors;
+        let seriesName      = properties.seriesName;
+        let sort            = properties.sort;
+        let percentage      = properties.percentage;
+        
+        let colorIndex = 0;
+        let colorIndexJumper = 1;
+        let mainSeries = [];
+        
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
-
+        
         let messageArray = data[StatsParserConstants.MESSAGE];
         let messageArrayLength = messageArray.length;
         this.#_logger.debug("Data Result length = " + messageArrayLength);
+        
         if (messageArrayLength > 1) {
-            //Why is this important? If we have a multiple repertoires, the name of the series will be the name of the repertoire,
-            //otherwise the name of the series will be the name of the field.
-            this.#_logger.debug("Representing " + messageArrayLength + " repertoires. Will need a 3D chart.");
+            // We have a multiple repertoires (Series), Specifics for multiple series need to be applied.
+            this.#_logger.debug("Representing " + messageArrayLength + " repertoires.");
             this.#_multipleSeries = true;
-
+            
             if (seriesColors.length < messageArrayLength) {
                 this.#_logger.error('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
-                throw new TypeError('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
+                throw 'Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.';
             }
             colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
-
         }
-
+        
+        if (percentage){
+            parsedProperties.setYLabel("Percentage");
+            parsedProperties.setDraw3D(false);
+        }else if (this.#_multipleSeries){
+            parsedProperties.setDraw3D(true);
+        }        
+        
+        // Specifics for this Parser
         for (let j = 0; j < messageArrayLength; j++) {
             let color = seriesColors[colorIndex];
             colorIndex += colorIndexJumper;
@@ -1255,7 +1298,8 @@ class GeneUsageStatsParser extends Parser {
                 //fetch the data into ResultSeriesDataItem
                 for (let i = 0; i < firstObject[StatsParserConstants.DATA].length; i++) {
                     let dataObject = firstObject[StatsParserConstants.DATA][i];
-                    let dataItem = new ResultSeriesDataItem().setName(dataObject[StatsParserConstants.KEY]).setY(dataObject[StatsParserConstants.VALUE]);                    
+                    let value = dataObject[StatsParserConstants.VALUE];
+                    let dataItem = new ResultSeriesDataItem().setName(dataObject[StatsParserConstants.KEY]).setY(percentage?value/totalUsageCount*100:value);                    
                     seriesData.push(dataItem);
                 }
                 if (properties.sort){
@@ -1539,14 +1583,51 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
     }
 
     onparse(properties) {
-        let data = properties.getData();
         this.#_logger.trace("parse");
         let timer = new DebugTimer();
         timer.start("parse");
-        let seriesColors = properties.seriesColors;
+        // parsedProperties is the instance variable properties in Parser Object
+        let parsedProperties = this.properties;
+
+        // Get important values from properties
+        let data            = properties.getData();
+        let seriesColors    = properties.seriesColors;
+        let seriesName      = properties.seriesName;
+        let sort            = properties.sort;
+        let percentage      = properties.percentage;
+        
         let colorIndex = 0;
         let colorIndexJumper = 1;
         let mainSeries = [];
+        
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+        
+        let messageArray = data[StatsParserConstants.MESSAGE];
+        let messageArrayLength = messageArray.length;
+        this.#_logger.debug("Data Result length = " + messageArrayLength);
+        
+        if (messageArrayLength > 1) {
+            // We have a multiple repertoires (Series), Specifics for multiple series need to be applied.
+            this.#_logger.debug("Representing " + messageArrayLength + " repertoires.");
+            this.#_multipleSeries = true;
+            
+            if (seriesColors.length < messageArrayLength) {
+                this.#_logger.error('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
+                throw 'Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.';
+            }
+            colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
+        }
+        
+        if (percentage){
+            parsedProperties.setYLabel("Percentage");
+            parsedProperties.setDraw3D(false);
+        }else if (this.#_multipleSeries){
+            parsedProperties.setDraw3D(true);
+        }        
+        
+        // Specifics for this Parser
         let drilldownSeries = [];
         let geneSeries;
         let geneNames = [];
@@ -1555,30 +1636,7 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         let geneSpliter = StatsParserConstants.SPLITER_GENE;
         let cellPostfix = StatsParserConstants.POSTFIX_CALL;
         let cellSpliter = StatsParserConstants.SPLITER_CALL;
-        // parsedProperties is the instance variable properties in Parser Object
-        let parsedProperties = this.properties;
-
-
-        if (typeof data === "string") {
-            data = JSON.parse(data);
-        }
-
-        let messageArray = data[StatsParserConstants.MESSAGE];
-        let messageArrayLength = messageArray.length; //The number of repertoires in the message
-        this.#_logger.debug("Data Result length = " + messageArrayLength);
-        if (messageArrayLength > 1) {
-            //Why is this important? If we have a multiple repertoires, the name of the series will be the name of the repertoire,
-            //otherwise the name of the series will be the name of the field.
-            this.#_logger.debug("Representing " + messageArrayLength + " repertoires. Will need a 3D chart.");
-            this.#_multipleSeries = true;
-
-            if (seriesColors.length < messageArrayLength) {
-                this.#_logger.error('Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.');
-                throw 'Not enough colors set for the amount of repertoires. Please increase the number of colors in seriesColor array.';
-            }
-            colorIndexJumper = Math.floor((seriesColors.length - 1) / (messageArrayLength - 1));
-
-        }
+        
         for (let j = 0; j < messageArrayLength; j++) {
             let color = seriesColors[colorIndex];
             colorIndex += colorIndexJumper;
@@ -1638,7 +1696,8 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                     let callGroupName = geneName.concat(cellPostfix);
                     geneNames.push(geneName);
                     this._initializeCellGroup(repID, callGroupName);
-                    let dataItem = new ResultSeriesDataItem().setName(geneName).setY(dataObject[StatsParserConstants.VALUE]).setDrilldown(callGroupName);
+                    let value = dataObject[StatsParserConstants.VALUE];
+                    let dataItem = new ResultSeriesDataItem().setName(geneName).setY(percentage?value/totalUsageCount*100:value).setDrilldown(callGroupName);
                     seriesData.push(dataItem);
                 }
                 //TODO: Before sorting I need to normalize data structures (for example ensure that all series have all named values, set to zero the missing ones.)
@@ -1705,7 +1764,8 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
                     //Answering situation where cellname is equal to genename.
                     if (cellSpliterIndex == -1) cellSpliterIndex = cellName.length;
                     let geneName = cellName.substring(0, cellSpliterIndex);
-                    let dataItem = new ResultSeriesDataItem().setName(cellName).setY(dataObject[StatsParserConstants.VALUE]);
+                    let value = dataObject[StatsParserConstants.VALUE];
+                    let dataItem = new ResultSeriesDataItem().setName(cellName).setY(percentage?value/totalUsageCount*100:value);
                     seriesData.push(dataItem);
                     cellSeriesDict[geneName].data.push(dataItem);
                 }

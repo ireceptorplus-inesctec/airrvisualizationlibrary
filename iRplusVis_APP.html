@@ -14,6 +14,7 @@
             <h1>Stats API data</h1>
             <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown-single_repertoire.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (1 repo, drilldown)</button>
             <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, drilldown)</button>
+            <button class="drilldownVloaderPercentage" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage - Percentage (2 repo, drilldown)</button>
             <button class="loader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, no drilldown)</button>
 
             <div id="v_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show V gene sample data from 2020/11/11</div>
@@ -24,6 +25,7 @@
             <div id="d_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show D gene sample data from 2020/11/11</div>
 
             <button class="drilldownJloader" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-datatype="JGeneUsage">Load Rearrangement j_usage (2 repo, drilldown)</button>
+            <button class="drilldownJloaderPercentage" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-datatype="JGeneUsage">Load Rearrangement j_usage - Percentage (2 repo, drilldown)</button>
             <button class="loader" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-datatype="JGeneUsage">Load Rearrangement j_usage (2 repo, no drilldown)</button>
 
             <div id="j_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show J gene sample data from 2020/11/11</div>
@@ -95,6 +97,15 @@
                     let chart = window.airrvisualization.createChart(properties).plot();
                 });
             }
+            function redrawDrilldownVChartPercentage(url, identifier){
+                $.get(url, function(data){
+                    //Example using Properties as a String
+                    //data can be added to the string. Don't add "" around it.
+                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"Subgroup/Family\", \"Gene\", \"Allele\"], \"percentage\":true, \"data\":"+data+"}";
+                    let properties = window.airrvisualization.createProperties(stringProperties);
+                    let chart = window.airrvisualization.createChart(properties).plot();
+                });
+            }
             function redrawDrilldownDChart(url, identifier){
                 $.get(url, function(data){
                     //Example using Properties as a JSON Object
@@ -107,6 +118,13 @@
                 $.get(url, function(data){
                     //Example using Properties as a instance of Properties Class
                     let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setDataType("JGeneUsage").setSubtitle('').setData(data);;
+                    let chart = window.airrvisualization.createChart(prop).plot();
+                });
+            }
+            function redrawDrilldownJChartPercentage(url, identifier){
+                $.get(url, function(data){
+                    //Example using Properties as a instance of Properties Class
+                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setPercentage(true).setDataType("JGeneUsage").setSubtitle('').setData(data);;
                     let chart = window.airrvisualization.createChart(prop).plot();
                 });
             }
@@ -151,10 +169,16 @@
                 $('.drilldownVloader').click(function(){
                     redrawDrilldownVChart($(this).attr('x-data'), $(this).attr('x-target'));
                 });
+                $('.drilldownVloaderPercentage').click(function(){
+                    redrawDrilldownVChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
+                });
                 $('.drilldownDloader').click(function(){
                     redrawDrilldownDChart($(this).attr('x-data'), $(this).attr('x-target'));
                 });
                 $('.drilldownJloader').click(function(){
+                    redrawDrilldownJChart($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.drilldownJloaderPercentage').click(function(){
                     redrawDrilldownJChart($(this).attr('x-data'), $(this).attr('x-target'));
                 });
                 $('.drilldownCountloader').click(function(){

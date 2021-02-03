@@ -52,8 +52,6 @@ class CountStatsResult extends StatsResult {
     }
         
     isMultipleSeries(){
-        //FIXME: Forcing for debug and tests.
-        // return false;
         return this.parser.isMultipleSeries();
     }
     
@@ -98,9 +96,7 @@ class JunctionLengthStatsResult extends StatsResult {
     }
         
     isMultipleSeries(){
-        //FIXME: Forcing for debug and tests.
-        return false;
-        //return this.parser.isMultipleSeries();
+        return this.parser.isMultipleSeries();
     }
 
     update(properties){
@@ -134,7 +130,7 @@ class GeneUsageStatsResult extends StatsResult {
         }
         this.#_geneType = type;            
         
-        this.properties.setTitle("IR+ Repertoire Stats").setSubtitle("Subgroups").setYLabel("Count");
+        this.properties.setTitle("IR+ Repertoire Stats").setSubtitle("Subgroups");
 
 
         //Default parser depends on the value of this.drilldown (either GeneUsageStatsParser or GeneUsageDrilldownStatsParser).

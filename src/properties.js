@@ -62,12 +62,20 @@ class Properties {
     static get DEFAULT_BETA_3D(){return 0};
     /**
      * @description default value for depth distance on 3D charts
-     * @type {Number}
+     * @type {number}
      * @constant
      * @static
      * @default 100
      */
     static get DEFAULT_DEPTH_3D(){return 100};
+    /**
+     * @description default value for depth distance on 3D charts
+     * @type {boolean}
+     * @constant
+     * @static
+     * @default false
+     */
+    static get DEFAULT_DRAW_3D(){return false};
     /**
      * @description default color scheme used by series
      * @type {String[]}
@@ -97,6 +105,7 @@ class Properties {
     #_alpha3D;
     #_beta3D;
     #_depth3D;
+    #_draw3D;
     #_seriesColors;
     #_dataDrilldown_userDefined;
     #_sort_userDefined;
@@ -106,6 +115,7 @@ class Properties {
     #_alpha3D_userDefined;
     #_beta3D_userDefined;
     #_depth3D_userDefined;
+    #_draw3D_userDefined;
     #_seriesColors_userDefined;
 
     /**
@@ -131,6 +141,7 @@ class Properties {
         this.#_alpha3D = Properties.DEFAULT_ALPHA_3D; //defaults to 20;
         this.#_beta3D = Properties.DEFAULT_BETA_3D; //defaults to 0;
         this.#_depth3D = Properties.DEFAULT_DEPTH_3D; //defaults to 100;
+        this.#_draw3D = Properties.DEFAULT_DRAW_3D; //defaults to false;
         this.#_seriesColors = Properties.DEFAULT_SERIES_COLORS; //defaults to 100;
         this.#_sort_userDefined = false;
         this.#_percentage_userDefined = false;
@@ -702,6 +713,41 @@ class Properties {
     }
 
     /**
+     * @description the value of the depth distance to be used on 3D charts.
+     * @type {Number}
+     */
+    get draw3D() {
+        return this.getDraw3D();
+    }
+
+    set draw3D(value) {
+        this.setDraw3D(value);
+    }
+
+    /**
+     * @description Returns the value of the depth distance to be used on 3D charts.
+     * @returns {Number} the value of the depth distance to be used on 3D charts.
+     */
+    getDraw3D() {
+        return this.#_draw3D;
+    }
+
+    /**
+     * @description Sets the value of the depth distance to be used on 3D charts.
+     * @param {Number} value the value of the depth distance to be used on 3D charts.
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    setDraw3D(value) {
+        if (!(value === undefined)){
+            this.#_draw3D = value;
+            this.#_draw3D_userDefined = true;
+        }
+        this.#_logger.debug("setDraw3D.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+    /**
      * @description array of strings representing the series colors to be used.
      * @type {string[]}
      */
@@ -795,6 +841,7 @@ class Properties {
         if (!this.#_alpha3D_userDefined && anotherProperties.alpha3D) this.setAlpha3D(anotherProperties.alpha3D);
         if (!this.#_beta3D_userDefined && anotherProperties.beta3D) this.setBeta3D(anotherProperties.beta3D);
         if (!this.#_depth3D_userDefined && anotherProperties.depth3D) this.setDepth3D(anotherProperties.depth3D);
+        if (!this.#_draw3D_userDefined && anotherProperties.draw3D) this.setDraw3D(anotherProperties.draw3D);
         if (!this.#_seriesColors_userDefined && anotherProperties.seriesColors) this.setSeriesColors(anotherProperties.seriesColors);
         if (!this.id && anotherProperties.id) this.setId(anotherProperties.id);
         return this;
