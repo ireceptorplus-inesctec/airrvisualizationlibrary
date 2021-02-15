@@ -4,6 +4,11 @@
   ],
   "plugins": [
     "@babel/plugin-transform-runtime",
-    "@babel/plugin-proposal-class-properties"
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-transform-modules-commonjs"
+  ],
+  "ignore": [
+    "/\/node_modules\/(?!jsonpath-plus\/)/"
   ]
+
 }

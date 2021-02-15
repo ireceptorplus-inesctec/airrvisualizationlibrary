@@ -21,6 +21,13 @@
             <div id="usage_20200922_top_1000_clone_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200922 Top 1000</div>
         </article>
 
+        <article class="repertoire" >
+            <h1>Stats API data</h1>
+            <button class="loaderTopCount" x-target="usage_20210118_top_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210118_stats_api/top_copies_working_sample.json">Load top clone count</button>
+            <button class="loaderTopCountPercentage" x-target="usage_20210118_top_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210118_stats_api/top_copies_working_sample.json">Load top clone count Percentage</button>
+            <div id="usage_20210118_top_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20210118 Top clone count</div>
+       </article>
+
         <script src="lib/jquery.min.js"></script> 
         <script  src="dist/airrvisualization.js"></script>   
 
@@ -31,9 +38,25 @@
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setDataType("CloneCountImmuneDB")).plot();
                 });
             }
+            function redrawTopCountChart(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setDataType("CloneTopCountImmuneDB")).plot();
+                });
+            }
+            function redrawTopCountChartPercentage(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setPercentage(true).setDataType("CloneTopCountImmuneDB")).plot();
+                });
+            }
             $(function () {
                 $('.loader').click(function(){
                     redrawChart($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderTopCount').click(function(){
+                    redrawTopCountChart($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderTopCountPercentage').click(function(){
+                    redrawTopCountChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
                 });
             });
         </script>

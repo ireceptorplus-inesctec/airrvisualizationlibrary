@@ -126,7 +126,7 @@ class Parser {
          */
 
         console.log(seriesType);
-         console.log(dataItem); 
+        console.log(dataItem); 
         
     }
 }

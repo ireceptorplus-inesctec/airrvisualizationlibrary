@@ -240,6 +240,7 @@ class ResultSeriesType {
         "j_subgroup_exists_productive" : ResultSeriesType.typeCode.FAMILY,
         "c_subgroup_exists_productive" : ResultSeriesType.typeCode.FAMILY,
         "top_clones" : ResultSeriesType.typeCode.TOP_CLONES,
+        "clone_size_top" : ResultSeriesType.typeCode.TOP_CLONES,
         "junction_length" : ResultSeriesType.typeCode.JUNCTION_LENGTH,
         "junction_length_productive" : ResultSeriesType.typeCode.JUNCTION_LENGTH,
         "junction_aa_length" : ResultSeriesType.typeCode.JUNCTION_AA_LENGTH,
@@ -571,7 +572,8 @@ class DataType {
         C_GENE_USAGE: 'CGeneUsage',
         JUNCTION_LENGTH: 'JunctionLength',
         CLONE_COUNT: 'CloneCount',
-        CLONE_COUNT_IMMUNEDB: 'CloneCountImmuneDB'
+        CLONE_COUNT_IMMUNEDB: 'CloneCountImmuneDB',
+        CLONE_TOP_COUNT_IMMUNEDB: 'CloneTopCountImmuneDB'
     };
 
     /**
@@ -643,6 +645,16 @@ class DataType {
      */
     static get CLONE_COUNT_IMMUNEDB() {
         return DataType.types.CLONE_COUNT_IMMUNEDB;
+    }
+    
+    /**
+     * @description Clone Count (ImmuneDB) data type
+     * @constant
+     * @static
+     * @default 'CloneTopCountImmuneDB'
+     */
+    static get CLONE_TOP_COUNT_IMMUNEDB() {
+        return DataType.types.CLONE_TOP_COUNT_IMMUNEDB;
     }
 
     /**

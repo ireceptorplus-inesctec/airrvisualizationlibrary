@@ -1,14 +1,14 @@
 import { CountStatsParser } from '../src/iReceptorStatsParser.js';
-import { StatsResult, CountStatsResult } from '../src/iReceptorStatsResult.js';
+import { CountStatsResult } from '../src/iReceptorStatsResult.js';
 import { expect } from './common.js';
 
 
 
-describe('StatsResult', function(){
-    it('should throw Error when instanciating StatsResult directly', function(){
-        expect(() => new StatsResult()).to.throw(Error);
-    });
-});
+// describe('StatsResult', function(){
+//     it('should throw Error when instanciating StatsResult directly', function(){
+//         expect(() => new StatsResult()).to.throw(Error);
+//     });
+// });
 describe('CountStatsResult', function(){
     it('should not throw Error when instanciating CountStatsResult', function(){
         expect(() => new CountStatsResult()).to.not.throw(Error);

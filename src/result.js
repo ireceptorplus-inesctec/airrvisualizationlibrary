@@ -185,11 +185,6 @@ class Result {
             this.#_logger.trace("Can't parse, please set the parser first. Parser should be set on a Result subclass.")
             return;
         }
-        /*
-        this.#_parser.preparse(this.#_data);
-        this.#_parser.onparse(this.#_data);
-        this.#_parser.postparse(this.#_data);
-        */
         this.#_parser.preparse(properties);
         this.#_parser.onparse(properties);
         this.#_parser.postparse(properties);

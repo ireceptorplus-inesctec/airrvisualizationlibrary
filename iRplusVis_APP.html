@@ -1,75 +1,127 @@
 <html>
-    <head>
-        <title>iReceptor Data Visualization Examples.</title>
-        <style>
-            .error{
-                color: white;
-                text-align: center;
-                background-color: crimson;
-            }
-        </style>
-    </head>
-    <body>
-        <article class="repertoire" >
-            <h1>Stats API data</h1>
-            <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown-single_repertoire.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (1 repo, drilldown)</button>
-            <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, drilldown)</button>
-            <button class="drilldownVloaderPercentage" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage - Percentage (2 repo, drilldown)</button>
-            <button class="loader" x-target="v_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json" x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, no drilldown)</button>
 
-            <div id="v_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show V gene sample data from 2020/11/11</div>
+<head>
+    <title>iReceptor Data Visualization Examples.</title>
+    <style>
+        .error {
+            color: white;
+            text-align: center;
+            background-color: crimson;
+        }
+    </style>
+</head>
 
-            <button class="drilldownDloader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, drilldown)</button>
-            <button class="loader" x-target="d_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json" x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, no drilldown)</button>
+<body>
+    <article class="repertoire">
+        <h1>Stats API data</h1>
+        <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown-single_repertoire.json"
+            x-datatype="VGeneUsage">Load Rearrangement v_usage (1 repo, drilldown)</button>
+        <button class="drilldownVloader" x-target="v_gene_usage_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json"
+            x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, drilldown)</button>
+        <button class="drilldownVloaderPercentage" x-target="v_gene_usage_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json"
+            x-datatype="VGeneUsage">Load Rearrangement v_usage - Percentage (2 repo, drilldown)</button>
+        <button class="loader" x-target="v_gene_usage_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-v_call_unique_drilldown.json"
+            x-datatype="VGeneUsage">Load Rearrangement v_usage (2 repo, no drilldown)</button>
 
-            <div id="d_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show D gene sample data from 2020/11/11</div>
+        <div id="v_gene_usage_20201111_stats_api_data" class="iRVis"
+            style="min-width: 310px; height: 400px; margin: 0 auto">Show V gene sample data from 2020/11/11</div>
 
-            <button class="drilldownJloader" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-datatype="JGeneUsage">Load Rearrangement j_usage (2 repo, drilldown)</button>
-            <button class="drilldownJloaderPercentage" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-datatype="JGeneUsage">Load Rearrangement j_usage - Percentage (2 repo, drilldown)</button>
-            <button class="loader" x-target="j_gene_usage_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json" x-datatype="JGeneUsage">Load Rearrangement j_usage (2 repo, no drilldown)</button>
+        <button class="drilldownDloader" x-target="d_gene_usage_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json"
+            x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, drilldown)</button>
+        <button class="loader" x-target="d_gene_usage_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-d_call_unique_drilldown.json"
+            x-datatype="DGeneUsage">Load Rearrangement d_usage (2 repo, no drilldown)</button>
 
-            <div id="j_gene_usage_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show J gene sample data from 2020/11/11</div>
+        <div id="d_gene_usage_20201111_stats_api_data" class="iRVis"
+            style="min-width: 310px; height: 400px; margin: 0 auto">Show D gene sample data from 2020/11/11</div>
 
-            <button class="junctionloaderPercentage" x-target="junction_length_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_junction_length_response.json">Load Rearrangement junction_length - Percentage (2 repo, no drilldown)</button>
-            <button class="junctionloader" x-target="junction_length_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_junction_length_response.json">Load Rearrangement junction_length (2 repo, no drilldown)</button>
+        <button class="drilldownJloader" x-target="j_gene_usage_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json"
+            x-datatype="JGeneUsage">Load Rearrangement j_usage (2 repo, drilldown)</button>
+        <button class="drilldownJloaderPercentage" x-target="j_gene_usage_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json"
+            x-datatype="JGeneUsage">Load Rearrangement j_usage - Percentage (2 repo, drilldown)</button>
+        <button class="loader" x-target="j_gene_usage_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_gene_usage_response-j_call_unique_drilldown.json"
+            x-datatype="JGeneUsage">Load Rearrangement j_usage (2 repo, no drilldown)</button>
 
-            <div id="junction_length_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Junction Length sample data from 2020/11/11</div>
- 
-            <button class="countloader" x-target="count_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_count_response.json">Load Rearrangement Count (2 repo, no drilldown)</button>
-            <button class="countloader" x-target="count_20201111_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_count_response-single_Repertoire.json">Load Rearrangement Count (1 repo, no drilldown)</button>
+        <div id="j_gene_usage_20201111_stats_api_data" class="iRVis"
+            style="min-width: 310px; height: 400px; margin: 0 auto">Show J gene sample data from 2020/11/11</div>
 
-            <div id="count_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Rearrangement Count sample data from 2020/11/11</div>
+        <button class="junctionloaderPercentage" x-target="junction_length_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_junction_length_response.json">Load
+            Rearrangement junction_length - Percentage (2 repo, no drilldown)</button>
+        <button class="junctionloader" x-target="junction_length_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_junction_length_response.json">Load
+            Rearrangement junction_length (2 repo, no drilldown)</button>
 
-            <button class="failandsuccessloader" x-target="failandsuccess_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201202_stats_api/fail.json">Failed but now works (1 repo, drilldown)</button>
-            <button class="failandsuccessloader" x-target="failandsuccess_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201202_stats_api/success.json">Success (1 repo, drilldown)</button>
+        <div id="junction_length_20201111_stats_api_data" class="iRVis"
+            style="min-width: 310px; height: 400px; margin: 0 auto">Show Junction Length sample data from 2020/11/11
+        </div>
 
-            <div id="failandsuccess_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Fail and Success sample data from 2020/12/02 (Example of gene name equal to subgroup name)</div>
+        <button class="countloader" x-target="count_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_count_response.json">Load
+            Rearrangement Count (2 repo, no drilldown)</button>
+        <button class="countloader" x-target="count_20201111_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201111_stats_api/rearrangement_count_response-single_Repertoire.json">Load
+            Rearrangement Count (1 repo, no drilldown)</button>
 
-            <button class="failandsuccessloader" x-target="v_gene_usage_20201218_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201218_stats_api/turnkey-stat-vcall.json">Failed but now works (1 repo, drilldown)</button>
+        <div id="count_20201111_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">
+            Show Rearrangement Count sample data from 2020/11/11</div>
 
-            <div id="v_gene_usage_20201218_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failing sample data from 2020/12/18 (Example of allele name equal to gene name)</div>
+        <button class="failandsuccessloader" x-target="failandsuccess_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201202_stats_api/fail.json">Failed
+            but now works (1 repo, drilldown)</button>
+        <button class="failandsuccessloader" x-target="failandsuccess_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201202_stats_api/success.json">Success
+            (1 repo, drilldown)</button>
 
-            <button class="failandsuccessloader" x-target="v_gene_usage_20210126_stats_api_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210126_stats_api/v_call_response.json">Failed but now works (1 repo, drilldown)</button>
+        <div id="failandsuccess_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">
+            Show Fail and Success sample data from 2020/12/02 (Example of gene name equal to subgroup name)</div>
 
-            <div id="v_gene_usage_20210126_stats_api_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show Failing sample data from 2021/01/26 (Example of Orphan Genes)</div>
+        <button class="failandsuccessloader" x-target="v_gene_usage_20201218_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20201218_stats_api/turnkey-stat-vcall.json">Failed but now works (1 repo, drilldown)</button>
 
-        </article>
+        <div id="v_gene_usage_20201218_stats_api_data" class="iRVis"
+            style="min-width: 310px; height: 400px; margin: 0 auto">Show Failing sample data from 2020/12/18 (Example of allele name equal to gene name)</div>
 
-        <script src="lib/jquery.min.js"></script> 
-        <script src="lib/highcharts/highcharts.js"></script> 
-        <script src="lib/highcharts/highcharts-3d.js"></script> 
-        <script src="lib/highcharts/modules/data.js"></script> 
-        <script src="lib/highcharts/modules/exporting.js"></script> 
-        <script src="lib/highcharts/modules/drilldown.js"></script> 
-        <script src="lib/highcharts/modules/bullet.js"></script>
-        <script  src="dist/airrvisualization.js"></script>   
+        <button class="failandsuccessloader" x-target="v_gene_usage_20210126_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210126_stats_api/v_call_response.json">Failed but now works (1 repo, drilldown)</button>
 
-        <script>
-            function redrawChart(datatype, url, identifier){
-                $.get(url, function(data){
+        <div id="v_gene_usage_20210126_stats_api_data" class="iRVis"
+            style="min-width: 310px; height: 400px; margin: 0 auto">Show Failing sample data from 2021/01/26 (Example of Orphan Genes)</div>
+
+        <button class="drilldownVloader" x-target="v_and_j_gene_usage_20210211_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210211_stats_api/vcall_response.json">Failing V Gene Count (1 repo, drilldown)</button>
+        <button class="drilldownJloader" x-target="v_and_j_gene_usage_20210211_stats_api_data"
+            x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210211_stats_api/jcall_response.json">Not Failing J Gene Count (1 repo, drilldown)</button>
+
+        <div id="v_and_j_gene_usage_20210211_stats_api_data" class="iRVis"
+            style="min-width: 310px; height: 400px; margin: 0 auto">Show Failing sample data from 2021/02/11 (Example of an empty Allele name ('') without a empty Gene Father)</div>
+
+    </article>
+
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/highcharts/highcharts.js"></script>
+    <script src="lib/highcharts/highcharts-3d.js"></script>
+    <script src="lib/highcharts/modules/data.js"></script>
+    <script src="lib/highcharts/modules/exporting.js"></script>
+    <script src="lib/highcharts/modules/drilldown.js"></script>
+    <script src="lib/highcharts/modules/bullet.js"></script>
+    <script src="dist/airrvisualization.js"></script>
+
+    <script>
+        function redrawChart(datatype, url, identifier) {
+            $.get(url, function (data) {
+                try {
                     //Example using Properties as an instance of Properties (through Library)
                     let properties = window.airrvisualization.createProperties();
-                    properties.setId(identifier).setXLabel("X Axis Title Example").setSeriesName(["Series 1","Series 2"]).setSort(true).setTitle("My title").setSubtitle(["A", "B"]).setDataType(datatype).setData(data);
+                    properties.setId(identifier).setXLabel("X Axis Title Example").setSeriesName(["Series 1", "Series 2"]).setSort(true).setTitle("My title").setSubtitle(["A", "B"]).setDataType(datatype).setData(data);
                     /*
                         Moved Result creation into the constructor of the Chart.
                         Requires to set :
@@ -82,121 +134,171 @@
                             if datatype is not set? throws Error upon Chart creation.
                             if data is not set? Will not work...
                     */
-                   // Make properties object mandatory
-                   let chart = window.airrvisualization.createChart(properties);
-                   //Have logic here..
-                   chart.plot();
-                });
-            }
-            function redrawDrilldownVChart(url, identifier){
-                $.get(url, function(data){
+                    // Make properties object mandatory
+                    let chart = window.airrvisualization.createChart(properties);
+                    //Have logic here..
+                    chart.plot();
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        function redrawDrilldownVChart(url, identifier) {
+            $.get(url, function (data) {
+                try {
                     //Example using Properties as a String
                     //data can be added to the string. Don't add "" around it.
-                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"Subgroup/Family\", \"Gene\", \"Allele\"], \"data\":"+data+"}";
+                    let stringProperties = "{\"id\": \"" + identifier + "\", \"xLabel\":\"X Axis Title Example\", \"yLabel\":\"Count\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"Subgroup/Family\", \"Gene\", \"Allele\"], \"data\":" + data + "}";
                     let properties = window.airrvisualization.createProperties(stringProperties);
                     let chart = window.airrvisualization.createChart(properties).plot();
-                });
-            }
-            function redrawDrilldownVChartPercentage(url, identifier){
-                $.get(url, function(data){
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        function redrawDrilldownVChartPercentage(url, identifier) {
+            $.get(url, function (data) {
+                try {
                     //Example using Properties as a String
                     //data can be added to the string. Don't add "" around it.
-                    let stringProperties = "{\"id\": \""+identifier+"\", \"xLabel\":\"X Axis Title Example\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"Subgroup/Family\", \"Gene\", \"Allele\"], \"percentage\":true, \"data\":"+data+"}";
+                    let stringProperties = "{\"id\": \"" + identifier + "\", \"xLabel\":\"X Axis Title Example\", \"dataType\":\"VGeneUsage\", \"dataDrilldown\":true, \"sort\":true,\"seriesName\":[\"First Series\"], \"subtitle\":[\"Subgroup/Family\", \"Gene\", \"Allele\"], \"percentage\":true, \"data\":" + data + "}";
                     let properties = window.airrvisualization.createProperties(stringProperties);
                     let chart = window.airrvisualization.createChart(properties).plot();
-                });
-            }
-            function redrawDrilldownDChart(url, identifier){
-                $.get(url, function(data){
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        function redrawDrilldownDChart(url, identifier) {
+            $.get(url, function (data) {
+                try {
                     //Example using Properties as a JSON Object
-                    let jsonProperties = window.airrvisualization.createProperties({"id": identifier, "yLabel":"Y Axis Title Example", "dataType": "DGeneUsage", "sort":true, "dataDrilldown": true, "subtitle":["Subgroup/Family", "Gene", "Allele"] });
+                    let jsonProperties = window.airrvisualization.createProperties({ "id": identifier, "yLabel": "Y Axis Title Example", "dataType": "DGeneUsage", "sort": true, "dataDrilldown": true, "subtitle": ["Subgroup/Family", "Gene", "Allele"] });
                     jsonProperties.setData(data);
                     let chart = window.airrvisualization.createChart(jsonProperties).plot();
-                });
-            }
-            function redrawDrilldownJChart(url, identifier){
-                $.get(url, function(data){
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        function redrawDrilldownJChart(url, identifier) {
+            $.get(url, function (data) {
+                try {
                     //Example using Properties as a instance of Properties Class
-                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setDataType("JGeneUsage").setSubtitle('').setData(data);;
+                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setDataType("JGeneUsage").setSubtitle('').setData(data);
                     let chart = window.airrvisualization.createChart(prop).plot();
-                });
-            }
-            function redrawDrilldownJChartPercentage(url, identifier){
-                $.get(url, function(data){
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        function redrawDrilldownJChartPercentage(url, identifier) {
+            $.get(url, function (data) {
+                try {
                     //Example using Properties as a instance of Properties Class
-                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setPercentage(true).setDataType("JGeneUsage").setSubtitle('').setData(data);;
+                    let prop = window.airrvisualization.createProperties().setId(identifier).setSort(true).setXLabel("Category").setDataDrilldown(true).setPercentage(true).setDataType("JGeneUsage").setSubtitle('').setData(data);
                     let chart = window.airrvisualization.createChart(prop).plot();
-                });
-            }
-            function redrawDrilldownCountChart(url, identifier){
-                $.get(url, function(data){
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        function redrawDrilldownCountChart(url, identifier) {
+            $.get(url, function (data) {
+                try {
                     //window.airrvisualization.setDebugLevel(0);
                     window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataDrilldown(true).setDataType("CloneCount").setData(data)).plot();
-                });
-            }
-            function redrawCountChart(url, identifier){
-                $.get(url, function(data){
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        function redrawCountChart(url, identifier) {
+            $.get(url, function (data) {
+                try {
                     //window.airrvisualization.setDebugLevel(0);
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setDataType("CloneCount").setSeriesColors(["rgb(125,174,202)", "rgb(147,196,210)", "rgb(171,218,217)", "rgb(202,239,223)"]).setData(data)).plot();
-                });
-            }
-            function redrawJunctionChart(url, identifier){
-                $.get(url, function(data){
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        function redrawJunctionChart(url, identifier) {
+            $.get(url, function (data) {
+                try {
                     window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setDataType("JunctionLength").setData(data)).plot();
-                });
-            }
-            function redrawJunctionChartPercentage(url, identifier){
-                $.get(url, function(data){
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        function redrawJunctionChartPercentage(url, identifier) {
+            $.get(url, function (data) {
+                try {
                     //window.airrvisualization.setDebugLevel(0);
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setSort(true).setPercentage(true).setDataType("JunctionLength").setData(data)).plot();
-                });
-            }
-            function redrawFailandsuccessChart(url, identifier){
-                $.get(url, function(data){
-                    try {
-                        //window.airrvisualization.setDebugLevel(70);
-                        let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setDataType("VGeneUsage").setDataDrilldown(true).setData(data).setSubtitle(["Subgroup/Family", "Gene", "Allele"])).plot();
-                    } catch (error) {
-                        $('#'+identifier).empty().addClass("error").append('<p>' + error + '</p>');
-                        console.error(error);
-                    }
-                });
-            }
-            $(function () {
-                $('.loader').click(function(){
-                    redrawChart($(this).attr('x-datatype'), $(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.drilldownVloader').click(function(){
-                    redrawDrilldownVChart($(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.drilldownVloaderPercentage').click(function(){
-                    redrawDrilldownVChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.drilldownDloader').click(function(){
-                    redrawDrilldownDChart($(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.drilldownJloader').click(function(){
-                    redrawDrilldownJChart($(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.drilldownJloaderPercentage').click(function(){
-                    redrawDrilldownJChart($(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.drilldownCountloader').click(function(){
-                    redrawDrilldownCountChart($(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.countloader').click(function(){
-                    redrawCountChart($(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.junctionloader').click(function(){
-                    redrawJunctionChart($(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.junctionloaderPercentage').click(function(){
-                    redrawJunctionChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
-                });
-                $('.failandsuccessloader').click(function(){
-                    redrawFailandsuccessChart($(this).attr('x-data'), $(this).attr('x-target'));
-                });
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
             });
-        </script>
-    </body>
+        }
+        function redrawFailandsuccessChart(url, identifier) {
+            $.get(url, function (data) {
+                try {
+                    //window.airrvisualization.setDebugLevel(70);
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setDataType("VGeneUsage").setDataDrilldown(true).setData(data).setSubtitle(["Subgroup/Family", "Gene", "Allele"])).plot();
+                } catch (error) {
+                    $('#' + identifier).empty().addClass("error").append('<p>' + error + '</p>');
+                    console.error(error);
+                }
+            });
+        }
+        $(function () {
+            $('.loader').click(function () {
+                redrawChart($(this).attr('x-datatype'), $(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.drilldownVloader').click(function () {
+                redrawDrilldownVChart($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.drilldownVloaderPercentage').click(function () {
+                redrawDrilldownVChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.drilldownDloader').click(function () {
+                redrawDrilldownDChart($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.drilldownJloader').click(function () {
+                redrawDrilldownJChart($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.drilldownJloaderPercentage').click(function () {
+                redrawDrilldownJChart($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.drilldownCountloader').click(function () {
+                redrawDrilldownCountChart($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.countloader').click(function () {
+                redrawCountChart($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.junctionloader').click(function () {
+                redrawJunctionChart($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.junctionloaderPercentage').click(function () {
+                redrawJunctionChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+            $('.failandsuccessloader').click(function () {
+                redrawFailandsuccessChart($(this).attr('x-data'), $(this).attr('x-target'));
+            });
+        });
+    </script>
+</body>
+
 </html>

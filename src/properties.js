@@ -93,6 +93,7 @@ class Properties {
     #_xLabel;
     #_yLabel;
     #_stackingType;
+    #_grouping;
     #_seriesName
     #_data
     #_dataType
@@ -129,6 +130,7 @@ class Properties {
         this.#_xLabel = undefined;
         this.#_yLabel = undefined;
         this.#_stackingType = undefined;
+        this.#_grouping = undefined;
         this.#_seriesName = undefined;
         this.#_data = undefined;
         this.#_dataType = undefined;
@@ -350,6 +352,37 @@ class Properties {
     setStackingType(value) {
         this.#_stackingType = value;
         this.#_logger.debug("setStackingType.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+    /**
+     * @description defines if grouping is to be used or not in the chart.
+     * @type {boolean}
+     */
+    get grouping() {
+        return this.getGrouping();
+    }
+
+    set grouping(value) {
+        this.setGrouping(value);
+    }
+
+    /**
+     * @description returns true if grouping is to be used in the chart.
+     * @returns {boolean} true if grouping is to be used in the chart.
+     */
+    getGrouping() {
+        return this.#_grouping;
+    }
+
+    /**
+     * @description Sets if grouping is to be used or not in the chart.
+     * @param {boolean} value true if grouping is to be used in the chart.
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    setGrouping(value) {
+        this.#_grouping = value;
+        this.#_logger.debug("setGrouping.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
     }
@@ -832,6 +865,7 @@ class Properties {
         if (!this.xLabel && anotherProperties.xLabel) this.setXLabel(anotherProperties.xLabel);
         if (!this.yLabel && anotherProperties.yLabel) this.setYLabel(anotherProperties.yLabel);
         if (!this.stackingType && anotherProperties.stackingType) this.setStackingType(anotherProperties.stackingType);
+        if (this.grouping == undefined && anotherProperties.grouping != undefined) this.setGrouping(anotherProperties.grouping);
         if (!this.data && anotherProperties.data) this.setData(anotherProperties.data);
         if (!this.dataType && anotherProperties.dataType) this.setDataType(anotherProperties.dataType);
         if (!this.#_dataDrilldown_userDefined && anotherProperties.dataDrilldown) this.setDataDrilldown(anotherProperties.dataDrilldown);

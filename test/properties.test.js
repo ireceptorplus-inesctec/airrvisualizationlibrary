@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { prototype } from 'mocha';
 import { Properties } from '../src';
 import {DebugTimer} from '../src/common';
 let timer = new DebugTimer();
@@ -80,6 +79,7 @@ let propertyAlpha3DUpdated = 21;
 let propertyBeta3DUpdated = 31;
 let propertyDepth3DUpdated = 41;
 let propertyPercentageUpdated = false;
+
 let propertiesJsonObjectError = {"id":propertyId, "title":propertyTitle, "subtitle": propertySubtitle, "inexistentProperty": "This property does not exist"};
 let propertiesJsonObjectWithoutId = {
     "title":propertyTitle, 

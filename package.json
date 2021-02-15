@@ -10,37 +10,34 @@
     "test": "test"
   },
   "dependencies": {
-    "highcharts": "8.2.0",
-    "jquery": "3.5.1"
+    "highcharts": "8.2.0"
   },
-  "type": "module",
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "7.10.4",
+    "@babel/plugin-transform-modules-commonjs": "7.12.13",
     "@babel/plugin-transform-runtime": "7.12.1",
     "@babel/preset-env": "7.11.5",
-    "@babel/register": "7.12.1",
+    "@babel/register": "7.12.13",
     "@jsdevtools/browserify-banner": "2.0.4",
     "babelify": "10.0.0",
     "browserify": "16.5.2",
     "browserify-versionify": "1.0.6",
-    "bufferutil": "4.0.1",
-    "canvas": "2.5.0",
     "chai": "4.2.0",
-    "clean-jsdoc-theme": "3.0.1",
     "copyfiles": "2.4.0",
     "esmify": "2.1.1",
     "exorcist": "1.0.1",
-    "foodoc": "0.0.9",
+    "jquery": "3.5.1",
     "jsdoc": "3.6.6",
     "jsdom": "16.4.0",
     "jsdom-global": "3.0.2",
+    "jsonpath-plus": "5.0.3",
     "make-dir-cli": "2.0.0",
     "mocha": "8.1.3",
     "npm-run-all": "4.1.5",
     "nyc": "15.1.0",
     "rimraf": "3.0.2",
     "tui-jsdoc-template": "1.2.2",
-    "uglifyify": "5.0.2",
+    "uglifyjs": "2.4.11",
     "utf-8-validate": "5.0.2"
   },
   "scripts": {
@@ -48,22 +45,20 @@
     "clean:dist": "rimraf dist",
     "clean:lib": "rimraf lib",
     "clean:doc": "rimraf jsdoc",
-    "clean:nodemodules": "rimraf node_modules",
     "clean": "run-p clean:dist clean:lib clean:doc clean:nyc",
     "setup:lib:jquery": "copyfiles -f node_modules/jquery/dist/jquery.min.js ./lib ",
     "setup:lib:highcharts": "copyfiles -u 1  \"node_modules/highcharts/**\" ./lib ",
-    "setup:lib": "run-p setup:lib:jquery setup:lib:highcharts",
+    "setup:lib": "make-dir lib && run-p setup:lib:jquery setup:lib:highcharts",
     "setup:dist": "make-dir dist",
-    "install": "run-p setup:lib setup:dist",
+    "setup": "run-p setup:lib setup:dist",
     "build:docs": "./node_modules/.bin/jsdoc -r -c ./doc/jsdoc-tui.json ./src -d ./jsdoc",
-    "build:prod": "browserify    -u highcharts -u highcharts/highcharts-3d -u highcharts/modules/exporting -u highcharts/modules/data -u highcharts/modules/drilldown -t [browserify-versionify] -t [ babelify ] -t [uglifyify] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js                                           -o ./dist/airrvisualization.js",
-    "build:maps": "browserify -d -u highcharts -u highcharts/highcharts-3d -u highcharts/modules/exporting -u highcharts/modules/data -u highcharts/modules/drilldown -t [browserify-versionify] -t [ babelify ]                -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js | exorcist ./dist/airrvisualization.js.map > ./dist/airrvisualization.js",
+    "build:prod": "browserify    -u highcharts -u highcharts/highcharts-3d -u highcharts/modules/exporting -u highcharts/modules/data -u highcharts/modules/drilldown -t [browserify-versionify] -t [ babelify --global ] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js | uglifyjs -c --comments                  -o ./dist/airrvisualization.js",
+    "build:maps": "browserify -d -u highcharts -u highcharts/highcharts-3d -u highcharts/modules/exporting -u highcharts/modules/data -u highcharts/modules/drilldown -t [browserify-versionify] -t [ babelify --global ] -p [ @jsdevtools/browserify-banner --file src/banner.txt ] ./src/index.js | exorcist ./dist/airrvisualization.js.map > ./dist/airrvisualization.js",
     "build:dev": "run-s clean:dist setup:dist build:maps",
     "build": "run-s clean:dist setup:dist build:prod",
     "test:watch": "npm t -- -w",
     "test": "mocha --require jsdom-global/register --require @babel/register test/all.tests.js",
-    "cover": "nyc npm t",
-    "rebuild": "run-s clean:nodemodules clean & npm install && npm run build"
+    "cover": "nyc npm t"
   },
   "repository": {
     "type": "git",
@@ -82,5 +77,9 @@
     "url": "https://www.linkedin.com/in/marcoamarooliveira/"
   },
   "license": "AGPL-3.0-only",
-  "copyright": "INESCTEC (https://www.inesctec.pt/)"
+  "copyright": "INESCTEC (https://www.inesctec.pt/)",
+  "optionalDependencies": {
+    "clean-jsdoc-theme": "3.0.1",
+    "foodoc": "0.0.9"
+  }
 }

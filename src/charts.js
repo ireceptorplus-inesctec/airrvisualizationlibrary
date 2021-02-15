@@ -337,7 +337,10 @@ class HighchartsChart extends Chart {
             p.plotOptions.series = (p.plotOptions.series || {});
             p.plotOptions.series.stacking = this.properties.stackingType;
         }
-
+        if (this.properties.grouping != undefined) {
+            p.plotOptions.series = (p.plotOptions.series || {});
+            p.plotOptions.series.grouping = this.properties.grouping;
+        }
         timer.end("build_Highcharts_structure");
         //console.log(p);
         // If Hicharts is imported as a module than we don't need jquery to plot the chart into the DOM.

@@ -1094,7 +1094,13 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     let value = dataObject[StatsParserConstants.VALUE];
                     let dataItem = new ResultSeriesDataItem().setName(cellName).setY(percentage?value/totalUsageCount*100:value);
                     seriesData.push(dataItem);
-                    cellSeriesDict[geneName].data.push(dataItem);
+                    try {
+                        cellSeriesDict[geneName].data.push(dataItem);
+                    } catch (error) {
+                        let errorMessage = "Cannot find Gene '" + geneName + "' in existing gene list [" + Object.keys(cellSeriesDict) + "] for Cell '" + cellName +"'";
+                        //console.error(errorMessage);
+                        throw new TypeError(errorMessage);
+                    }
                 }
                 //    this.#_logger.trace(JSON.stringify(cellSeriesDict));
                 for (let key in cellSeriesDict) {

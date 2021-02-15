@@ -444,7 +444,7 @@ class ResultSeries{
      */
     setType(type){
         if (!type instanceof ResultSeriesType){
-            throw 'type mus be an instance of ResultSeriesType';
+            throw 'type must be an instance of ResultSeriesType';
         }
         if (!ResultSeriesType.contains(type.typeCode)){
             throw 'type must exist in ResultSeriesType.types';

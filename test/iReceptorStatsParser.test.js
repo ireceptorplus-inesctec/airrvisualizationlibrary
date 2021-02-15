@@ -1,5 +1,5 @@
 import { StatsParserConstants } from '../src/iReceptorStatsParser.js';
-import { expect } from './common.js';
+import { expect, fs } from './common.js';
 
 
 

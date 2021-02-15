@@ -11,7 +11,7 @@ import {Properties} from './properties.js';
 import {ResultSeriesDataItem, ResultSeries} from "./series.js";
 import {Result} from "./result.js";
 import {VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult, CountStatsResult} from "./iReceptorStatsResult.js";
-import {ImmuneDbCloneCountResult} from "./immuneDbResult.js";
+import {ImmuneDbCloneCountResult, ImmuneDbTopCountStatsResult} from "./immuneDbResult.js";
 import {HighchartsChart} from "./charts.js";
 
 /*
@@ -178,6 +178,9 @@ class ResultFactory{
             case DataType.CLONE_COUNT_IMMUNEDB:
                 result = new ImmuneDbCloneCountResult();
                 break;
+            case DataType.CLONE_TOP_COUNT_IMMUNEDB:
+                result = new ImmuneDbTopCountStatsResult();
+                break;
         }
         
         if (result){
@@ -190,7 +193,7 @@ class ResultFactory{
 }
 
 export { VisualizationLibrary, ResultFactory, HighchartsChart, Result, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult, JunctionLengthStatsResult,
-    CountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, DataType,
+    CountStatsResult, ImmuneDbTopCountStatsResult, ResultSeries, ResultSeriesDataItem, Properties, GeneType, DataType,
     ResultSeriesType, Logger};
 
 

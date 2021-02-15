@@ -4,7 +4,7 @@ function importTest(name, path) {
     });
 }
 
-import {options, assert, expect, should} from './common.js';
+//import {options, assert, expect, should} from './common.js';
 
 
 describe("All Tests", function () {
@@ -25,6 +25,7 @@ describe("All Tests", function () {
     importTest("Parser", './parser.test.js');
     importTest("iReceptorStatsParser", './iReceptorStatsParser.test.js');
     importTest("iReceptorStatsResult", './iReceptorStatsResult.test.js');
+    importTest("immuneDBParser", './immuneDBParser.test.js');
 
 
     after(function () {
