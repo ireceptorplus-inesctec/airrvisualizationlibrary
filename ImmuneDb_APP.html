@@ -28,6 +28,13 @@
             <div id="usage_20210118_top_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20210118 Top clone count</div>
        </article>
 
+        <article class="repertoire" >
+            <h1>Stats API data</h1>
+            <button class="loaderFunctionalityCount" x-target="usage_20210118_functionality_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210118_stats_api/functionality.json">Load functionality count</button>
+            <button class="loaderFunctionalityCountPercentage" x-target="usage_20210118_functionality_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210118_stats_api/functionality.json">Load functionality count Percentage</button>
+            <div id="usage_20210118_functionality_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20210118 functionality count</div>
+       </article>
+
         <script src="lib/jquery.min.js"></script> 
         <script  src="dist/airrvisualization.js"></script>   
 
@@ -48,6 +55,16 @@
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setPercentage(true).setDataType("CloneTopCountImmuneDB")).plot();
                 });
             }
+            function redrawFunctionalityCountChart(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setDataType("CloneFunctionalityCountImmuneDB")).plot();
+                });
+            }
+            function redrawFunctionalityCountChartPercentage(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setPercentage(true).setDataType("CloneFunctionalityCountImmuneDB")).plot();
+                });
+            }
             $(function () {
                 $('.loader').click(function(){
                     redrawChart($(this).attr('x-data'), $(this).attr('x-target'));
@@ -57,6 +74,12 @@
                 });
                 $('.loaderTopCountPercentage').click(function(){
                     redrawTopCountChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderFunctionalityCount').click(function(){
+                    redrawFunctionalityCountChart($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderFunctionalityCountPercentage').click(function(){
+                    redrawFunctionalityCountChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
                 });
             });
         </script>

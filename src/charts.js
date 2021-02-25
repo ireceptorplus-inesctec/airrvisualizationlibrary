@@ -261,6 +261,10 @@ class HighchartsChart extends Chart {
             p.yAxis = (p.yAxis || {});
             p.yAxis.title = { text: this.properties.yLabel };
         }
+        if (this.properties.yMaxValue) {
+            p.yAxis = (p.yAxis || {});
+            p.yAxis.max = this.properties.yMaxValue;
+        }
         if (this.properties.xLabel) {
             p.xAxis = (p.xAxis || {});
             p.xAxis.title = { text: this.properties.xLabel };

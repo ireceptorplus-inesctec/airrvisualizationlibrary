@@ -249,6 +249,8 @@ class ResultSeriesType {
         "rearrangement_count_productive" : ResultSeriesType.typeCode.GENE_COUNT,
         "duplicate_count" : ResultSeriesType.typeCode.GENE_COUNT,
         "duplicate_count_productive" : ResultSeriesType.typeCode.GENE_COUNT,
+        "functionality count" : ResultSeriesType.typeCode.GENE_COUNT,
+
     };
 
     /**
@@ -573,7 +575,8 @@ class DataType {
         JUNCTION_LENGTH: 'JunctionLength',
         CLONE_COUNT: 'CloneCount',
         CLONE_COUNT_IMMUNEDB: 'CloneCountImmuneDB',
-        CLONE_TOP_COUNT_IMMUNEDB: 'CloneTopCountImmuneDB'
+        CLONE_TOP_COUNT_IMMUNEDB: 'CloneTopCountImmuneDB',
+        CLONE_FUNCTIONALITY_COUNT_IMMUNEDB: 'CloneFunctionalityCountImmuneDB'
     };
 
     /**
@@ -655,6 +658,16 @@ class DataType {
      */
     static get CLONE_TOP_COUNT_IMMUNEDB() {
         return DataType.types.CLONE_TOP_COUNT_IMMUNEDB;
+    }
+    
+    /**
+     * @description Clone Count (ImmuneDB) data type
+     * @constant
+     * @static
+     * @default 'CloneFunctionalityCountImmuneDB'
+     */
+    static get CLONE_FUNCTIONALITY_COUNT_IMMUNEDB() {
+        return DataType.types.CLONE_FUNCTIONALITY_COUNT_IMMUNEDB;
     }
 
     /**

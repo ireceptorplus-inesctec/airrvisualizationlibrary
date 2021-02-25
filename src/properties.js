@@ -92,6 +92,7 @@ class Properties {
     #_subtitle;
     #_xLabel;
     #_yLabel;
+    #_yMaxValue;
     #_stackingType;
     #_grouping;
     #_seriesName
@@ -129,6 +130,7 @@ class Properties {
         this.#_subtitle = undefined;
         this.#_xLabel = undefined;
         this.#_yLabel = undefined;
+        this.#_yMaxValue = undefined;
         this.#_stackingType = undefined;
         this.#_grouping = undefined;
         this.#_seriesName = undefined;
@@ -285,6 +287,38 @@ class Properties {
     setYLabel(label) {
         this.#_yLabel = label;
         this.#_logger.debug("setYLabel.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+    /**
+     * @description the top value for the Yy axis
+     * @type {String}
+     */
+    get yMaxValue() {
+        return this.getYMaxValue();
+    }
+
+    set yMaxValue(value) {
+        this.setYMaxValue(value);
+    }
+
+    /**
+     * @description returns the top value for the Yy axis
+     * @returns {String} the top value for the Yy axis
+     */
+    getYMaxValue() {
+        return this.#_yMaxValue;
+    }
+
+    /**
+     * @description Sets the top value for the Yy axis
+     * @param {String} value the top value for the Yy axis
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    setYMaxValue(value) {
+        this.#_yMaxValue = value;
+        this.#_logger.debug("setYMaxValue.");
         this.#_logger.trace(JSON.stringify(this));
         return this;
     }
@@ -864,6 +898,7 @@ class Properties {
         if (this.subtitle == undefined && anotherProperties.subtitle) this.setSubtitle(anotherProperties.subtitle);
         if (!this.xLabel && anotherProperties.xLabel) this.setXLabel(anotherProperties.xLabel);
         if (!this.yLabel && anotherProperties.yLabel) this.setYLabel(anotherProperties.yLabel);
+        if (!this.#_yMaxValue && anotherProperties.yMaxValue) this.setYMaxValue(anotherProperties.yMaxValue);
         if (!this.stackingType && anotherProperties.stackingType) this.setStackingType(anotherProperties.stackingType);
         if (this.grouping == undefined && anotherProperties.grouping != undefined) this.setGrouping(anotherProperties.grouping);
         if (!this.data && anotherProperties.data) this.setData(anotherProperties.data);
