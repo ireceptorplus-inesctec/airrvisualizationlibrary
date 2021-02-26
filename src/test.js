@@ -269,4 +269,4 @@ var data = {
 
 var keys = JSONPath('$..count', data);
 let uniq = [...new Set(keys)];
-console.log(uniq);
+// console.log(uniq);

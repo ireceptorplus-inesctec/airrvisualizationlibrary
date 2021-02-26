@@ -125,8 +125,8 @@ class Parser {
          * - At third level, title should be gene (IGHV5-51), back to should say "Back to IGHV5"
          */
 
-        console.log(seriesType);
-        console.log(dataItem); 
+        // console.log(seriesType);
+        // console.log(dataItem); 
         
     }
 }

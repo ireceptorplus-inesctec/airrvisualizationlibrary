@@ -595,9 +595,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
             return function(e) {
                 let chart = this;
                 let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
-                console.log(chart);
-                console.log(currentDrillLevelNumber);
-                console.log(e);
+                // console.log(chart);
+                // console.log(currentDrillLevelNumber);
+                // console.log(e);
                 logger.trace(e.toString());
                 if (subtitle){
                     let subIndex = currentDrillLevelNumber -1;
@@ -614,9 +614,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
         return function(e) {
                 let chart = this;
                 let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
-                console.log(chart);
-                console.log(currentDrillLevelNumber);
-                console.log(e);
+                // console.log(chart);
+                // console.log(currentDrillLevelNumber);
+                // console.log(e);
                 logger.trace(e.toString());
                 if (subtitle){
                     let subIndex = currentDrillLevelNumber - 1;
@@ -643,9 +643,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
             return function(e) {
                 let chart = this;
                 let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
-                console.log(chart);
-                console.log(currentDrillLevelNumber);
-                console.log(e);
+                // console.log(chart);
+                // console.log(currentDrillLevelNumber);
+                // console.log(e);
                 //chart.setTitle(null, { text: e.point.name });
                 if (subtitle){
                     let subIndex = currentDrillLevelNumber + 1;
@@ -664,9 +664,9 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
             let random = Common.makeid(12);
             let chart = this;
             let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);;
-            console.log(chart);
-            console.log(currentDrillLevelNumber);
-            console.log(e);
+            // console.log(chart);
+            // console.log(currentDrillLevelNumber);
+            // console.log(e);
             logger.trace(random + ", " + e.toString());
             if (!e.seriesOptions) {
                 //console.log(chart.series);
@@ -947,8 +947,8 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                 let geneSeriesDict = new Object();
                 for (let i = 0; i < familyNames.length; i++) {
                     let geneGroupName = familyNames[i].concat(genePostfix);
-                    console.log(geneGroupName);
-                    console.log(familyNames[i]);
+                    // console.log(geneGroupName);
+                    // console.log(familyNames[i]);
 
                     //DONE: change for the Repertoire {Rep_Id} or the value from properties if user set it.
                     //let _geneSeriesName = familyNames[i].concat(' ').concat(type.toString());
@@ -1431,9 +1431,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
             return function(e) {
                 let chart = this;
                 let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
-                console.log(chart);
-                console.log(currentDrillLevelNumber);
-                console.log(e);
+                // console.log(chart);
+                // console.log(currentDrillLevelNumber);
+                // console.log(e);
                 logger.trace(e.toString());
                 //logger.trace(JSON.stringify(chart));
                 if (subtitle){
@@ -1450,9 +1450,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
         return function(e) {
                 let chart = this;
                 let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
-                console.log(chart);
-                console.log(currentDrillLevelNumber);
-                console.log(e);
+                // console.log(chart);
+                // console.log(currentDrillLevelNumber);
+                // console.log(e);
                 logger.trace(e.toString());
                 if (subtitle){
                     let subIndex = currentDrillLevelNumber + 1;
@@ -1475,9 +1475,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
             return function(e) {
                 let chart = this;
                 let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
-                console.log(chart);
-                console.log(currentDrillLevelNumber);
-                console.log(e);
+                // console.log(chart);
+                // console.log(currentDrillLevelNumber);
+                // console.log(e);
                 //chart.setTitle(null, { text: e.point.name });
                 if (subtitle){
                     let subIndex = currentDrillLevelNumber + 1;
@@ -1496,9 +1496,9 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
             let random = Common.makeid(12);
             let chart = this;
             let currentDrillLevelNumber = (chart.series[0].options._levelNumber || 0);
-            console.log(chart);
-            console.log(chart.series[0].options._levelNumber);
-            console.log(e);
+            // console.log(chart);
+            // console.log(chart.series[0].options._levelNumber);
+            // console.log(e);
             logger.trace(random + ", " + e.toString());
             if (!e.seriesOptions) {
                 //console.log(chart.series);

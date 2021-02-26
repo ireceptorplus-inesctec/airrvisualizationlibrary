@@ -192,7 +192,7 @@ class ImmuneDBGeneTopCountStatsParser extends Parser {
                 subtitle = subtitle + ", ";
             subtitle = subtitle + key;
         });
-        console.log(subtitle);
+        // console.log(subtitle);
         parsedProperties.setSubtitle([subtitle]);
     }
 
@@ -431,7 +431,7 @@ class ImmuneDBFunctionalityCountStatsParser extends Parser {
             subtitle = subtitle + key;
         });
         subtitle = subtitle + " Count";
-        console.log(subtitle);
+        // console.log(subtitle);
         parsedProperties.setSubtitle([subtitle]);
     }
 
