@@ -6,13 +6,15 @@ import {Logger, ResultSeriesType} from './common.js';
  */
 class ResultSeriesDataItem{
     #_logger;
+    #_id;
     #_name;
     #_x;
     #_y;
     #_z;
+    #_value;
     #_color;
     #_drilldown;
-    #_title;
+    #_parent;
     
     /**
      * @description Creates an instance of ResultSeriesDataItem.
@@ -20,15 +22,47 @@ class ResultSeriesDataItem{
     constructor(){
         this.#_logger = new Logger('ResultSeriesDataItem');
         this.#_logger.debug("Constructor.");
+        this.#_id = undefined;
         this.#_name = undefined;
         this.#_x = undefined;
         this.#_y = undefined;
         this.#_z = undefined;
+        this.#_value = undefined;
         this.#_color = undefined;
         this.#_drilldown = undefined;
-        this.#_title = "subtitle";
+        this.#_parent = undefined;
     }
     
+    /**
+     * @description the name of this data item. It is used to group Data Items of distinct {@link ResultSeries}
+     * @type {String}
+     */
+    get id(){
+        return this.getId();
+    }
+
+    set id(id){
+        this.setId(id);
+    }
+    
+    /**
+     * @description returns the id of the Data item
+     * @returns {string} 
+     */
+    getId(){
+        return this.#_id;
+    }
+
+    /**
+     * @description Chainable method that sets the id of this Data item
+     * @param {string} id
+     * @returns {DataItem} the same instance on which the method was called.
+     */
+    setId(id){
+        this.#_id = id;
+        return this;
+    }
+
     /**
      * @description the name of this data item. It is used to group Data Items of distinct {@link ResultSeries}
      * @type {String}
@@ -150,6 +184,36 @@ class ResultSeriesDataItem{
     }
     
     /**
+     * @description the `value` value of the data item.
+     * @type {Number}
+     */
+    get value(){
+        return this.getValue();
+    }
+    
+    set value(value){
+        this.setValue(value);
+    }
+            
+    /**
+     * @description returns the `value` value of the Data item
+     * @returns {Number} 
+     */
+    getValue(){
+        return this.#_value;
+    }
+        
+    /**
+     * @description Sets the value of this Data item
+     * @param {Number} value
+     * @returns {DataItem} this data item
+     */
+    setValue(value){
+        this.#_value = value;
+        return this;
+    }
+    
+    /**
      * @description the color value for the data item.
      * @type {Number}
      */
@@ -208,14 +272,44 @@ class ResultSeriesDataItem{
         this.#_drilldown = drilldownName;
         return this;
     }
+            
+    /**
+     * @description the id of the parent {@link ResultSeriesDataItem} of the Data item
+     * @returns {String} 
+     */
+    get parent(){
+        return this.getParent();
+    }
+    
+    set parent(id){
+        this.setParent(id);
+    }
+            
+    /**
+     * @description returns the id of the parent {@link ResultSeriesDataItem} for the Data item
+     * @returns {Number} 
+     */
+    getParent(){
+        return this.#_parent;
+    }
+
+    /**
+     * @description Sets the id of the parent {@link ResultSeriesDataItem} of this Data item
+     * @param {string} id
+     * @returns {ResultSeriesDataItem} this data item
+     */
+    setParent(id){
+        this.#_parent = id;
+        return this;
+    }
 
     /**
      * @description Returns a JSON representation of this object
      * @returns {JSON} 
      */
     toJSON(){
-        let {name, x, y, z, color, drilldown} = this;
-        let json = {name, x, y, z, color, drilldown};
+        let {id, name, x, y, z, value, color, drilldown, parent} = this;
+        let json = {id, name, x, y, z, value, color, drilldown, parent};
         /*
          * Simple implementation (doesn't check for undefined values)
          */

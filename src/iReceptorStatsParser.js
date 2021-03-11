@@ -2,6 +2,7 @@ import { Logger, ResultSeriesType, Common, DebugTimer, GeneType } from './common
 import { Properties} from "./properties.js";
 import { Parser, DrilldownParser } from "./parser.js";
 import { ResultSeriesDataItem, ResultSeries } from "./series.js";
+import {JSONPath} from 'jsonpath-plus';
 
 /*
 Allele will always have a *
@@ -32,6 +33,7 @@ class StatsParserConstants{
         POSTFIX_FAMILY : '_subgroup',
         POSTFIX_GENE : '_gene',
         POSTFIX_CALL : '_call',
+        SPLITER_GENE_ORPHAN : '/OR',
         SPLITER_GENE : '-',
         SPLITER_CALL : '*'
     };
@@ -79,55 +81,157 @@ class StatsParserConstants{
     static get STATISTICS_NAME(){
         return StatsParserConstants.VOCABULARY.STATISTICS_NAME;
     }
-
+    
+    /**
+     * @description REPERTOIRES constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "repertoires"
+     */
     static get REPERTOIRES(){
         return StatsParserConstants.VOCABULARY.REPERTOIRES;
     }
-
+    
+    /**
+     * @description REPERTOIRES_ID constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "repertoires_id"
+     */
     static get REPERTOIRE_ID(){
         return StatsParserConstants.VOCABULARY.REPERTOIRE_ID;
     }
-
+    
+    /**
+     * @description SAMPLE_PROCESSING_ID constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "sample_processing_id"
+     */
     static get SAMPLE_PROCESSING_ID(){
         return StatsParserConstants.VOCABULARY.SAMPLE_PROCESSING_ID;
     }
 
+   /**
+     * @description DATA_PROCESSING_ID constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "data_processing_id"
+     */
     static get DATA_PROCESSING_ID(){
         return StatsParserConstants.VOCABULARY.DATA_PROCESSING_ID;
     }
 
+   /**
+     * @description TOTAL constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "total"
+     */
     static get TOTAL(){
         return StatsParserConstants.VOCABULARY.TOTAL;
     }
 
+   /**
+     * @description DATA constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "data"
+     */
     static get DATA(){
         return StatsParserConstants.VOCABULARY.DATA;
     }
 
+   /**
+     * @description KEY constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "key"
+     */
     static get KEY(){
         return StatsParserConstants.VOCABULARY.KEY;
     }
 
+   /**
+     * @description VALUE constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "value"
+     */
     static get VALUE(){
         return StatsParserConstants.VOCABULARY.VALUE;
     }
 
+   /**
+     * @description POSTFIX_FAMILY constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "_subgroup"
+     */
     static get POSTFIX_FAMILY(){
         return StatsParserConstants.VOCABULARY.POSTFIX_FAMILY;
     }
 
+   /**
+     * @description POSTFIX_GENE constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "_gene"
+     */
     static get POSTFIX_GENE(){
         return StatsParserConstants.VOCABULARY.POSTFIX_GENE;
     }
 
+   /**
+     * @description POSTFIX_CALL constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "_call"
+     */
     static get POSTFIX_CALL(){
         return StatsParserConstants.VOCABULARY.POSTFIX_CALL;
     }
 
+   /**
+     * @description SPLITER_GENE_ORPHAN constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "/OR"
+     */
+    static get SPLITER_GENE_ORPHAN(){
+        return StatsParserConstants.VOCABULARY.SPLITER_GENE_ORPHAN;
+    }
+
+   /**
+     * @description SPLITER_GENE constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "-"
+     */
     static get SPLITER_GENE(){
         return StatsParserConstants.VOCABULARY.SPLITER_GENE;
     }
 
+   /**
+     * @description SPLITER_CALL constant
+     * @type {string}
+     * @static
+     * @const
+     * @default "*"
+     */
     static get SPLITER_CALL(){
         return StatsParserConstants.VOCABULARY.SPLITER_CALL;
     }
@@ -476,6 +580,280 @@ class JunctionLenghtStatsParser extends Parser {
 }
 
 /**
+ * GeneUsageSunburstStatsParser is a default {@link Parser} for Sunburst Charts with {@link GeneStatsResult}
+ * 
+ * GeneUsageSunburstStatsParser assumes that it will receive an only a call (allele) structure.
+ * If other structure is passed to the parser, then errors may arrise.
+ * 
+ * @extends {Parser}
+ */
+class GeneUsageSunburstStatsParser extends Parser {
+    #_logger;
+
+    #_data;
+    #_seriesColors;
+    #_seriesName;
+    #_sort;
+    #_percentage;
+    #_colorIndex;
+    #_colorIndexJumper;
+    #_geneType;
+
+    // should be always false
+    #_multipleSeries; 
+
+    // Array of ResultSeries
+    #_series;
+
+    // Dictionary (key=familyName, value= Array of all ResultSeries children of familyName across all repertoires)
+    // Each element of the value Array must be a ResultSeries grouping all (GENE) values of a repertoire that are contained in a family.
+    #_geneSeriesByFamily;
+
+    // Dictionary (key=geneName, value= Array of all ResultSeries children of geneName across all repertoires)
+    // Each element of the value Array must be a ResultSeries grouping all (CELL) values of a repertoire that are contained in a gene.
+    #_cellSeriesByGene;
+
+    // Dictionary (key=repetoire_id, value= Array of all ResultSeries children of type FAMILY in repertoire_id)
+    // Each element of the value Array must be a ResultSeries grouping all (FAMILY) values of a repertoire.
+    #_familySeriesByRepertoire;
+
+    /**
+     * @description Creates an instance of GeneUsageDrilldownStatsParser.
+     * @param {GeneType} type
+     */
+    constructor(type) {
+        super();
+        this.#_logger = new Logger('GeneUsageDrilldownStatsParser');
+        this.#_logger.debug("Constructor.");
+        if (!GeneType.contains(type)) {
+            this.#_logger.fatal('type must exist in GeneType.genes');
+            throw 'type must exist in GeneType.genes';
+        }
+        this.#_geneType = type;
+        this.#_multipleSeries = false;
+
+        this.#_series = [];
+
+        //To be obtained by properties.
+        this.#_data = undefined;
+        this.#_seriesColors = undefined;
+        this.#_seriesName = undefined;
+        this.#_sort = undefined;
+        this.#_percentage = undefined;
+        this.#_colorIndex = 0;
+        this.#_colorIndexJumper = 1;
+        // Dictionaries for processing ResultSeries structures by grouping type.
+        this.#_geneSeriesByFamily = {};
+        this.#_cellSeriesByGene = {};
+        this.#_familySeriesByRepertoire = {};
+    }
+
+    get drilldown(){
+        return false;
+    }
+
+    get geneType() {
+        return this.#_geneType;
+    }
+
+    getSeries(){
+        this.#_logger.debug("getting series.");
+        return this.#_series;
+    }
+    
+    get drilldownSeries(){
+        this.#_logger.debug("getting drilldown series.");
+        let emptyDrilldownObject = {series: []};
+        this.#_logger.trace(JSON.stringify(emptyDrilldownObject));
+        return emptyDrilldownObject;
+    }
+
+    get multipleSeries() {
+        return this.#_multipleSeries;
+    }
+
+    isMultipleSeries() {
+        return this.multipleSeries;
+    }
+                    
+    getDrillupSeriesEvent(properties){
+        return undefined;
+    }
+    getDrilldownSeriesEvent(properties){
+        return undefined;
+    }
+
+    preparse(properties) {
+        this.#_logger.trace("preparse.");
+        // Build  the structures that will hold the series for each size of key
+        // parsedProperties is the instance variable properties in Parser Object
+        let parsedProperties = this.properties;
+        
+        // Get important values from properties
+        this.#_data            = properties.getData();
+        this.#_seriesColors    = properties.seriesColors;
+        this.#_seriesName      = properties.seriesName;
+        this.#_sort            = properties.sort;
+        this.#_percentage      = properties.percentage;
+        
+        if (typeof this.#_data === "string") {
+            this.#_data = JSON.parse(this.#_data);
+        }
+        parsedProperties.setYLabel("")
+        if (this.#_percentage){
+            parsedProperties.setYLabel("");
+            parsedProperties.setDraw3D(false);
+        }else if (this.#_multipleSeries){
+            parsedProperties.setDraw3D(false);
+        }        
+        
+        //Ensure only one series exists (or at least use only the first)
+        let messageArray = this.#_data[StatsParserConstants.MESSAGE];
+        let messageArrayLength = messageArray.length;
+        if (messageArrayLength > 1) {
+            throw new Error("Cannot parse multiple series for a Sunburst Chart");
+        }
+        this.#_multipleSeries = false;
+        
+    }
+    
+    postparse(properties) {
+        this.#_logger.trace("postparse.");
+    }
+    
+    onparse(properties) {
+        //TODO: Create a "central" element - The repertoire_id(?) - with id '0'
+        //TODO: Build the structure subgroup > gene > allele from the keys on the data
+        //TODO: Every element on the struture must have a unique id, parent id and a name.
+        //TODO: Only the "central" element has an empty parent.
+        //TODO: Only allele elements have value property.
+        this.#_logger.trace("parse");
+        let timer = new DebugTimer();
+        timer.start("parse");
+        // parsedProperties is the instance variable properties in Parser Object
+        let parsedProperties = this.properties;
+
+        let colorIndex = this.#_colorIndex;
+        let colorIndexJumper = this.#_colorIndexJumper
+        let seriesColors = this.#_seriesColors;
+        let percentage = this.#_percentage;
+        let sort = this.#_sort;
+        
+        let mainSeries = [];
+        let data = this.#_data;        
+        
+        let messageArray = data[StatsParserConstants.MESSAGE];
+        //TODO: Set colors when we know the number of subgroups/families.
+        
+        //I need ONE ResultSeries to hold all the data.
+        // for best results we need it to be well organized (at least the first two levels - inner rings )
+        let messageArrayObject = messageArray[0];
+        let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRES];
+        //fetch the StatsParserConstants.REPERTOIRE_ID
+        let repID = messageArrayObjectRepertoires[StatsParserConstants.REPERTOIRE_ID];
+        //Only one (the first) statistics object is to be used, if more are received, then they are ignored
+        let statisticsObject = messageArrayObject[StatsParserConstants.STATISTICS][0];
+        let statisticName = statisticsObject[StatsParserConstants.STATISTICS_NAME];
+        //calculate the resutType by its name
+        let type = ResultSeriesType.getByName(statisticName)
+        //Ensure we have allele data
+        if (type.typeCode != ResultSeriesType.CALL) {
+            throw new Error("This parser expect Allele data to build a Sunburst Chart");
+        }
+        let _resultSeriesName = 'Repertoire '.concat(repID);
+        let resultSeriesName = (properties.seriesName?(properties.seriesName[j]||_resultSeriesName):_resultSeriesName);
+        let series = new ResultSeries()
+            .setRepertoireId(repID)
+            .setSampleProcessingId(messageArrayObjectRepertoires[StatsParserConstants.SAMPLE_PROCESSING_ID])
+            .setDataProcessingId(messageArrayObjectRepertoires[StatsParserConstants.DATA_PROCESSING_ID])
+            .setId(repID)
+            .setName(resultSeriesName)
+            .setFieldName(statisticName)
+            //.setColor(color)
+            .setType(type);
+        let seriesData = [];
+
+
+        let familyPostfix = StatsParserConstants.POSTFIX_FAMILY;
+        let genePostfix = StatsParserConstants.POSTFIX_GENE;
+        let geneOrphanSplitter = StatsParserConstants.SPLITER_GENE_ORPHAN;
+        let geneSpliter = StatsParserConstants.SPLITER_GENE;
+        let callSpliter = StatsParserConstants.SPLITER_CALL;
+
+        let statisticsObjectData = statisticsObject[StatsParserConstants.DATA];
+        let totalUsageCount = statisticsObject[StatsParserConstants.TOTAL]
+        let alleleDataItems = new Array();
+        let geneDataItems = new Array();
+        let familyDataItems = new Array();
+        let geneNames = new Set();
+        let familyNames = new Set();
+
+
+        //For each data key generate a ResultSeriesDataItem (leaves)
+        for (let i = 0; i < statisticsObjectData.length; i++) {
+            let dataObject  = statisticsObjectData[i]; 
+            let alleleName = (dataObject[StatsParserConstants.KEY] || '');
+
+            let callSpliterIndex = alleleName.indexOf(callSpliter);
+            //Answering situation where cellname is equal to genename.
+            if (callSpliterIndex == -1) callSpliterIndex = alleleName.length;
+            
+            let geneName = alleleName.substring(0, callSpliterIndex);
+            geneNames.add(geneName)
+            
+            let value = dataObject[StatsParserConstants.VALUE];
+            let dataItem = new ResultSeriesDataItem().setId(alleleName).setName(alleleName).setValue(percentage?value/totalUsageCount*100:value).setParent(geneName + genePostfix);
+            
+            alleleDataItems.push(dataItem);
+        }
+        geneNames.forEach((geneName) => {
+            let geneSpliterIndex = undefined;
+            let geneOrphanSpliterIndex = geneName.indexOf(geneOrphanSplitter);
+            //Ansering to orphan genes
+            if (geneOrphanSpliterIndex != -1){
+                geneSpliterIndex = geneOrphanSpliterIndex
+            }else{
+                geneSpliterIndex = geneName.indexOf(geneSpliter);
+            }
+            //Answering situation where cellname is equal to genename.
+            if (geneSpliterIndex == -1) geneSpliterIndex = geneName.length;
+            let familyName = geneName.substring(0, geneSpliterIndex);
+            familyNames.add(familyName);
+            let dataItem = new ResultSeriesDataItem().setId(geneName + genePostfix).setName(geneName).setParent(familyName + familyPostfix);
+            geneDataItems.push(dataItem);
+        });
+        let familyNamesLength = familyNames.size;
+        if (seriesColors.length < familyNamesLength) {
+            throw new Error('Not enough colors set for the amount of families. Please increase the number of colors in seriesColor array to ' + familyNamesLength +  '.');
+        }
+        colorIndexJumper = Math.floor((seriesColors.length - 1) / (familyNamesLength - 1));
+        // console.log(seriesColors);
+        // console.log(colorIndex);
+        // console.log(colorIndexJumper);
+        // console.log(familyNamesLength);
+        familyNames.forEach((familyName) => {
+            let color = seriesColors[colorIndex];
+            colorIndex += colorIndexJumper;
+            let dataItem = new ResultSeriesDataItem().setId(familyName + familyPostfix).setName(familyName).setParent('0').setColor(color);
+            familyDataItems.push(dataItem);
+        });
+        let dataItem = new ResultSeriesDataItem().setId('0').setName(repID).setParent('');
+
+        if (sort){
+            alleleDataItems.sort((a, b) => a.name.localeCompare(b.name));
+            geneDataItems.sort((a, b) => a.name.localeCompare(b.name));
+            familyDataItems.sort((a, b) => a.name.localeCompare(b.name));
+        }
+        seriesData = [dataItem].concat(familyDataItems).concat(geneDataItems).concat(alleleDataItems);
+        series.data = seriesData;
+        this.#_series = [series];
+
+        timer.end("parse");
+        timer.print();
+    }
+}
+
+/**
  * GeneUsageDrilldownStatsParser is a default {@link DrilldownParser} for {@link GeneStatsResult}
  * 
  * GeneUsageDrilldownStatsParser assumes that when parsing a drilldown Gene Stats it will receive an 
@@ -682,7 +1060,10 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     let series = drilldownSeries[e.point.drilldown][i];
                     logger.debug(random + ", " + "Found series")
                     logger.trace(JSON.stringify(series));
-                    chart.addSingleSeriesAsDrilldown(e.point, series.asHighchartSeries());
+                    let highchartSeries = series.asHighchartSeries();
+                    highchartSeries.animation = false;
+                    // console.log(highchartSeries);
+                    chart.addSingleSeriesAsDrilldown(e.point, highchartSeries);
                 }
                 logger.trace(JSON.stringify(chart.drilldown));
                 //chart.addSingleSeriesAsDrilldown(e.point, series[0]);
@@ -1809,4 +2190,4 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
     }
 }
 
-export { StatsParserConstants, JunctionLenghtStatsParser, CountStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser };
+export { StatsParserConstants, JunctionLenghtStatsParser, CountStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser, GeneUsageSunburstStatsParser };

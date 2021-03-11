@@ -254,6 +254,53 @@ class HighchartsChart extends Chart {
         timer.start(".asHighchartSeries");
         p.series = this.result.series.map(series => series.asHighchartSeries());
         timer.end(".asHighchartSeries");
+        if(this.properties.chartType == 'sunburst'){
+            // console.log(this.properties);
+            if (this.properties.dataDrilldown) {
+                p.series[0].allowDrillToNode = true;
+            }
+            p.series[0].cursor = 'pointer';
+            p.series[0].dataLabels = {
+                format: '{point.name}',
+                filter: {
+                    property: 'innerArcLength',
+                    operator: '>',
+                    value: 10
+                }
+            }
+            p.series[0].levels = [{
+                level: 1,
+                levelIsConstant: false
+            }, {
+                level: 2,
+                levelSize: {
+                    unit: 'percentage',
+                    value: 20
+                },
+                colorByPoint: true
+            },
+            {
+                level: 3,
+                levelSize: {
+                    unit: 'percentage',
+                    value: 30
+                },
+                colorVariation: {
+                    key: 'brightness',
+                    to: -0.5
+                }
+            }, {
+                level: 4,
+                levelSize: {
+                    unit: 'percentage',
+                    value: 30
+                },
+                colorVariation: {
+                    key: 'brightness',
+                    to: 0.5
+                }
+            }]
+        }
         // If not set on properties the Title should not be set. I.e. we need it to be undefined.
         p.title = { text: this.properties.title } 
         if (this.properties.subtitle) { p.subtitle = { text: (this.properties.subtitle[0] || undefined) } };
@@ -280,7 +327,11 @@ class HighchartsChart extends Chart {
             // This object contains a series property that is an array of objects, each one representing a data series (as the series in the chart).
             // Each data series can have its own plot options, existence of the id property is mandatory to reference which series to plot.
             // Later I may need to change this.#_result.drilldownSeries; for a .map like in the series property.
+            p.drilldown = (p.drilldown || {});
             p.drilldown = this.result.drilldownSeries;
+            if (!this.properties.animation){
+                p.drilldown.animation = this.properties.animation;
+            }
             //We need to get the drilldown and drillup events to change at least the title and subtitle of the chart.
             p.chart.events = {
                 drillup: this.result.getDrillupSeriesEvent(this.properties),
@@ -335,7 +386,19 @@ class HighchartsChart extends Chart {
             p.legend = (p.legend || {});
             p.legend.enabled = false;
         }
-
+        if (this.properties.animation == false){
+            p.plotOptions.pie = (p.plotOptions.pie || {});
+            p.plotOptions.pie.animation = this.properties.animation;
+            p.plotOptions.line = (p.plotOptions.line || {});
+            p.plotOptions.line.animation = this.properties.animation;
+            p.plotOptions.column = (p.plotOptions.column || {});
+            p.plotOptions.column.animation = this.properties.animation;
+            p.plotOptions.series = (p.plotOptions.series || {});
+            p.plotOptions.series.animation = this.properties.animation;
+            p.series.forEach((serie) => {
+                serie.animation = this.properties.animation;
+            });
+        }
         // If is a stacking chart
         if (this.properties.stackingType) {
             p.plotOptions.series = (p.plotOptions.series || {});
@@ -346,7 +409,7 @@ class HighchartsChart extends Chart {
             p.plotOptions.series.grouping = this.properties.grouping;
         }
         timer.end("build_Highcharts_structure");
-        //console.log(p);
+        // console.log(p);
         // If Hicharts is imported as a module than we don't need jquery to plot the chart into the DOM.
         //this.#_chart  = Highcharts.chart(this.#_properties.id, p);
         this.#_chart = this.#_highcharts.chart(this.properties.id, p);
