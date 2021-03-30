@@ -191,6 +191,10 @@ class ResultSeriesType {
     };
 
     static names = {
+        "v_call" : ResultSeriesType.typeCode.CALL,
+        "d_call" : ResultSeriesType.typeCode.CALL,
+        "j_call" : ResultSeriesType.typeCode.CALL,
+        "c_call" : ResultSeriesType.typeCode.CALL,
         "v_call_unique" : ResultSeriesType.typeCode.CALL,
         "d_call_unique" : ResultSeriesType.typeCode.CALL,
         "j_call_unique" : ResultSeriesType.typeCode.CALL,
@@ -207,6 +211,10 @@ class ResultSeriesType {
         "d_call_exists_productive" : ResultSeriesType.typeCode.CALL,
         "j_call_exists_productive" : ResultSeriesType.typeCode.CALL,
         "c_call_exists_productive" : ResultSeriesType.typeCode.CALL,
+        "v_gene" : ResultSeriesType.typeCode.GENE,
+        "d_gene" : ResultSeriesType.typeCode.GENE,
+        "j_gene" : ResultSeriesType.typeCode.GENE,
+        "c_gene" : ResultSeriesType.typeCode.GENE,
         "v_gene_unique" : ResultSeriesType.typeCode.GENE,
         "d_gene_unique" : ResultSeriesType.typeCode.GENE,
         "j_gene_unique" : ResultSeriesType.typeCode.GENE,
@@ -223,6 +231,10 @@ class ResultSeriesType {
         "d_gene_exists_productive" : ResultSeriesType.typeCode.GENE,
         "j_gene_exists_productive" : ResultSeriesType.typeCode.GENE,
         "c_gene_exists_productive" : ResultSeriesType.typeCode.GENE,
+        "v_subgroup" : ResultSeriesType.typeCode.FAMILY,
+        "d_subgroup" : ResultSeriesType.typeCode.FAMILY,
+        "j_subgroup" : ResultSeriesType.typeCode.FAMILY,
+        "c_subgroup" : ResultSeriesType.typeCode.FAMILY,
         "v_subgroup_unique" : ResultSeriesType.typeCode.FAMILY,
         "d_subgroup_unique" : ResultSeriesType.typeCode.FAMILY,
         "j_subgroup_unique" : ResultSeriesType.typeCode.FAMILY,
@@ -576,7 +588,8 @@ class DataType {
         CLONE_COUNT: 'CloneCount',
         CLONE_COUNT_IMMUNEDB: 'CloneCountImmuneDB',
         CLONE_TOP_COUNT_IMMUNEDB: 'CloneTopCountImmuneDB',
-        CLONE_FUNCTIONALITY_COUNT_IMMUNEDB: 'CloneFunctionalityCountImmuneDB'
+        CLONE_FUNCTIONALITY_COUNT_IMMUNEDB: 'CloneFunctionalityCountImmuneDB',
+        V_GENE_USAGE_IMMUNEDB: 'VGeneUsageImmuneDB'
     };
 
     /**
@@ -668,6 +681,16 @@ class DataType {
      */
     static get CLONE_FUNCTIONALITY_COUNT_IMMUNEDB() {
         return DataType.types.CLONE_FUNCTIONALITY_COUNT_IMMUNEDB;
+    }
+    
+    /**
+     * @description Clone Count (ImmuneDB) data type
+     * @constant
+     * @static
+     * @default 'CloneFunctionalityCountImmuneDB'
+     */
+    static get V_GENE_USAGE_IMMUNEDB() {
+        return DataType.types.V_GENE_USAGE_IMMUNEDB;
     }
 
     /**
@@ -768,5 +791,58 @@ class DebugTimer {
     }
 }
 
+/**
+ * A static class for Chart Types
+ */
+ class ChartType {
+    static chartTypes = {
+      HEATMAP: 'heatmap',
+      SUNBURST: 'sunburst',
+      COLUMN: 'column',
+    };
+  
+    /**
+     * @description The code for HEATMAP charts
+     * @const
+     * @static
+     * @type {string}
+     * @default 'heatmap'
+     */
+    static get HEATMAP() {
+      return ChartType.chartTypes.HEATMAP;
+    }
+  
+    /**
+     * @description The code for SUNBURST charts
+     * @const
+     * @static
+     * @type {string}
+     * @default 'sunburst'
+     */
+    static get SUNBURST() {
+      return ChartType.chartTypes.SUNBURST;
+    }
+  
+    /**
+     * @description The code for COLUMN charts
+     * @const
+     * @static
+     * @type {string}
+     * @default 'column'
+     */
+    static get COLUMN() {
+      return ChartType.chartTypes.COLUMN;
+    }
+  
+    /**
+     * @description return true if the code is a valid code (i.e. exists in the list of possible codes).
+     * @static
+     * @param {String} value
+     * @returns {boolean}
+     */
+    static contains(value) {
+      return Object.values(ChartType.chartTypes).includes(value);
+    }
+  }
 
-export { Logger, ResultSeriesType, GeneType, DataType, Common, DebugTimer };
+export { Logger, ResultSeriesType, GeneType, DataType, Common, ChartType, DebugTimer };

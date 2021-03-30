@@ -1,4 +1,4 @@
-import { Chart } from '../src/charts.js';
+import { Chart, HighchartsChart, HighchartsCategories } from '../src/charts.js';
 import { DataType } from '../src/index.js';
 import { Properties } from '../src/properties.js';
 import { expect } from './common.js';
@@ -68,3 +68,33 @@ describe('Abstract Class Chart basic structure', function() {
         expect(() => c.plot()).to.not.throw(TypeError);
     });
 });
+
+describe('Highcharts Categories structure', function() {
+    let  c = new HighchartsCategories();
+    it('should create a valid structure', function(){
+        expect(c).to.exist;
+        expect(c).to.be.an('object');
+        expect(c).to.be.instanceOf(HighchartsCategories);
+    });
+    it('Should return an empty array', function(){
+        expect(c.categories).to.be.an('array');
+        expect(c.categories).to.be.eql([]);
+    });
+    it('Should return TypeError when adding an empty category', function(){
+        expect(() => c.getIndex()).to.throw(TypeError);
+    });
+    it('Should return the correct index after requesting an inexistent value', function(){
+        expect(c.getIndex('I1')).to.be.equal(0);
+        expect(c.getIndex('I2')).to.be.equal(1);
+        expect(c.getIndex('I3')).to.be.equal(2);
+    });
+    it('Should return the correct index on requesting an existent value', function(){
+        expect(c.getIndex('I1')).to.be.equal(0);
+        expect(c.getIndex('I2')).to.be.equal(1);
+        expect(c.getIndex('I3')).to.be.equal(2);
+    });
+    it('Should return an ordered array with all the existent categories', function(){
+        expect(c.categories).to.be.eql(['I1','I2','I3']);
+    });
+});
+

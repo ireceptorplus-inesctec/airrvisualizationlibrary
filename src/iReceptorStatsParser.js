@@ -1038,6 +1038,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
         }
         // I may need a structure to hold the drilldown and drillup level and labels. That way we can have a subtitle of the type 'Families' > ' Genes' > '...' and a label for drillup button.
         let drilldownSeries = {...this.#_geneSeriesByFamily, ...this.#_cellSeriesByGene};
+        let animation = properties.animation;
         return function(e) {
             let random = Common.makeid(12);
             let chart = this;
@@ -1061,7 +1062,24 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
                     logger.debug(random + ", " + "Found series")
                     logger.trace(JSON.stringify(series));
                     let highchartSeries = series.asHighchartSeries();
-                    highchartSeries.animation = false;
+                    highchartSeries.animation = animation;
+                    highchartSeries.column = (highchartSeries.column || {}); 
+                    highchartSeries.column.animation = animation;
+                    highchartSeries.pie = (highchartSeries.pie || {}); 
+                    highchartSeries.pie.animation = animation;
+                    highchartSeries.line = (highchartSeries.line || {}); 
+                    highchartSeries.line.animation = animation;
+                    highchartSeries.bar = (highchartSeries.bar || {}); 
+                    highchartSeries.bar.animation = animation;
+                    highchartSeries.area = (highchartSeries.area || {}); 
+                    highchartSeries.area.animation = animation;
+                    highchartSeries.gauge = (highchartSeries.gauge || {}); 
+                    highchartSeries.gauge.animation = animation;
+                    highchartSeries.item = (highchartSeries.item || {}); 
+                    highchartSeries.item.animation = animation;
+                    highchartSeries.venn = (highchartSeries.venn || {}); 
+                    highchartSeries.venn.animation = animation;
+                    
                     // console.log(highchartSeries);
                     chart.addSingleSeriesAsDrilldown(e.point, highchartSeries);
                 }

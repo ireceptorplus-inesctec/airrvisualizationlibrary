@@ -643,35 +643,7 @@ class ResultSeries{
         let {repertoireId, sampleProcessingId, dataProcessingId, name, fieldName, parentName, type, color, data, title} = this;
         return {repertoireId, sampleProcessingId, dataProcessingId, name, fieldName, parentName, type, color, data, title};
     }
-        
-    //TODO: This method (or this action) must be moved into a Highcharts 'package'. Probably into HighchartsChart class.
-    /**
-     * @description Returns this ResultSeries formatted as an HighCharts.series
-     * @returns {HighCharts.series} 
-     */
-    asHighchartSeries(){
 
-        let {id, name, color, title} = this;
-        let json = {id, name, color, title};
-
-        for (const key in json) {
-            if (json.hasOwnProperty(key)) {
-                let value = json[key];
-                if (value == undefined) delete json[key];
-            }
-        }
-        /*
-        let json = {
-            name: this.#_name,
-            color: this.#_color
-        };
-        
-        if (this.#_id) { json.id = this.#_id; }
-        */  
-        if (this.#_data) { json.data = this.#_data.map(d => d.toJSON()); }
-        
-        return json;
-    }
 }
 
 export {ResultSeriesDataItem, ResultSeries};

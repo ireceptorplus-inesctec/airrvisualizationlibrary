@@ -1,0 +1,23 @@
+# Ignore folders and artifacts
+coverage
+dist
+doc
+jsdoc
+lib
+node_modules
+old
+
+# Ignore file types
+#*.js
+*.json
+*.html
+#*.md
+
+# to exclude the next node in the abstract syntax tree from formatting.
+# A JavaScript comment of '// prettier-ignore' 
+# A JSX comment of '{/* prettier-ignore */}'
+# A HTML comment of '<!-- prettier-ignore -->' or '<!-- prettier-ignore-attribute -->' or '<!-- prettier-ignore-attribute (mouseup) -->'
+# A CSS comment of '/* prettier-ignore */'
+# A Markdown comment of '<!-- prettier-ignore -->'
+# A YAML comment of '# prettier-ignore'
+# A GraphQL comment of '# prettier-ignore'

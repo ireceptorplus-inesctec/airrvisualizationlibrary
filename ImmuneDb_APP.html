@@ -7,17 +7,22 @@
         <script src="lib/highcharts/modules/data.js"></script> 
         <script src="lib/highcharts/modules/exporting.js"></script> 
         <script src="lib/highcharts/modules/drilldown.js"></script> 
+        <script src="lib/highcharts/modules/heatmap.js"></script>
+        <!--
+        <script src="lib/highcharts/modules/boost-canvas.js"></script>
+        <script src="lib/highcharts/modules/boost.js"></script>
+        -->
     </head>
     <body>
         <article class="repertoire" >
             <h1>Stats API data</h1>
-            <button class="loader" x-target="usage_20200922_top_10_clone_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200922_stats_api/response_fraction_10.json">Load top 10 clone count</button>
+            <button class="loader" x-datatype="CloneCountImmuneDB" x-target="usage_20200922_top_10_clone_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200922_stats_api/response_fraction_10.json">Load top 10 clone count</button>
             <div id="usage_20200922_top_10_clone_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200922 Top 10</div>
             
-            <button class="loader" x-target="usage_20200922_top_100_clone_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200922_stats_api/response_fraction_100.json">Load top 100 clone count</button>            
+            <button class="loader" x-datatype="CloneCountImmuneDB" x-target="usage_20200922_top_100_clone_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200922_stats_api/response_fraction_100.json">Load top 100 clone count</button>            
             <div id="usage_20200922_top_100_clone_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200922 Top 100</div>
 
-            <button class="loader" x-target="usage_20200922_top_1000_clone_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200922_stats_api/response_fraction_1000.json">Load top 1000 clone count</button>
+            <button class="loader" x-datatype="CloneCountImmuneDB" x-target="usage_20200922_top_1000_clone_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20200922_stats_api/response_fraction_1000.json">Load top 1000 clone count</button>
             <div id="usage_20200922_top_1000_clone_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20200922 Top 1000</div>
         </article>
 
@@ -29,20 +34,37 @@
        </article>
 
         <article class="repertoire" >
-            <h1>Stats API data</h1>
+            <h1>Stats API data from 2021/01/18</h1>
             <button class="loaderFunctionalityCount" x-target="usage_20210118_functionality_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210118_stats_api/functionality.json">Load functionality count</button>
             <button class="loaderFunctionalityCountPercentage" x-target="usage_20210118_functionality_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210118_stats_api/functionality.json">Load functionality count Percentage</button>
             <div id="usage_20210118_functionality_count_data" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20210118 functionality count</div>
+       </article>
+
+        <article class="repertoire" >
+            <h1>Stats API data from 2021/03/15</h1>
+            <button class="loaderGeneUsageCountHeat" x-target="usage_20210315_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210315_stats_api/V_gene_usage_filtered.json">Load Gene Usage Filtered (heatmap)</button>
+            <button class="loaderGeneUsageCountPercentageHeat" x-target="usage_20210315_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210315_stats_api/V_gene_usage_filtered.json">Load Gene Usage Filtered (Percentage, heatmap)</button>
+            <button class="loaderGeneUsageCount" x-target="usage_20210315_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210315_stats_api/V_gene_usage_filtered.json">Load Gene Usage Filtered (3D)</button>
+            <button class="loaderGeneUsageCount2D" x-target="usage_20210315_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210315_stats_api/V_gene_usage_filtered.json">Load Gene Usage Filtered (2D)</button>
+            <button class="loaderGeneUsageCountPercentage" x-target="usage_20210315_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210315_stats_api/V_gene_usage_filtered.json">Load Gene Usage Filtered(Percentage, 3D)</button>
+            <button class="loaderGeneUsageCountPercentage2D" x-target="usage_20210315_count_data" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210315_stats_api/V_gene_usage_filtered.json">Load Gene Usage Filtered(Percentage, 2D)</button>
+            <div id="usage_20210315_count_data" class="iRVis" style="min-width: 310px; height: 800px; margin: 0 auto">Show sample data from 20210315 Gene Usage</div>
+       </article>
+
+        <article class="repertoire" >
+            <h1>Stats API data from 2021/03/15 - VGeneUsage</h1>
+            <button class="loader" x-datatype="VGeneUsage" x-target="usage_20210315_count_data_a" x-data="https://raw.githubusercontent.com/marcoamarooliveira/sampledata/master/20210315_stats_api/V_gene_usage_filtered_airrc.json">Load Gene Usage Filtered (3D)</button>
+            <div id="usage_20210315_count_data_a" class="iRVis" style="min-width: 310px; height: 400px; margin: 0 auto">Show sample data from 20210315 Gene Usage</div>
        </article>
 
         <script src="lib/jquery.min.js"></script> 
         <script  src="dist/airrvisualization.js"></script>   
 
         <script>
-            function redrawChart(url, identifier){
+            function redrawChart(datatype, url, identifier) {
                 $.get(url, function(data){
                     window.airrvisualization.setDebugLevel(40);
-                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setDataType("CloneCountImmuneDB")).plot();
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setDataType(datatype)).plot();
                 });
             }
             function redrawTopCountChart(url, identifier){
@@ -65,9 +87,39 @@
                     let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Category").setData(data).setPercentage(true).setDataType("CloneFunctionalityCountImmuneDB")).plot();
                 });
             }
+            function redrawGeneUsageCountHeat(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setChartType("heatmap").setSort(true).setLegend(true).setPercentage(false).setDraw3D(false).setId(identifier).setXLabel("Gene").setData(data).setDataType("VGeneUsageImmuneDB")).plot();
+                });
+            }
+            function redrawGeneUsageCountPercentageHeat(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setChartType("heatmap").setSort(true).setLegend(true).setPercentage(true).setDraw3D(false).setId(identifier).setXLabel("Gene").setData(data).setDataType("VGeneUsageImmuneDB")).plot();
+                });
+            }
+            function redrawGeneUsageCount(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setXLabel("Gene").setData(data).setDataType("VGeneUsageImmuneDB")).plot();
+                });
+            }
+            function redrawGeneUsageCount2D(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setDraw3D(false).setXLabel("Gene").setData(data).setDataType("VGeneUsageImmuneDB")).plot();
+                });
+            }
+            function redrawGeneUsageCountPercentage(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setLegend(true).setXLabel("Gene").setData(data).setPercentage(true).setDataType("VGeneUsageImmuneDB")).plot();
+                });
+            }
+            function redrawGeneUsageCountPercentage2D(url, identifier){
+                $.get(url, function(data){
+                    let chart = window.airrvisualization.createChart(window.airrvisualization.createProperties().setId(identifier).setLegend(true).setDraw3D(false).setXLabel("Gene").setData(data).setPercentage(true).setDataType("VGeneUsageImmuneDB")).plot();
+                });
+            }
             $(function () {
-                $('.loader').click(function(){
-                    redrawChart($(this).attr('x-data'), $(this).attr('x-target'));
+                $('.loader').click(function () {
+                    redrawChart($(this).attr('x-datatype'), $(this).attr('x-data'), $(this).attr('x-target'));
                 });
                 $('.loaderTopCount').click(function(){
                     redrawTopCountChart($(this).attr('x-data'), $(this).attr('x-target'));
@@ -80,6 +132,24 @@
                 });
                 $('.loaderFunctionalityCountPercentage').click(function(){
                     redrawFunctionalityCountChartPercentage($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderGeneUsageCountHeat').click(function(){
+                    redrawGeneUsageCountHeat($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderGeneUsageCountPercentageHeat').click(function(){
+                    redrawGeneUsageCountPercentageHeat($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderGeneUsageCount').click(function(){
+                    redrawGeneUsageCount($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderGeneUsageCount2D').click(function(){
+                    redrawGeneUsageCount2D($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderGeneUsageCountPercentage').click(function(){
+                    redrawGeneUsageCountPercentage($(this).attr('x-data'), $(this).attr('x-target'));
+                });
+                $('.loaderGeneUsageCountPercentage2D').click(function(){
+                    redrawGeneUsageCountPercentage2D($(this).attr('x-data'), $(this).attr('x-target'));
                 });
             });
         </script>

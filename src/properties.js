@@ -37,6 +37,14 @@ class Properties {
      */
     static get DEFAULT_ANIMATION(){return false};
     /**
+     * @description default value for legend
+     * @static
+     * @constant
+     * @default false
+     * @type {boolean}
+     */
+     static get DEFAULT_LEGEND(){return false};
+    /**
      * @description default value for percentage (chart plots as percentages or as values)
      * @type {boolean}
      * @static
@@ -106,6 +114,7 @@ class Properties {
     #_sort;
     #_chartType;
     #_animation;
+    #_legend;
     #_percentage;
     #_alpha3D;
     #_beta3D;
@@ -117,6 +126,7 @@ class Properties {
     #_percentage_userDefined;
     #_chartType_userDefined;
     #_animation_userDefined;
+    #_legend_userDefined;
     #_alpha3D_userDefined;
     #_beta3D_userDefined;
     #_depth3D_userDefined;
@@ -145,6 +155,7 @@ class Properties {
         this.#_percentage = Properties.DEFAULT_PERCENTAGE;
         this.#_chartType = Properties.DEFAULT_CHART_TYPE; //defaults to column chart.
         this.#_animation = Properties.DEFAULT_ANIMATION; //defaults to false.
+        this.#_legend = Properties.DEFAULT_LEGEND; //defaults to false.
         this.#_alpha3D = Properties.DEFAULT_ALPHA_3D; //defaults to 20;
         this.#_beta3D = Properties.DEFAULT_BETA_3D; //defaults to 0;
         this.#_depth3D = Properties.DEFAULT_DEPTH_3D; //defaults to 100;
@@ -154,6 +165,7 @@ class Properties {
         this.#_percentage_userDefined = false;
         this.#_chartType_userDefined = false;
         this.#_animation_userDefined = false;
+        this.#_legend_userDefined = false;
         this.#_alpha3D_userDefined = false;
         this.#_beta3D_userDefined = false;
         this.#_depth3D_userDefined = false;
@@ -678,6 +690,41 @@ class Properties {
     }
 
     /**
+     * @description the value of the legend property to be used by the Chart.
+     * @type {Boolean}
+     */
+    get legend() {
+        return this.getLegend();
+    }
+
+    set legend(value) {
+        this.setLegend(value);
+    }
+
+    /**
+     * @description Returns the value of the legend property to be used by the Chart.
+     * @returns {Boolean} the value of the legend property to be used by the Chart.
+     */
+    getLegend() {
+        return this.#_legend;
+    }
+
+    /**
+     * @description Sets the value of the legend property to be used by the Chart.
+     * @param {String} value the value of the legend property to be used by the Chart.
+     * @returns {Properties} the same instance on which the method was called.
+     */
+    setLegend(value) {
+        if (!(value === undefined)){
+            this.#_legend = value;
+            this.#_legend_userDefined = true;
+        }
+        this.#_logger.debug("setLegend.");
+        this.#_logger.trace(JSON.stringify(this));
+        return this;
+    }
+
+    /**
      * @description the value of the alpha distance to be used on 3D charts.
      * @type {Number}
      */
@@ -909,6 +956,7 @@ class Properties {
         if (!this.#_dataDrilldown_userDefined && anotherProperties.dataDrilldown) this.setDataDrilldown(anotherProperties.dataDrilldown);
         if (!this.#_sort_userDefined && anotherProperties.sort) this.setSort(anotherProperties.sort);
         if (!this.#_animation_userDefined && anotherProperties.animation) this.setAnimation(anotherProperties.animation);
+        if (!this.#_legend_userDefined && anotherProperties.legend) this.setLegend(anotherProperties.legend);
         if (!this.#_percentage_userDefined && anotherProperties.percentage) this.setPercentage(anotherProperties.percentage);
         if (!this.#_alpha3D_userDefined && anotherProperties.alpha3D) this.setAlpha3D(anotherProperties.alpha3D);
         if (!this.#_beta3D_userDefined && anotherProperties.beta3D) this.setBeta3D(anotherProperties.beta3D);
