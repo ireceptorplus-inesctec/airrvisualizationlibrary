@@ -1,14 +1,8 @@
 // Import and export other modules from AIIR Visualization Library
-import { Logger, GeneType } from "./common.js";
+import {Logger, GeneType} from './common.js';
 //import {Properties} from './properties.js';
-import { Result } from "./result.js";
-import {
-  JunctionLenghtStatsParser,GeneUsageSunburstStatsParser,
-  GeneUsageStatsParser,
-  GeneUsageDrilldownStatsParser,
-  JGeneUsageDrilldownStatsParser,
-  CountStatsParser,
-} from "./iReceptorStatsParser.js";
+import {Result} from './result.js';
+import {JunctionLenghtStatsParser, GeneUsageSunburstStatsParser, GeneUsageStatsParser, GeneUsageDrilldownStatsParser, JGeneUsageDrilldownStatsParser, CountStatsParser} from './iReceptorStatsParser.js';
 
 /**
  * Abstract class that represents a StatsResult.
@@ -34,32 +28,30 @@ class CountStatsResult extends StatsResult {
   //#_multipleSeries;
 
   static get TITLE() {
-    return "Count";
+    return 'Count';
   }
   static get Y_LABEL() {
-    return "Count";
+    return 'Count';
   }
 
   //constructor(data = undefined) {
   //super(data);
   constructor() {
     super();
-    this.#_logger = new Logger("CountStatsResult");
-    this.#_logger.debug("Constructor.");
+    this.#_logger = new Logger('CountStatsResult');
+    this.#_logger.debug('Constructor.');
 
     //this.#_drilldownSeries = {series: []};
     //this.#_multipleSeries = false;
 
     //Set default properties for CountStatsResult
-    this.properties
-      .setTitle(CountStatsResult.TITLE)
-      .setYLabel(CountStatsResult.Y_LABEL);
+    this.properties.setTitle(CountStatsResult.TITLE).setYLabel(CountStatsResult.Y_LABEL);
 
     this.setParser(new CountStatsParser());
   }
 
   get drilldownSeries() {
-    this.#_logger.debug("getting drilldown series.");
+    this.#_logger.debug('getting drilldown series.');
     return this.parser.drilldownSeries;
   }
 
@@ -68,7 +60,7 @@ class CountStatsResult extends StatsResult {
   }
 
   update(properties) {
-    this.#_logger.debug("update");
+    this.#_logger.debug('update');
     if (this.properties.dataDrilldown == properties.dataDrilldown) return this;
     this.properties.setDataDrilldown(properties.dataDrilldown);
     return this.setParser(new CountStatsParser());
@@ -82,30 +74,30 @@ class JunctionLengthStatsResult extends StatsResult {
   //#_multipleSeries;
 
   static get TITLE() {
-    return "Junction Length";
+    return 'Junction Length';
   }
   static get Y_LABEL() {
-    return "Percentage";
+    return 'Percentage';
   }
 
   //constructor(data = undefined) {
   //super(data);
   constructor() {
     super();
-    this.#_logger = new Logger("JunctionLengthStatsResult");
-    this.#_logger.debug("Constructor.");
+    this.#_logger = new Logger('JunctionLengthStatsResult');
+    this.#_logger.debug('Constructor.');
 
     //this.#_drilldownSeries = {series: []};
     //this.#_multipleSeries = false;
 
     //Set default properties for JunctionLengthStatsResult
-    this.properties.setTitle("Junction Length");
+    this.properties.setTitle('Junction Length');
 
     this.setParser(new JunctionLenghtStatsParser());
   }
 
   get drilldownSeries() {
-    this.#_logger.debug("getting drilldown series.");
+    this.#_logger.debug('getting drilldown series.');
     return this.parser.drilldownSeries;
   }
 
@@ -114,7 +106,7 @@ class JunctionLengthStatsResult extends StatsResult {
   }
 
   update(properties) {
-    this.#_logger.debug("update");
+    this.#_logger.debug('update');
     if (this.properties.dataDrilldown == properties.dataDrilldown) return this;
     this.properties.setDataDrilldown(properties.dataDrilldown);
     return this.setParser(new JunctionLenghtStatsParser());
@@ -135,26 +127,22 @@ class GeneUsageStatsResult extends StatsResult {
   //super(data);
   constructor(type) {
     super();
-    this.#_logger = new Logger("GeneUsageStatsResult");
-    this.#_logger.debug("Constructor.");
+    this.#_logger = new Logger('GeneUsageStatsResult');
+    this.#_logger.debug('Constructor.');
     if (!GeneType.contains(type)) {
-      logger.fatal("type must exist in GeneType.genes");
-      throw "type must exist in GeneType.genes";
+      logger.fatal('type must exist in GeneType.genes');
+      throw 'type must exist in GeneType.genes';
     }
     this.#_geneType = type;
 
-    this.properties.setTitle("IR+ Repertoire Stats").setSubtitle("Subgroups");
+    this.properties.setTitle('IR+ Repertoire Stats').setSubtitle('Subgroups');
 
     //Default parser depends on the value of this.drilldown (either GeneUsageStatsParser or GeneUsageDrilldownStatsParser).
-    this.setParser(
-      this.drilldown
-        ? new GeneUsageDrilldownStatsParser(type)
-        : new GeneUsageStatsParser(type)
-    );
+    this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(type) : new GeneUsageStatsParser(type));
   }
 
   get drilldownSeries() {
-    this.#_logger.debug("getting drilldown series.");
+    this.#_logger.debug('getting drilldown series.');
     return this.parser.drilldownSeries;
   }
 
@@ -174,8 +162,8 @@ class VGeneUsageStatsResult extends GeneUsageStatsResult {
   //super(GeneType.V_GENE, data);
   constructor() {
     super(GeneType.V_GENE);
-    this.#_logger = new Logger("VGeneUsageStatsResult");
-    this.#_logger.debug("Constructor.");
+    this.#_logger = new Logger('VGeneUsageStatsResult');
+    this.#_logger.debug('Constructor.');
   }
 
   /*
@@ -188,18 +176,16 @@ class VGeneUsageStatsResult extends GeneUsageStatsResult {
     }
     */
   update(properties) {
-    this.#_logger.debug("update");
+    this.#_logger.debug('update');
     //if (this.properties.dataDrilldown == properties.dataDrilldown) return this;
     this.properties.setDataDrilldown(properties.dataDrilldown);
     let parser = undefined;
-    switch (properties.chartType){
-        case 'sunburst':
-            parser = new GeneUsageSunburstStatsParser(GeneType.V_GENE);
-            break;
-        default:
-            parser = this.drilldown
-            ? new GeneUsageDrilldownStatsParser(GeneType.V_GENE)
-            : new GeneUsageStatsParser(GeneType.V_GENE);
+    switch (properties.chartType) {
+      case 'sunburst':
+        parser = new GeneUsageSunburstStatsParser(GeneType.V_GENE);
+        break;
+      default:
+        parser = this.drilldown ? new GeneUsageDrilldownStatsParser(GeneType.V_GENE) : new GeneUsageStatsParser(GeneType.V_GENE);
     }
     return this.setParser(parser);
   }
@@ -212,8 +198,8 @@ class DGeneUsageStatsResult extends GeneUsageStatsResult {
   //super(GeneType.D_GENE, data);
   constructor() {
     super(GeneType.D_GENE);
-    this.#_logger = new Logger("DGeneUsageStatsResult");
-    this.#_logger.debug("Constructor.");
+    this.#_logger = new Logger('DGeneUsageStatsResult');
+    this.#_logger.debug('Constructor.');
   }
 
   /*
@@ -226,15 +212,11 @@ class DGeneUsageStatsResult extends GeneUsageStatsResult {
     }
     */
   update(properties) {
-    this.#_logger.debug("update");
+    this.#_logger.debug('update');
     if (this.properties.dataDrilldown == properties.dataDrilldown) return this;
     //super.setDrilldown(value);
     this.properties.setDataDrilldown(properties.dataDrilldown);
-    return this.setParser(
-      this.drilldown
-        ? new GeneUsageDrilldownStatsParser(GeneType.D_GENE)
-        : new GeneUsageStatsParser(GeneType.D_GENE)
-    );
+    return this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(GeneType.D_GENE) : new GeneUsageStatsParser(GeneType.D_GENE));
   }
 }
 
@@ -245,8 +227,8 @@ class JGeneUsageStatsResult extends GeneUsageStatsResult {
   //super(GeneType.J_GENE, data);
   constructor() {
     super(GeneType.J_GENE);
-    this.#_logger = new Logger("JGeneUsageStatsResult");
-    this.#_logger.debug("Constructor.");
+    this.#_logger = new Logger('JGeneUsageStatsResult');
+    this.#_logger.debug('Constructor.');
 
     // GeneStatsResult constructor already set the default Parser.
     // Only force the change on the parser if this.drilldown is true because parser with drilldown capabilities is specific for J Gene.
@@ -266,15 +248,11 @@ class JGeneUsageStatsResult extends GeneUsageStatsResult {
     }
     */
   update(properties) {
-    this.#_logger.debug("update");
+    this.#_logger.debug('update');
     if (this.properties.dataDrilldown == properties.dataDrilldown) return this;
     //super.setDrilldown(value);
     this.properties.setDataDrilldown(properties.dataDrilldown);
-    return this.setParser(
-      this.drilldown
-        ? new JGeneUsageDrilldownStatsParser(GeneType.J_GENE)
-        : new GeneUsageStatsParser(GeneType.J_GENE)
-    );
+    return this.setParser(this.drilldown ? new JGeneUsageDrilldownStatsParser(GeneType.J_GENE) : new GeneUsageStatsParser(GeneType.J_GENE));
   }
 }
 
@@ -285,8 +263,8 @@ class CGeneUsageStatsResult extends GeneUsageStatsResult {
   //super(GeneType.C_GENE, data);
   constructor() {
     super(GeneType.C_GENE);
-    this.#_logger = new Logger("CGeneUsageStatsResult");
-    this.#_logger.debug("Constructor.");
+    this.#_logger = new Logger('CGeneUsageStatsResult');
+    this.#_logger.debug('Constructor.');
   }
 
   /*
@@ -299,24 +277,12 @@ class CGeneUsageStatsResult extends GeneUsageStatsResult {
     }
     */
   update(properties) {
-    this.#_logger.debug("update");
+    this.#_logger.debug('update');
     if (this.properties.dataDrilldown == properties.dataDrilldown) return this;
     //super.setDrilldown(value);
     this.properties.setDataDrilldown(properties.dataDrilldown);
-    return this.setParser(
-      this.drilldown
-        ? new GeneUsageDrilldownStatsParser(GeneType.C_GENE)
-        : new GeneUsageStatsParser(GeneType.C_GENE)
-    );
+    return this.setParser(this.drilldown ? new GeneUsageDrilldownStatsParser(GeneType.C_GENE) : new GeneUsageStatsParser(GeneType.C_GENE));
   }
 }
 
-export {
-  JunctionLengthStatsResult,
-  CountStatsResult,
-  GeneUsageStatsResult,
-  VGeneUsageStatsResult,
-  DGeneUsageStatsResult,
-  JGeneUsageStatsResult,
-  CGeneUsageStatsResult,
-};
+export {JunctionLengthStatsResult, CountStatsResult, GeneUsageStatsResult, VGeneUsageStatsResult, DGeneUsageStatsResult, JGeneUsageStatsResult, CGeneUsageStatsResult};

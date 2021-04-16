@@ -3,10 +3,10 @@
  */
 import * as fs from 'fs';
 import pkg from 'chai';
-const { assert, expect, should } = pkg;
+const {assert, expect, should} = pkg;
 
 var options = {
-    foo: "foo"
+  foo: 'foo',
 };
 
 export {options, assert, expect, should, fs};

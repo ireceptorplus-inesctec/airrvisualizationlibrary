@@ -1,8 +1,9 @@
 // Import and export other modules from AIIR Visualization Library
-import {Logger, DebugTimer, ChartType} from './common.js';
+import {Logger, DebugTimer, ChartType, Common} from './common.js';
 import {ResultFactory} from './index.js';
 import {Properties} from './properties.js';
 import {Result} from './result.js';
+import {ResultSeriesDataItem, ResultSeries} from './series.js';
 
 /**
  * Abstract Class for the Chart type.
@@ -63,12 +64,6 @@ class Chart {
     return this.getResult();
   }
 
-  /*
-    set result(result) {
-        this.setResult(result);
-    }
-    */
-
   /**
    * @description returns the Result of this Chart.
    * @returns {Result} the Result object.
@@ -77,37 +72,6 @@ class Chart {
     return this.#_result;
   }
 
-  /* *
-     * @description Chainable method to set the {@link Result} to be plotted.
-     * @param {Result} result the {@link Result} to be plotted.
-     * @returns {Chart} the same instance on which the method was called.
-     * @throws {TypeError} if result is not an instance of {@link Result}
-     * /
-    setResult(result) {
-        this.#_logger.debug("setResult");
-        if (result instanceof Result) {
-            this.#_result = result;
-            //TODO: Add Observer on Result for when PARSED AND READY.
-            //TODO: Plot needs to WAIT FOR READY STATE.
-            //TODO: result.parse must be trigered by Chart instance.
-            this.#_logger.trace(JSON.stringify(this.#_properties));
-            this.#_logger.trace(JSON.stringify(this.#_result.properties));
-            //Update chart properties with default result properties.
-            this.#_properties.updateWith(this.#_result.properties);
-            this.#_logger.trace(JSON.stringify(this.#_properties));
-            //Ensure Result is set according to chart properties
-            this.#_result.setDrilldown(this.#_properties.dataDrilldown);
-            this.#_result.parse(this.#_properties);
-
-        } else {
-            this.#_logger.error("Received result is not compatible. Result must be an instance of Result.");
-            throw new TypeError("Parameter result must be an instance of Result.");
-        }
-        this.#_logger.trace(JSON.stringify(this));
-        return this;
-    }
-    */
-
   /**
    * @description The {@link Properties} of the chart
    * @type {Properties}
@@ -115,26 +79,6 @@ class Chart {
   get properties() {
     return this.getProperties();
   }
-
-  /*
-    set properties(properties) {
-        this.setProperties(properties);
-    }
-
-    /* *
-     * @description Chainable method to set the {@link Properties} for the chart
-     * @param {Properties} properties the {@link Properties} for the chart
-     * @returns {Chart} the same instance on which the method was called.
-     * /
-    setProperties(properties) {
-        if (properties instanceof Properties) {
-            this.#_properties = properties;
-        } else {
-            throw new TypeError('Invalid Properties received. Parameter must be an instance of Properties class.');
-        }
-        return this;
-    }
-    */
 
   /**
    * @description Returns the {@link Properties} of this chart
@@ -204,6 +148,7 @@ class HighchartsChart extends Chart {
    * @throws Error if Highcharts Library or any of the required modules are missing.
    */
   checkHighcharts() {
+    //TODO: check for existence of modules based on properties file.
     this.#_logger.debug('Checking if highcharts resources are available.');
     let Highcharts = window.Highcharts;
     if (!Highcharts) {
@@ -229,28 +174,181 @@ class HighchartsChart extends Chart {
   }
 
   /**
-   * @description Returns this ResultSeries formatted as an HighCharts.series
-   * @returns {HighCharts.series}
+   * @description Returns the drillup series event for this Hicharts
+   * @returns event function
    */
-  asHighchartsSeries(series) {
+  getDrillupSeriesEvent() {
+    let properties = this.properties;
+    let multipleSeries = this.result.multipleSeries;
+    if (!properties.drilldown) {
+      return undefined;
+    }
+    let logger = this.#_logger;
+    let subtitle = properties.subtitle;
+    if (!multipleSeries) {
+      logger.debug('retrieving single series drillup event');
+      return function (e) {
+        let chart = this;
+        let currentDrillLevelNumber = chart.series[0].options._levelNumber || 0;
+        if (subtitle) {
+          let subIndex = currentDrillLevelNumber - 1;
+          if (subtitle[subIndex]) {
+            chart.setTitle(null, {text: subtitle[subIndex]});
+          } else {
+            chart.setTitle(null, {text: undefined});
+          }
+        }
+      };
+    }
+    logger.debug('retrieving multiple series drillup event');
+    return function (e) {
+      let chart = this;
+      let currentDrillLevelNumber = chart.series[0].options._levelNumber || 0;
+      logger.trace(e.toString());
+      if (subtitle) {
+        let subIndex = currentDrillLevelNumber + 1;
+        if (subtitle[subIndex]) {
+          chart.setTitle(null, {text: subtitle[subIndex]});
+        } else {
+          chart.setTitle(null, {text: undefined});
+        }
+      }
+    };
+  }
+
+  /**
+   * @description Returns the drilldown series event for this Hicharts
+   * @returns event function
+   */
+  getDrilldownSeriesEvent() {
+    let logger = this.#_logger;
+    logger.debug('requested drilldown event');
+    let properties = this.properties;
+    if (!properties.dataDrilldown) {
+      return undefined;
+    }
+    let multipleSeries = this.result.multipleSeries;
+    let subtitle = properties.subtitle;
+    if (!multipleSeries) {
+      logger.debug('retrieving single series drilldown event');
+      return function (e) {
+        if (!e.points || e.points[0] == e.point) {
+          console.log(e);
+          let chart = this;
+          let currentDrillLevelNumber = chart.series[0].options._levelNumber || 0;
+          //chart.setTitle(null, { text: e.point.name });
+          if (subtitle) {
+            let subIndex = currentDrillLevelNumber + 1;
+            if (subtitle[subIndex]) {
+              chart.setTitle(null, {text: subtitle[subIndex]});
+            } else {
+              chart.setTitle(null, {text: undefined});
+            }
+          }
+          logger.trace(e.toString());
+        }
+      };
+    }
+    // I may need a structure to hold the drilldown and drillup level and labels. That way we can have a subtitle of the type 'Families' > ' Genes' > '...' and a label for drillup button.
+    // let drilldownSeries = this.asHighchartsSeries(this.result.drilldownSeries);
+    let drilldownSeries = this.result.drilldownSeries;
+    let animation = properties.animation;
+    let asHighchartsSeries = this.asHighchartsSeries;
+    return function (e) {
+      let random = Common.makeid(12);
+      let chart = this;
+      chart.properties = properties;
+      let currentDrillLevelNumber = chart.series[0].options._levelNumber || 0;
+      logger.trace(random + ', ' + e.toString());
+      if (!e.seriesOptions) {
+        logger.debug(random + ', ' + 'Gathering drilldown series for ' + e.point.drilldown);
+        // for (let i = 0; i < drilldownSeries[e.point.drilldown].length; i++) {
+        // let series = drilldownSeries[e.point.drilldown][i];
+        let series = drilldownSeries[e.point.drilldown];
+        logger.debug(random + ', ' + 'Found series');
+        logger.trace(JSON.stringify(series));
+        // let highchartSeries = series.asHighchartSeries();
+        let highchartSeries = asHighchartsSeries(series, properties);
+
+        for (let i = 0; i < highchartSeries.length; i++) {
+          let series = highchartSeries[i];
+          series.animation = animation;
+          series.column = series.column || {};
+          series.column.animation = animation;
+          series.pie = series.pie || {};
+          series.pie.animation = animation;
+          series.line = series.line || {};
+          series.line.animation = animation;
+          series.bar = series.bar || {};
+          series.bar.animation = animation;
+          series.area = series.area || {};
+          series.area.animation = animation;
+          series.gauge = series.gauge || {};
+          series.gauge.animation = animation;
+          series.item = series.item || {};
+          series.item.animation = animation;
+          series.venn = series.venn || {};
+          series.venn.animation = animation;
+          chart.addSingleSeriesAsDrilldown(e.point, series);
+        }
+        // }
+        logger.trace(JSON.stringify(chart.drilldown));
+        chart.applyDrilldown();
+      } else {
+        chart.setTitle(null, {text: e.seriesOptions.name});
+      }
+      if (subtitle) {
+        let subIndex = currentDrillLevelNumber + 1;
+        if (subtitle[subIndex]) {
+          chart.setTitle(null, {text: subtitle[subIndex]});
+        } else {
+          chart.setTitle(null, {text: undefined});
+        }
+      }
+    };
+  }
+
+  /**
+   */
+  /**
+   * @description Returns this ResultSeries formatted as an HighCharts.series
+   * @param {ResultSeries[]} series
+   * @returns {HighCharts.series}
+   * @throws {TypeError}
+   */
+  asHighchartsSeries(series, properties) {
+    if (!series) return undefined;
+    if (!(series instanceof Array)) {
+      throw new TypeError('series argument must be an Array');
+    }
+    if (series.length == 0) {
+      return series;
+    }
+    let p = properties || this.properties || undefined;
+    if (!p) {
+      throw TypeError('properties is undefined, please ensure you are passing a properties.');
+    }
     let highchartSeries = undefined;
-    switch (this.properties.chartType) {
-      case ChartType.HEATMAP+1:
+    switch (p.chartType) {
+      case ChartType.HEATMAP + 1:
         this.#_xAxisCategories = new HighchartsCategories();
         this.#_yAxisCategories = new HighchartsCategories();
         highchartSeries = series.map(s => {
+          if (!(s instanceof ResultSeries)) {
+            throw new TypeError('series elements must be instances of ResultSeries');
+          }
           let {id, name, title} = s;
           let j = {id, name, title};
-          for (const key in json) {
-            if (json.hasOwnProperty(key)) {
-              let value = json[key];
-              if (value == undefined) delete json[key];
+          for (const key in j) {
+            if (j.hasOwnProperty(key)) {
+              let value = j[key];
+              if (value == undefined) delete j[key];
             }
           }
           /*
-          json.dataLabels = json.dataLabels ||{};
-          json.dataLabels.enabled = true;
-          json.dataLabels.color =  '#000000';
+          j.dataLabels = j.dataLabels ||{};
+          j.dataLabels.enabled = true;
+          j.dataLabels.color =  '#000000';
           */
           j.boostThreshold = 100;
           j.borderWidth = 0;
@@ -281,6 +379,9 @@ class HighchartsChart extends Chart {
         json.nullColor = '#FFFFFF';
         // highchartSeries = series.map(s => {
         series.map(s => {
+          if (!(s instanceof ResultSeries)) {
+            throw new TypeError('series elements must be instances of ResultSeries');
+          }
           let {id, name, title} = s;
           let j = {id, name, title};
           /*
@@ -311,23 +412,20 @@ class HighchartsChart extends Chart {
               if (dataItem.y) dataItem.value = dataItem.y;
               dataItem.y = yAxysIndex;
               dataItem.x = xAxysIndex;
-              // json.data.push([dataItem.x, dataItem.y, dataItem.value]);
-              if (dataItem.value)
-                json.data.push(dataItem);
+              if (dataItem.value) json.data.push(dataItem);
             });
           }
-          // return j;
         });
         highchartSeries = [json];
-
         break;
 
       default:
-        // console.log('other');
         highchartSeries = series.map(s => {
+          if (!(s instanceof ResultSeries)) {
+            throw new TypeError('series elements must be instances of ResultSeries');
+          }
           let {id, name, color, title} = s;
           let json = {id, name, color, title};
-
           for (const key in json) {
             if (json.hasOwnProperty(key)) {
               let value = json[key];
@@ -341,19 +439,17 @@ class HighchartsChart extends Chart {
         });
         break;
     }
-    // console.log(highchartSeries);
     return highchartSeries;
   }
 
   /**
-   
-  * @description Creates an Highcharts.chart and displays it on the HTML container as defined in the {@link Properties} object.
+   * @description Creates an Highcharts.chart and displays it on the HTML container as defined in the {@link Properties} object.
    */
   plot() {
     let timer = new DebugTimer();
     this.#_logger.debug('Ploting chart');
     timer.start('build_Highcharts_structure');
-    //Plotting must have into consideration the type of data and the visualization implementation required.
+    // Plotting must have into consideration the type of data and the visualization implementation required.
     // This is where we map  properties and data to specific Visualization library.
     let p = {
       chart: {
@@ -368,6 +464,9 @@ class HighchartsChart extends Chart {
         type: 'category',
       },
       /*
+       * boost throws an error with big datasets
+       */
+      /*
       boost: {
         useGPUTranslations: true,
       },
@@ -379,7 +478,6 @@ class HighchartsChart extends Chart {
       plotOptions: {},
     };
     timer.start('.asHighchartSeries');
-    // p.series = this.result.series.map(series => series.asHighchartSeries());
     p.series = this.asHighchartsSeries(this.result.series);
     timer.end('.asHighchartSeries');
     if (this.properties.chartType == ChartType.HEATMAP) {
@@ -418,7 +516,6 @@ class HighchartsChart extends Chart {
       };
     }
     if (this.properties.chartType == ChartType.SUNBURST) {
-      // console.log(this.properties);
       if (this.properties.dataDrilldown) {
         p.series[0].allowDrillToNode = true;
       }
@@ -497,18 +594,22 @@ class HighchartsChart extends Chart {
       // Each data series can have its own plot options, existence of the id property is mandatory to reference which series to plot.
       // Later I may need to change this.#_result.drilldownSeries; for a .map like in the series property.
       p.drilldown = p.drilldown || {};
-      p.drilldown = this.result.drilldownSeries;
+      if (!this.result.isMultipleSeries()) {
+        p.drilldown = {series: this.asHighchartsSeries(this.result.drilldownSeries)};
+      }
       if (!this.properties.animation) {
         p.drilldown.animation = this.properties.animation;
       }
       //We need to get the drilldown and drillup events to change at least the title and subtitle of the chart.
       p.chart.events = {
-        drillup: this.result.getDrillupSeriesEvent(this.properties),
-        drilldown: this.result.getDrilldownSeriesEvent(this.properties),
+        // drillup: this.result.getDrillupSeriesEvent(this.properties),
+        drillup: this.getDrillupSeriesEvent(),
+        // drilldown: this.result.getDrilldownSeriesEvent(this.properties),
+        drilldown: this.getDrilldownSeriesEvent(),
       };
     }
     this.#_logger.trace('Is 3D (multiple series)? -' + this.result.isMultipleSeries());
-    //TODO: We need to have a distinction between Multiple series and 3D (when plotting Junction length I ignore multiple series to have side-by-side chart)
+    //DONE: We need to have a distinction between Multiple series and 3D (when plotting Junction length I ignore multiple series to have side-by-side chart)
     // if (this.result.isMultipleSeries()) {
     if (this.properties.draw3D) {
       // Setup chart 3Doptions properties (in the future using #_properties and #_dataseries data).

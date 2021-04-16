@@ -1,29 +1,26 @@
-import { StatsParserConstants } from '../src/iReceptorStatsParser.js';
-import { expect, fs } from './common.js';
+import {StatsParserConstants} from '../src/iReceptorStatsParser.js';
+import {expect, fs} from './common.js';
 
-
-
-describe('StatsParserConstants', function(){
-    it('Should return valid constants', function(){
-        expect(StatsParserConstants.INFO).to.be.a('string');
-        expect(StatsParserConstants.MESSAGE).to.be.a('string');
-        expect(StatsParserConstants.STATISTICS).to.be.a('string');
-        expect(StatsParserConstants.STATISTICS_NAME).to.be.a('string');
-        expect(StatsParserConstants.REPERTOIRES).to.be.a('string');
-        expect(StatsParserConstants.REPERTOIRE_ID).to.be.a('string');
-        expect(StatsParserConstants.SAMPLE_PROCESSING_ID).to.be.a('string');
-        expect(StatsParserConstants.DATA_PROCESSING_ID).to.be.a('string');
-        expect(StatsParserConstants.TOTAL).to.be.a('string');
-        expect(StatsParserConstants.DATA).to.be.a('string');
-        expect(StatsParserConstants.KEY).to.be.a('string');
-        expect(StatsParserConstants.VALUE).to.be.a('string');
-        expect(StatsParserConstants.POSTFIX_FAMILY).to.be.a('string');
-        expect(StatsParserConstants.POSTFIX_GENE).to.be.a('string');
-        expect(StatsParserConstants.POSTFIX_CALL).to.be.a('string');
-        expect(StatsParserConstants.SPLITER_GENE).to.be.a('string');
-        expect(StatsParserConstants.SPLITER_CALL).to.be.a('string');
-    });
-
+describe('StatsParserConstants', function () {
+  it('Should return valid constants', function () {
+    expect(StatsParserConstants.INFO).to.be.a('string');
+    expect(StatsParserConstants.MESSAGE).to.be.a('string');
+    expect(StatsParserConstants.STATISTICS).to.be.a('string');
+    expect(StatsParserConstants.STATISTICS_NAME).to.be.a('string');
+    expect(StatsParserConstants.REPERTOIRES).to.be.a('string');
+    expect(StatsParserConstants.REPERTOIRE_ID).to.be.a('string');
+    expect(StatsParserConstants.SAMPLE_PROCESSING_ID).to.be.a('string');
+    expect(StatsParserConstants.DATA_PROCESSING_ID).to.be.a('string');
+    expect(StatsParserConstants.TOTAL).to.be.a('string');
+    expect(StatsParserConstants.DATA).to.be.a('string');
+    expect(StatsParserConstants.KEY).to.be.a('string');
+    expect(StatsParserConstants.VALUE).to.be.a('string');
+    expect(StatsParserConstants.POSTFIX_FAMILY).to.be.a('string');
+    expect(StatsParserConstants.POSTFIX_GENE).to.be.a('string');
+    expect(StatsParserConstants.POSTFIX_CALL).to.be.a('string');
+    expect(StatsParserConstants.SPLITER_GENE).to.be.a('string');
+    expect(StatsParserConstants.SPLITER_CALL).to.be.a('string');
+  });
 });
 
 /*
@@ -64,4 +61,3 @@ describe('GeneUsageDrilldownStatsParser', function() {
     
 });
 */
-

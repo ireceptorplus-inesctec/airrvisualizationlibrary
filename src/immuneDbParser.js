@@ -641,7 +641,6 @@ class ImmuneDBGeneUsageStatsParser extends Parser {
       this.#_data = JSON.parse(this.#_data);
     }
     if (properties.chartType == ChartType.HEATMAP) {
-
     } else {
       parsedProperties.setYLabel('Value');
       if (this.#_percentage) {
