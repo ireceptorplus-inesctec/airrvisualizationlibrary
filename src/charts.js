@@ -350,7 +350,7 @@ class HighchartsChart extends Chart {
           j.dataLabels.enabled = true;
           j.dataLabels.color =  '#000000';
           */
-          j.boostThreshold = 100;
+          j.boostThreshold = 10000;
           j.borderWidth = 0;
           j.nullColor = '#FFFFFF';
           let yAxysIndex = this.#_yAxisCategories.getIndex(j.name);
@@ -374,7 +374,7 @@ class HighchartsChart extends Chart {
         this.#_yAxisCategories = new HighchartsCategories();
         let json = {};
         json.data = [];
-        json.boostThreshold = 2000;
+        json.boostThreshold = 10000;
         json.borderWidth = 0;
         json.nullColor = '#FFFFFF';
         // highchartSeries = series.map(s => {
@@ -514,8 +514,11 @@ class HighchartsChart extends Chart {
       p.tooltip.formatter = function () {
         return '<b>' + this.point.series['yAxis'].categories[this.point['y']] + '</b>:<b>' + this.point.series['xAxis'].categories[this.point['x']] + '</b> <br />' + this.point.value;
       };
-    }
-    if (this.properties.chartType == ChartType.SUNBURST) {
+      //Had zoomable feature if not 3D mode.
+      p.chart.zoomType= 'xy';
+      p.chart.panning= true;
+      p.chart.panKey= 'shift';
+    }else if (this.properties.chartType == ChartType.SUNBURST) {
       if (this.properties.dataDrilldown) {
         p.series[0].allowDrillToNode = true;
       }
@@ -564,6 +567,13 @@ class HighchartsChart extends Chart {
           },
         },
       ];
+    }else{
+      //Had zoomable feature if not 3D mode.
+      if (!this.properties.is3D){
+        p.chart.zoomType= 'x';
+        p.chart.panning= true;
+        p.chart.panKey= 'shift';
+      }
     }
     // If not set on properties the Title should not be set. I.e. we need it to be undefined.
     p.title = {text: this.properties.title};
@@ -679,7 +689,7 @@ class HighchartsChart extends Chart {
       p.plotOptions.series.grouping = this.properties.grouping;
     }
     p.plotOptions.series = p.plotOptions.series || {};
-    p.plotOptions.series.turboThreshold = 2000;
+    p.plotOptions.series.turboThreshold = 10000;
 
     timer.end('build_Highcharts_structure');
     // console.log(p);

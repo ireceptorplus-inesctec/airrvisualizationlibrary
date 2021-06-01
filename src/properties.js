@@ -187,6 +187,7 @@ class Properties {
   #_grouping;
   #_seriesName;
   #_data;
+  #_metadata;
   #_dataType;
   #_dataDrilldown;
   #_id;
@@ -227,6 +228,7 @@ class Properties {
     this.#_grouping = undefined;
     this.#_seriesName = undefined;
     this.#_data = undefined;
+    this.#_metadata = undefined;
     this.#_dataType = undefined;
     this.#_dataDrilldown = Properties.DEFAULT_DATA_DRILLDOWN; //defaults to false
     this.#_id = Common.makeid(12);
@@ -594,6 +596,36 @@ class Properties {
     this.#_logger.trace(JSON.stringify(this));
     return this;
   }
+
+  /**
+   * @description the metadata.
+   * @type {JSON}
+   */
+  get metadata() {
+    return this.getMetadata();
+  }
+
+  set metadata(value) {
+    this.setMetadata(value);
+  }
+
+  /**
+   * @description returns the metadata.
+   * @returns {JSON} the metadata.
+   */
+  getMetadata() {
+    return this.#_metadata;
+  }
+
+    /*
+   * @description Sets the metadata.
+   * @param {JSON} value the metadata.
+   * @returns {Properties} the same instance on which the method was called.
+   */
+  setMetadata(value) {
+        this.#_metadata = value;
+        return this;
+    }
 
   /**
    * @description the data type of the source data.

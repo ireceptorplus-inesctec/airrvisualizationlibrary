@@ -439,6 +439,20 @@ describe('Set Properties', function () {
     expect(properties.data).to.be.an(obj.typeof);
     expect(properties.data).to.equal(obj.setAs);
   });
+  it('should allow to set and get individual property: metadata', function () {
+    let obj = {setAs: {}, typeof: 'object', default: undefined};
+    // Set/get as method
+    let properties = new Properties().setMetadata(obj.setAs);
+    expect(properties.getMetadata()).to.be.an(obj.typeof);
+    expect(properties.getMetadata()).to.equal(obj.setAs);
+
+    // Set/get as property
+    properties = new Properties();
+    expect(properties.metadata).to.equal(obj.default);
+    properties.metadata = obj.setAs;
+    expect(properties.metadata).to.be.an(obj.typeof);
+    expect(properties.metadata).to.equal(obj.setAs);
+  });
   it('should allow to set and get individual property: dataDrilldown', function () {
     let obj = {setAs: true, typeof: 'boolean', default: Properties.DEFAULT_DATA_DRILLDOWN};
     // Set/get as method

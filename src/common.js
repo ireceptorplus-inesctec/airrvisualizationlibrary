@@ -176,6 +176,8 @@ class ResultSeriesType {
     TOP_CLONES: {code: 'tc', name: 'Top Clones'},
     JUNCTION_LENGTH: {code: 'jl', name: 'Junction Length'},
     JUNCTION_AA_LENGTH: {code: 'jal', name: 'Junction aa Length'},
+    CLONE_COUNT: {code: 'cc', name: 'Clone Count'}
+
   };
 
   static names = {
@@ -250,6 +252,7 @@ class ResultSeriesType {
     duplicate_count: ResultSeriesType.typeCode.GENE_COUNT,
     duplicate_count_productive: ResultSeriesType.typeCode.GENE_COUNT,
     'functionality count': ResultSeriesType.typeCode.GENE_COUNT,
+    cdr3_length_clone_dist: ResultSeriesType.typeCode.CLONE_COUNT
   };
 
   /**
@@ -327,6 +330,18 @@ class ResultSeriesType {
    */
   static get JUNCTION_AA_LENGTH() {
     return ResultSeriesType.typeCode.JUNCTION_AA_LENGTH.code;
+  }
+
+
+  /**
+   * @description Clone Count code
+   * @type {string}
+   * @static
+   * @const
+   * @default 'cc'
+   */
+  static get CLONE_COUNT() {
+    return ResultSeriesType.typeCode.CLONE_COUNT.code;
   }
 
   /**
@@ -782,6 +797,7 @@ class ChartType {
     HEATMAP: 'heatmap',
     SUNBURST: 'sunburst',
     COLUMN: 'column',
+    SPLINE: 'spline'
   };
 
   /**
@@ -815,6 +831,17 @@ class ChartType {
    */
   static get COLUMN() {
     return ChartType.chartTypes.COLUMN;
+  }
+
+  /**
+   * @description The code for SPLINE charts
+   * @const
+   * @static
+   * @type {string}
+   * @default 'spline'
+   */
+  static get SPLINE() {
+    return ChartType.chartTypes.SPLINE;
   }
 
   /**

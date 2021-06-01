@@ -155,7 +155,7 @@ class ImmuneDBGeneTopCountStatsParser extends Parser {
 
     let jsonpathQueryString = '$..' + ImmuneDBStatsParserConstants.KEY;
     let distinctDataKey = [...new Set(JSONPath(jsonpathQueryString, this.#_data))];
-    // Need this array to be sorted for later when pltting series on the chart.
+    // Need this array to be sorted for later when plotting series on the chart.
     distinctDataKey.sort((a, b) => b.localeCompare(a));
 
     if (distinctDataKey.length > 1) {
@@ -387,7 +387,7 @@ class ImmuneDBFunctionalityCountStatsParser extends Parser {
 
     let jsonpathQueryString = '$..' + ImmuneDBStatsParserConstants.KEY;
     let distinctDataKey = [...new Set(JSONPath(jsonpathQueryString, this.#_data))];
-    // Need this array to be sorted for later when pltting series on the chart.
+    // Need this array to be sorted for later when plotting series on the chart.
     distinctDataKey.sort((a, b) => b.localeCompare(a));
 
     if (distinctDataKey.length > 1) {
@@ -610,13 +610,19 @@ class ImmuneDBGeneUsageStatsParser extends Parser {
       this.#_dataKeys.forEach((key, index) => {
         let bit = this.#_keysByRepertoire[repertoireId][key];
         if (bit == 0) {
+          // console.log("Adding new key ", key, " to ", repertoireId);
           series.data.push(new ResultSeriesDataItem().setName(key).setY(0));
         }
       });
     });
     repertoires.forEach(repertoireId => {
       let series = this.#_seriesByRepertoire[repertoireId];
-      if (this.#_sort) series.data.sort((a, b) => a.name.localeCompare(b.name));
+      if (this.#_sort) series.data.sort((a, b) =>  {
+        let m = Number(a.name);
+        let n = Number(b.name);
+        // console.log (repertoireId, m,n);
+        return m<n?-1:(m==n?0:1)});
+      // if (this.#_sort) series.data.sort((a, b) => a.name.localeCompare(b.name));
       this.#_series.push(series);
     });
   }
@@ -645,7 +651,7 @@ class ImmuneDBGeneUsageStatsParser extends Parser {
       parsedProperties.setYLabel('Value');
       if (this.#_percentage) {
         parsedProperties.setYLabel('Fraction');
-        parsedProperties.setYMaxValue(100);
+        // parsedProperties.setYMaxValue(100);
         parsedProperties.setDraw3D(false);
       }
     }
@@ -705,9 +711,11 @@ class ImmuneDBGeneUsageStatsParser extends Parser {
 
     // Get important values from properties
     let data = this.#_data;
-
+    console.log(1); 
     let messageArray = data[StatsParserConstants.MESSAGE];
+    console.log(messageArray); 
     let messageArrayLength = messageArray.length;
+    console.log(messageArrayLength); 
 
     // Specifics for this Parser
     for (let j = 0; j < messageArrayLength; j++) {
@@ -736,6 +744,7 @@ class ImmuneDBGeneUsageStatsParser extends Parser {
         //Probably we have an error in the result. Should abort and return?
       }
     }
+    console.log("Calling _coalescAndSort")
     this._coalescAndSort();
     timer.end('parse');
     timer.print();
