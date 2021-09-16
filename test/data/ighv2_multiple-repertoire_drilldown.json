@@ -1,0 +1,144 @@
+{
+  "Info": {
+    "title": "iReceptorPlus Statistics API",
+    "version": "0.3.0",
+    "description": "Statistics API for the iReceptor Plus platform.",
+    "contact": null
+  },
+  "Result": [
+    {
+      "repertoires": {
+        "repertoire_id": "322",
+        "sample_processing_id": "398",
+        "data_processing_id": "398"
+      },
+      "statistics": [
+        {
+          "statistic_name": "v_call_unique",
+          "total": 1926,
+          "data": [
+            {
+              "key": "IGHV2-5*03",
+              "count": 3
+            },
+            {
+              "key": "IGHV2-70*11",
+              "count": 18
+            },
+            {
+              "key": "IGHV2-5*01",
+              "count": 38
+            },
+            {
+              "key": "IGHV2-26*01",
+              "count": 14
+            },
+            {
+              "key": "IGHV2-5*08",
+              "count": 1
+            },
+            {
+              "key": "IGHV2-5*02",
+              "count": 68
+            },
+            {
+              "key": "IGHV2-70*12",
+              "count": 1
+            },
+            {
+              "key": "IGHV2-5*04",
+              "count": 1
+            },
+            {
+              "key": "IGHV2-70*04",
+              "count": 1
+            },
+            {
+              "key": "IGHV2-70*01",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "statistic_name": "v_gene_unique",
+          "total": 3088,
+          "data": [
+            {
+              "key": "IGHV2-5",
+              "count": 130
+            },
+            {
+              "key": "IGHV2-70",
+              "count": 32
+            },
+            {
+              "key": "IGHV2-26",
+              "count": 14
+            }
+          ]
+        },
+        {
+          "statistic_name": "v_subgroup_unique",
+          "total": 3471,
+          "data": [
+            {
+              "key": "IGHV2",
+              "count": 180
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repertoires": {
+        "repertoire_id": "279",
+        "sample_processing_id": "433",
+        "data_processing_id": "433"
+      },
+      "statistics": [
+        {
+          "statistic_name": "v_call_unique",
+          "total": 426651,
+          "data": [
+            {
+              "key": "IGHV2-70*05",
+              "count": 133
+            },
+            {
+              "key": "IGHV2-70*13",
+              "count": 1
+            },
+            {
+              "key": "IGHV2-26*01",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "statistic_name": "v_gene_unique",
+          "total": 848917,
+          "data": [
+            {
+              "key": "IGHV2-70",
+              "count": 169
+            },
+            {
+              "key": "IGHV2-26",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "statistic_name": "v_subgroup_unique",
+          "total": 2483188,
+          "data": [
+            {
+              "key": "IGHV2",
+              "count": 551
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
