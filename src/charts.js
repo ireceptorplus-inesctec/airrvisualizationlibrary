@@ -155,11 +155,13 @@ class HighchartsChart extends Chart {
       this.#_logger.error('Highcharts not available');
       throw 'Required Highcharts Library not available';
     }
+    let _version = Highcharts.version;
+    let _majorVersion = parseInt(_version.split('.')[0]);
     if (!Highcharts._modules.hasOwnProperty('Extensions/Drilldown.js')) {
       this.#_logger.error('Highcharts Drilldown module not available');
       throw 'Required Highcharts Drilldown module not available';
     }
-    if (!Highcharts._modules.hasOwnProperty('Extensions/Exporting.js')) {
+    if (_majorVersion > 8 ? !Highcharts._modules.hasOwnProperty('Extensions/Exporting/Exporting.js') : !Highcharts._modules.hasOwnProperty('Extensions/Exporting.js')) { //Extensions/Exporting/Exporting.js from 9.0.0 on
       this.#_logger.error('Highcharts Exporting module not available');
       throw 'Required Highcharts Exporting module not available';
     }

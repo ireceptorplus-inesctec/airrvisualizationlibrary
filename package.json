@@ -10,7 +10,7 @@
     "test": "test"
   },
   "dependencies": {
-    "highcharts": "8.2.0"
+    "highcharts": "9.3.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "7.10.4",
