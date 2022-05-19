@@ -23,6 +23,7 @@ class StatsParserConstants {
     STATISTICS: 'statistics',
     STATISTICS_NAME: 'statistic_name',
     REPERTOIRES: 'repertoires',
+    REPERTOIRE: 'repertoire',
     REPERTOIRE_ID: 'repertoire_id',
     SAMPLE_PROCESSING_ID: 'sample_processing_id',
     DATA_PROCESSING_ID: 'data_processing_id',
@@ -83,7 +84,7 @@ class StatsParserConstants {
   }
 
   /**
-   * @description REPERTOIRES constant
+   * @description REPERTOIRES constant.
    * @type {string}
    * @static
    * @const
@@ -91,6 +92,17 @@ class StatsParserConstants {
    */
   static get REPERTOIRES() {
     return StatsParserConstants.VOCABULARY.REPERTOIRES;
+  }
+
+  /**
+   * @description REPERTOIRE constant
+   * @type {string}
+   * @static
+   * @const
+   * @default "repertoire"
+   */
+  static get REPERTOIRE() {
+    return StatsParserConstants.VOCABULARY.REPERTOIRE;
   }
 
   /**
@@ -330,7 +342,8 @@ class CountStatsParser extends Parser {
       let color = seriesColors[colorIndex];
       colorIndex += colorIndexJumper;
       let messageArrayObject = messageArray[j];
-      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRES];
+      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRE] || messageArrayObject[StatsParserConstants.REPERTOIRES];
+
 
       //fetch the StatsParserConstants.REPERTOIRE_ID
       let repID = messageArrayObjectRepertoires[StatsParserConstants.REPERTOIRE_ID];
@@ -502,7 +515,7 @@ class JunctionLenghtStatsParser extends Parser {
       let color = seriesColors[colorIndex];
       colorIndex += colorIndexJumper;
       let messageArrayObject = messageArray[j];
-      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRES];
+      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRE] || messageArrayObject[StatsParserConstants.REPERTOIRES];
 
       //fetch the StatsParserConstants.REPERTOIRE_ID
       let repID = messageArrayObjectRepertoires[StatsParserConstants.REPERTOIRE_ID];
@@ -747,7 +760,8 @@ class GeneUsageSunburstStatsParser extends Parser {
     //I need ONE ResultSeries to hold all the data.
     // for best results we need it to be well organized (at least the first two levels - inner rings )
     let messageArrayObject = messageArray[0];
-    let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRES];
+    let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRE] || messageArrayObject[StatsParserConstants.REPERTOIRES];
+
     //fetch the StatsParserConstants.REPERTOIRE_ID
     let repID = messageArrayObjectRepertoires[StatsParserConstants.REPERTOIRE_ID];
     //Only one (the first) statistics object is to be used, if more are received, then they are ignored
@@ -1114,7 +1128,7 @@ class GeneUsageDrilldownStatsParser extends DrilldownParser {
       let color = seriesColors[colorIndex];
       colorIndex += colorIndexJumper;
       let messageArrayObject = messageArray[j];
-      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRES];
+      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRE] || messageArrayObject[StatsParserConstants.REPERTOIRES];
 
       //fetch the StatsParserConstants.REPERTOIRE_ID
       let repID = messageArrayObjectRepertoires[StatsParserConstants.REPERTOIRE_ID];
@@ -1533,7 +1547,7 @@ class GeneUsageStatsParser extends Parser {
       let color = seriesColors[colorIndex];
       colorIndex += colorIndexJumper;
       let messageArrayObject = messageArray[j];
-      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRES];
+      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRE] || messageArrayObject[StatsParserConstants.REPERTOIRES];
 
       //fetch the StatsParserConstants.REPERTOIRE_ID
       let repID = messageArrayObjectRepertoires[StatsParserConstants.REPERTOIRE_ID];
@@ -1810,7 +1824,7 @@ class JGeneUsageDrilldownStatsParser extends DrilldownParser {
       let color = seriesColors[colorIndex];
       colorIndex += colorIndexJumper;
       let messageArrayObject = messageArray[j];
-      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRES];
+      let messageArrayObjectRepertoires = messageArrayObject[StatsParserConstants.REPERTOIRE] || messageArrayObject[StatsParserConstants.REPERTOIRES];
 
       //fetch the StatsParserConstants.REPERTOIRE_ID
       let repID = messageArrayObjectRepertoires[StatsParserConstants.REPERTOIRE_ID];
